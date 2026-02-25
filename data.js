@@ -26,7 +26,7 @@ const allLessonsData = {
     "3": { title: "第三課：愛玉的變身術", level1: [], level2: [], level3: [], level4: [] },
 
     // ================= 第四課 =================
-    "4": { title: "第四課：揚修猜字", level1: [], level2: [], level3: [], level4: [] },
+    "4": { title: "第四課：楊修猜字", level1: [], level2: [], level3: [], level4: [] },
 
     // ================= 第五課 =================
     "5": { title: "第五課：唱反調", level1: [], level2: [], level3: [], level4: [] },
