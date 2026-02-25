@@ -35,13 +35,17 @@
     </div>
 
     <template id="tpl-landing">
-        <div class="flex flex-col gap-8 items-center p-8 bg-white rounded-3xl shadow-xl max-w-lg w-full">
-            <h1 class="text-4xl font-bold text-gray-700 mb-4">生字大富翁</h1>
+        <div class="flex flex-col gap-6 items-center p-8 bg-white rounded-3xl shadow-xl max-w-lg w-full relative">
+            <h1 class="text-4xl font-bold text-gray-700 mb-2">生字大富翁</h1>
             <button onclick="initTeacher()" class="w-full py-6 text-2xl font-bold text-white bg-blue-500 rounded-2xl shadow-lg hover:bg-blue-600 transition">
                 我是老師 (建立房間)
             </button>
             <div class="w-full border-t border-gray-200"></div>
             <div class="w-full text-center text-gray-500">學生請掃描老師的 QR Code 加入</div>
+            
+            <a href="index.html" class="mt-2 px-6 py-2 bg-gray-100 text-blue-600 font-bold rounded-full hover:bg-blue-50 transition border border-blue-200 flex items-center gap-2">
+                🏠 返回課程大廳
+            </a>
         </div>
     </template>
 
@@ -52,8 +56,11 @@
                     </div>
             </div>
 
-            <div class="w-1/4 bg-white rounded-2xl shadow-lg flex flex-col p-4 overflow-hidden">
-                <div class="mb-4 text-center">
+            <div class="w-1/4 bg-white rounded-2xl shadow-lg flex flex-col p-4 overflow-hidden relative">
+                <div class="mb-4 text-center relative">
+                    <div class="absolute left-0 top-0">
+                        <a href="index.html" class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-bold hover:bg-blue-200 transition shadow-sm border border-blue-200">🏠 回大廳</a>
+                    </div>
                     <h2 class="text-xl font-bold text-gray-700">控制台</h2>
                     <div id="qrcode" class="flex justify-center my-2 p-2 bg-white border rounded"></div>
                     <div class="text-xs text-gray-400 break-all" id="roomIdDisplay"></div>
@@ -80,7 +87,10 @@
     <template id="tpl-student">
         <div class="w-full h-full flex flex-col items-center justify-between p-6 bg-slate-800 text-white relative overflow-hidden">
             <div class="w-full flex justify-between items-center z-10">
-                <div class="text-lg opacity-80">學生: <span id="myStudentName" class="font-bold text-yellow-400"></span></div>
+                <div class="flex items-center gap-3">
+                    <a href="index.html" class="px-3 py-1 bg-white/20 rounded-full text-sm font-bold hover:bg-white/30 transition text-white">🏠 回大廳</a>
+                    <div class="text-lg opacity-80">學生: <span id="myStudentName" class="font-bold text-yellow-400"></span></div>
+                </div>
                 <div class="px-3 py-1 bg-white/10 rounded-full text-sm" id="connectionStatus">連線中...</div>
             </div>
 
@@ -104,6 +114,10 @@
             <h2 class="text-2xl font-bold text-gray-700">加入遊戲</h2>
             <input type="text" id="inputName" placeholder="請輸入你的名字/代號" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-lg focus:border-blue-500 outline-none text-center">
             <button onclick="joinGame()" class="w-full py-4 bg-blue-500 text-white rounded-xl font-bold text-xl shadow-lg active:scale-95 transition">加入房間</button>
+            
+            <a href="index.html" class="mt-2 text-blue-500 font-bold hover:underline flex items-center gap-1">
+                🏠 返回課程大廳
+            </a>
         </div>
     </template>
 
@@ -242,6 +256,11 @@
             connections.forEach(c => c.send(data));
         }
 
+        function removeStudent(peerId) {
+            connections = connections.filter(c => c.peer !== peerId);
+            if(isTeacher) updateStudentList();
+        }
+
         // --- 學生端邏輯 ---
         function joinGame() {
             const name = document.getElementById('inputName').value.trim();
@@ -281,7 +300,6 @@
                 wordEl.classList.add('hidden');
                 btn.disabled = true;
                 btn.querySelector('span:last-child').textContent = "(等待轉停)";
-                // 這裡可以加一些動畫效果
             } 
             else if (data.type === 'SPIN_RESULT') {
                 // 轉動結束，顯示結果並開放搶答
@@ -337,9 +355,6 @@
                     
                     // 廣播：結果
                     broadcast({ type: 'SPIN_RESULT', word: word });
-                    
-                    // 顯示中央文字
-                    // (老師端的中央顯示邏輯與之前相同，這裡簡化處理)
                 });
             },
 
@@ -395,10 +410,9 @@
             }
         };
 
-        // --- 輔助：繪製盤面 (與之前相同，簡化版) ---
+        // --- 輔助：繪製盤面 ---
         function renderBoard() {
             const container = document.getElementById('gameBoardArea');
-            // 這裡插入簡化的盤面結構
             container.innerHTML = `
                 <div class="relative w-full h-full aspect-square max-h-[80vh] bg-blue-100 rounded-xl p-2">
                     <div class="absolute top-0 left-0 right-0 h-[12.5%] flex">${genCells(0,9,'h')}</div>
