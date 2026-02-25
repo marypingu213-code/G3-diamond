@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小語詞配對產生器 - 挑戰版</title>
+    <style>
+        :root {
+            --bg-color: #f0f7ff;
+            --primary-color: #4a90e2;
+            --secondary-color: #ff6b6b;
+            --accent-color: #f39c12;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: var(--bg-color);
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            overflow: hidden;
+        }
+
+        /* 16:9 容器 */
+        #game-container {
+            width: 95vw;
+            height: 53.43vw; /* 16:9 */
+            max-height: 90vh;
+            max-width: 160vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* 頂部控制列 */
+        #header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            height: 60px;
+        }
+
+        /* 輸入區域：點擊產生後會隱藏 */
+        #input-group {
+            display: flex;
+            gap: 10px;
+            flex-grow: 1;
+            transition: all 0.3s;
+        }
+
+        /* 遊戲中的操作按鈕 */
+        #action-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.1s, background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-start { background: var(--primary-color); }
+        .btn-shuffle { background: var(--accent-color); font-size: 1.5rem; }
+        .btn-reset { background: #666; }
+        .btn:active { transform: scale(0.9); }
+
+        /* 計時器樣式 */
+        #timer-display {
+            font-size: 1.8rem;
+            font-family: 'Courier New', Courier, monospace;
+            color: #d63031;
+            background: #ffeaa7;
+            padding: 5px 15px;
+            border-radius: 50px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        #best-record {
+            font-size: 0.9rem;
+            color: #777;
+            margin-left: 10px;
+        }
+
+        /* 棋盤 */
+        #board {
+            flex-grow: 1;
+            display: grid;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .card {
+            background: #fff;
+            border: 4px solid #f0f0f0;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #ddd;
+            transition: all 0.2s;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .card.selected {
+            border-color: #ffa500;
+            background-color: #fff9e6;
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #ddd;
+        }
+
+        .card.completed {
+            color: white;
+            border-color: rgba(0,0,0,0.05);
+            box-shadow: none;
+            cursor: default;
+        }
+
+        /* 實用的隱藏類別 */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="header-bar">
+        <div id="input-group">
+            <input type="text" id="wordInput" placeholder="輸入語詞用空格隔開（如：大象 蘋果 太陽）">
+            <button class="btn btn-start" onclick="startGame()">產生棋盤</button>
+        </div>
+
+        <div id="action-group">
+            <div id="timer-display">0.00</div>
+            <div id="best-record">最佳紀錄: --</div>
+            <button class="btn btn-shuffle" id="shuffleBtn" onclick="shuffleCurrent()" title="重新分布">🔁</button>
+            <button class="btn btn-reset" onclick="resetAll()">重新輸入</button>
+        </div>
+    </div>
+
+    <div id="board"></div>
+</div>
+
+<script>
+    let targetWords = [];
+    let currentSelection = [];
+    let allCharsData = [];
+    let timerInterval = null;
+    let startTime = null;
+    let isGameRunning = false;
+    let completedCount = 0;
+    let gameStarted = false; // 是否已經產生棋盤
+
+    const colors = [
+        '#FF6B6B', '#4ECDC4', '#FFD93D', '#6BCB77', 
+        '#4D96FF', '#9B59B6', '#F39C12', '#E84393', 
+        '#00B894', '#0984E3', '#2ECC71', '#E67E22'
+    ];
+
+    function startGame() {
+        const inputStr = document.getElementById('wordInput').value.trim();
+        if (!inputStr) {
+            alert("請先輸入語詞喔！");
+            return;
+        }
+
+        targetWords = inputStr.split(/\s+/);
+        allCharsData = [];
+        
+        targetWords.forEach((word, wordIdx) => {
+            word.split('').forEach(char => {
+                allCharsData.push({ char, wordIdx, wordText: word });
+            });
+        });
+
+        // 隱藏輸入框以避免提示
+        document.getElementById('input-group').classList.add('hidden');
+        gameStarted = true;
+        
+        initBoard();
+    }
+
+    function initBoard() {
+        stopTimer();
+        resetTimerUI();
+        completedCount = 0;
+        isGameRunning = false;
+        currentSelection = [];
+        
+        // 隨機打亂
+        const shuffled = [...allCharsData].sort(() => Math.random() - 0.5);
+        render(shuffled);
+    }
+
+    function render(chars) {
+        const board = document.getElementById('board');
+        board.innerHTML = '';
+        
+        const count = chars.length;
+        if (count === 0) return;
+
+        let cols = Math.ceil(Math.sqrt(count * (16/9)));
+        let rows = Math.ceil(count / cols);
+        
+        board.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        board.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+        chars.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerText = item.char;
+            card.dataset.wordIdx = item.wordIdx;
+            
+            card.addEventListener('click', () => handleSelect(card));
+            board.appendChild(card);
+        });
+    }
+
+    function handleSelect(card) {
+        if (card.classList.contains('completed')) return;
+
+        // 第一次點選開始計時
+        if (!isGameRunning) {
+            startTimer();
+            isGameRunning = true;
+        }
+
+        if (card.classList.contains('selected')) {
+            card.classList.remove('selected');
+            currentSelection = currentSelection.filter(c => c !== card);
+        } else {
+            card.classList.add('selected');
+            currentSelection.push(card);
+        }
+
+        checkMatch();
+    }
+
+    function checkMatch() {
+        if (currentSelection.length === 0) return;
+
+        const selectedString = currentSelection.map(c => c.innerText).join('');
+        const matchedIndex = targetWords.findIndex(word => word === selectedString);
+
+        if (matchedIndex !== -1) {
+            const color = colors[matchedIndex % colors.length];
+            
+            currentSelection.forEach(card => {
+                card.classList.remove('selected');
+                card.classList.add('completed');
+                card.style.backgroundColor = color;
+            });
+            
+            completedCount += currentSelection.length;
+            currentSelection = [];
+
+            if (completedCount === allCharsData.length) {
+                finishGame();
+            }
+        } else {
+            const maxLen = Math.max(...targetWords.map(w => w.length));
+            if (currentSelection.length >= maxLen) {
+                const temp = [...currentSelection];
+                currentSelection = [];
+                setTimeout(() => {
+                    temp.forEach(c => c.classList.remove('selected'));
+                }, 300);
+            }
+        }
+    }
+
+    // 功能按鈕：重新分布
+    function shuffleCurrent() {
+        if (!gameStarted) return;
+        initBoard();
+    }
+
+    // 功能按鈕：重新輸入
+    function resetAll() {
+        stopTimer();
+        gameStarted = false;
+        document.getElementById('wordInput').value = '';
+        document.getElementById('board').innerHTML = '';
+        document.getElementById('input-group').classList.remove('hidden');
+        resetTimerUI();
+        allCharsData = [];
+        targetWords = [];
+        isGameRunning = false;
+    }
+
+    // 計時器邏輯
+    function startTimer() {
+        startTime = Date.now();
+        timerInterval = setInterval(() => {
+            const elapsed = (Date.now() - startTime) / 1000;
+            document.getElementById('timer-display').innerText = elapsed.toFixed(2);
+        }, 50);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    function resetTimerUI() {
+        document.getElementById('timer-display').innerText = "0.00";
+    }
+
+    function finishGame() {
+        stopTimer();
+        const score = document.getElementById('timer-display').innerText;
+        document.getElementById('best-record').innerText = `最近紀錄: ${score} 秒`;
+        setTimeout(() => {
+            alert(`恭喜完成！總時間：${score} 秒`);
+        }, 300);
+    }
+</script>
+
+</body>
+</html>

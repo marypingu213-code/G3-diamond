@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>語詞配對大挑戰</title>
+    <style>
+        :root {
+            /* 優先使用華康寶風體W4(P) */
+            --font-family: "華康寶風體W4(P)", "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            --primary-color: #2196F3;
+            --match-color: #4CAF50;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f4c3;
+            font-family: var(--font-family);
+            overflow: hidden;
+        }
+
+        /* 16:9 遊戲畫布 */
+        .game-screen {
+            width: 95vw;
+            height: 53.43vw;
+            max-height: 85vh;
+            max-width: 151vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr); /* 6行 x 3列，共18張牌 */
+            grid-template-rows: repeat(3, 1fr);
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        /* 頂部資訊欄 */
+        .header {
+            width: 95vw;
+            max-width: 151vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #558b2f;
+        }
+
+        /* 卡片容器 */
+        .card {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 15px;
+        }
+
+        /* 翻牌動作 */
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            border: 4px solid #cddc39;
+            box-sizing: border-box;
+        }
+
+        /* 卡片背蓋 (未翻開) */
+        .card-front {
+            background-color: #8bc34a;
+            color: white;
+            font-size: 4rem;
+        }
+
+        /* 卡片正面 (內容) */
+        .card-back {
+            background-color: white;
+            transform: rotateY(180deg);
+            border-color: var(--primary-color);
+        }
+
+        .card-back.text-node {
+            font-size: 3.5rem;
+            color: #33691e;
+        }
+
+        .card-back img {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+        }
+
+        /* 配對成功效果 */
+        .card.matched {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+        #btn-restart {
+            padding: 10px 25px;
+            font-size: 1.5rem;
+            background: #689f38;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: var(--font-family);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>⏱️ 計時：<span id="timer">0</span> 秒</div>
+        <div style="font-size: 2.5rem;">語詞配對翻翻樂</div>
+        <button id="btn-restart" onclick="initGame()">重新開始</button>
+    </div>
+
+    <div class="game-screen" id="board">
+        </div>
+
+    <script>
+        // 修正後的資料庫：全 PNG 數字編號
+        const baseData = [
+            { text: "額頭", img: "image_9.png" },
+            { text: "臺灣", img: "image_17.png" },
+            { text: "祖先", img: "image_10.png" },
+            { text: "青蛙", img: "image_15.png" },
+            { text: "捕捉", img: "image_11.png" },
+            { text: "人類", img: "image_13.png" },
+            { text: "占據", img: "image_16.png" },
+            { text: "雞肉", img: "image_14.png" },
+            { text: "威風", img: "image_12.png" }
+        ];
+
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+        let matchesFound = 0;
+        let seconds = 0;
+        let timer;
+
+        const board = document.getElementById('board');
+        const timerLabel = document.getElementById('timer');
+
+        function initGame() {
+            // 重置參數
+            board.innerHTML = '';
+            matchesFound = 0;
+            seconds = 0;
+            timerLabel.textContent = '0';
+            clearInterval(timer);
+            startTimer();
+
+            // 建立 18 張牌 (9張字 + 9張圖)
+            let deck = [];
+            baseData.forEach(item => {
+                deck.push({ content: item.text, type: 'text', match: item.text });
+                deck.push({ content: item.img, type: 'img', match: item.text });
+            });
+
+            // 洗牌
+            deck.sort(() => Math.random() - 0.5);
+
+            // 渲染卡片
+            deck.forEach(data => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.match = data.match;
+
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front">?</div>
+                        <div class="card-back ${data.type === 'text' ? 'text-node' : ''}">
+                            ${data.type === 'text' ? data.content : `<img src="${data.content}">`}
+                        </div>
+                    </div>
+                `;
+
+                card.addEventListener('click', flipCard);
+                board.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (lockBoard || this === firstCard) return;
+
+            this.classList.add('flipped');
+            speak(this.dataset.match); // 點擊時朗讀語詞
+
+            if (!firstCard) {
+                firstCard = this;
+                return;
+            }
+
+            secondCard = this;
+            checkMatch();
+        }
+
+        function checkMatch() {
+            let isMatch = firstCard.dataset.match === secondCard.dataset.match;
+            isMatch ? disableCards() : unflipCards();
+        }
+
+        function disableCards() {
+            setTimeout(() => {
+                firstCard.classList.add('matched');
+                secondCard.classList.add('matched');
+                resetBoard();
+                matchesFound++;
+                if (matchesFound === baseData.length) {
+                    clearInterval(timer);
+                    alert(`恭喜完成！總共花了 ${seconds} 秒！`);
+                }
+            }, 600);
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                secondCard.classList.remove('flipped');
+                resetBoard();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            [firstCard, secondCard, lockBoard] = [null, null, false];
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                seconds++;
+                timerLabel.textContent = seconds;
+            }, 1000);
+        }
+
+        function speak(text) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'zh-TW';
+            synth.speak(utter);
+        }
+
+        // 啟動遊戲
+        initGame();
+    </script>
+</body>
+</html>
