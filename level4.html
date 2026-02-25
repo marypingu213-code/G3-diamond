@@ -119,17 +119,30 @@
             pointer-events: none;
             transition: opacity 0.5s;
         }
+        
+        /* 🌟 新增與修改：按鈕區域樣式 */
+        .header-controls {
+            display: flex;
+            gap: 15px;
+        }
 
-        #btn-restart {
+        .btn {
             padding: 10px 25px;
             font-size: 1.5rem;
-            background: #689f38;
             color: white;
             border: none;
             border-radius: 12px;
             cursor: pointer;
             font-family: var(--font-family);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: transform 0.1s;
         }
+        .btn:active { transform: scale(0.95); }
+
+        #btn-restart { background: #689f38; }
+        .home-btn { background: #4caf50; border: 2px solid #388e3c; } /* 森林綠風格的回大廳按鈕 */
     </style>
 </head>
 <body>
@@ -137,24 +150,28 @@
     <div class="header">
         <div>⏱️ 計時：<span id="timer">0</span> 秒</div>
         <div style="font-size: 2.5rem;">語詞配對翻翻樂</div>
-        <button id="btn-restart" onclick="initGame()">重新開始</button>
+        
+        <div class="header-controls">
+            <a href="index.html" class="btn home-btn">🏠 回總大廳</a>
+            <button class="btn" id="btn-restart" onclick="initGame()">重新開始</button>
+        </div>
     </div>
 
     <div class="game-screen" id="board">
         </div>
 
     <script>
-        // 修正後的資料庫：全 PNG 數字編號
+        // 🌟 修正後的資料庫：已將圖片路徑加上 pictures/ 前綴
         const baseData = [
-            { text: "額頭", img: "image_9.png" },
-            { text: "臺灣", img: "image_17.png" },
-            { text: "祖先", img: "image_10.png" },
-            { text: "青蛙", img: "image_15.png" },
-            { text: "捕捉", img: "image_11.png" },
-            { text: "人類", img: "image_13.png" },
-            { text: "占據", img: "image_16.png" },
-            { text: "雞肉", img: "image_14.png" },
-            { text: "威風", img: "image_12.png" }
+            { text: "額頭", img: "pictures/image_9.png" },
+            { text: "臺灣", img: "pictures/image_17.png" },
+            { text: "祖先", img: "pictures/image_10.png" },
+            { text: "青蛙", img: "pictures/image_15.png" },
+            { text: "捕捉", img: "pictures/image_11.png" },
+            { text: "人類", img: "pictures/image_13.png" },
+            { text: "占據", img: "pictures/image_16.png" },
+            { text: "雞肉", img: "pictures/image_14.png" },
+            { text: "威風", img: "pictures/image_12.png" }
         ];
 
         let firstCard = null;
