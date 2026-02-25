@@ -8,18 +8,21 @@
     <style>
         body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #eef2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         
-        /* 加上 position: relative 讓 QR code 可以乖乖待在右上角 */
         .canvas-16-9 { position: relative; width: 95vw; max-width: 1400px; aspect-ratio: 16 / 9; background-color: #fdf5e6; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; padding: 3%; box-sizing: border-box; overflow: hidden; }
         
-        .header-area { text-align: center; margin-bottom: 3%; }
+        .header-area { text-align: center; margin-bottom: 3%; display: flex; flex-direction: column; align-items: center; }
         h1 { color: #5a4a42; font-size: 3.5vw; margin: 0 0 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
         .subtitle { font-size: 1.8vw; color: #7b6855; margin: 0; }
         
         /* 📱 QR Code 專屬樣式 (固定在右上角) */
-        .qr-box { position: absolute; top: 3%; right: 3%; background: #fff; padding: 10px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; border: 3px dashed #f39c12; transition: transform 0.3s; }
+        .qr-box { position: absolute; top: 3%; right: 3%; background: #fff; padding: 10px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; border: 3px dashed #f39c12; transition: transform 0.3s; z-index: 100; }
         .qr-box:hover { transform: scale(1.1); }
         .qr-box p { margin: 0 0 5px 0; font-size: 1.2vw; font-weight: bold; color: #e74c3c; letter-spacing: 1px; }
         .qr-box img { width: 8vw; height: 8vw; min-width: 80px; min-height: 80px; object-fit: contain; }
+
+        /* 🐻 外部連結工具按鈕 */
+        .tool-btn { background-color: #8d6e63; color: white; text-decoration: none; font-size: 1.5vw; font-weight: bold; padding: 12px 25px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; margin-top: 15px; border: 2px solid #6d4c41; }
+        .tool-btn:hover { transform: scale(1.05) translateY(-3px); background-color: #795548; box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
 
         /* 課程列表區 */
         .lesson-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 2vw; width: 100%; overflow-y: auto; padding: 2vw; }
@@ -27,7 +30,14 @@
         .lesson-card:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 20px 40px rgba(0,0,0,0.15); background-color: #eafaf1; border-color: #2ecc71; }
         .lesson-title { font-size: 2vw; font-weight: bold; color: #2c3e50; text-align: center;}
 
-        @media (min-width: 1400px) { h1 { font-size: 48px; } .subtitle { font-size: 25px; } .lesson-title { font-size: 28px; } .qr-box p { font-size: 16px; } .qr-box img { width: 120px; height: 120px; } }
+        @media (min-width: 1400px) { 
+            h1 { font-size: 48px; } 
+            .subtitle { font-size: 25px; } 
+            .lesson-title { font-size: 28px; } 
+            .qr-box p { font-size: 16px; } 
+            .qr-box img { width: 120px; height: 120px; }
+            .tool-btn { font-size: 20px; }
+        }
     </style>
 </head>
 <body>
@@ -41,6 +51,10 @@
         <div class="header-area">
             <h1>🏫 特教國語遊戲網 🎪</h1>
             <p class="subtitle">請選擇今天要挑戰的課程！</p>
+            
+            <a href="https://gsyan888.blogspot.com/p/stroke.html#" target="_blank" class="tool-btn">
+                🐻 熊熊筆順練習網
+            </a>
         </div>
         
         <div class="lesson-list" id="lesson-container"></div>
@@ -54,18 +68,20 @@
 
             // 🌟 魔法 2：掃描 allLessonsData 裡面的每一課並生成按鈕
             const container = document.getElementById('lesson-container');
-            for (let lessonId in allLessonsData) {
-                const lessonInfo = allLessonsData[lessonId];
-                const card = document.createElement('a');
-                card.href = `lesson.html?id=${lessonId}`; 
-                card.className = 'lesson-card';
-                
-                const title = document.createElement('div');
-                title.className = 'lesson-title';
-                title.innerText = lessonInfo.title; 
-                
-                card.appendChild(title);
-                container.appendChild(card);
+            if (typeof allLessonsData !== 'undefined') {
+                for (let lessonId in allLessonsData) {
+                    const lessonInfo = allLessonsData[lessonId];
+                    const card = document.createElement('a');
+                    card.href = `lesson.html?id=${lessonId}`; 
+                    card.className = 'lesson-card';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'lesson-title';
+                    title.innerText = lessonInfo.title; 
+                    
+                    card.appendChild(title);
+                    container.appendChild(card);
+                }
             }
         };
     </script>
