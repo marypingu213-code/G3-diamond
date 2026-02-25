@@ -10,8 +10,17 @@
         .canvas-16-9 { width: 100%; max-width: 1400px; min-height: 85vh; background-color: #1a1a1a; border-radius: 30px; box-shadow: 0 15px 35px rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; padding: 3% 3% 4% 3%; box-sizing: border-box; position: relative; border: 2px solid #333; }
         .header-area { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2%; }
         h1 { color: #FFD700; font-size: 28px; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
-        .back-btn { background-color: #333333; color: #ffffff; text-decoration: none; font-size: 18px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); transition: 0.2s; border: 1px solid #555; z-index: 50; }
+        
+        /* 🌟 新增：將右上角按鈕包起來，讓它們並排顯示 */
+        .header-btns { display: flex; gap: 10px; z-index: 50; }
+        
+        .back-btn { background-color: #333333; color: #ffffff; text-decoration: none; font-size: 18px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); transition: 0.2s; border: 1px solid #555; display: flex; align-items: center;}
         .back-btn:hover { background-color: #555555; transform: scale(1.05); }
+        
+        /* 🌟 新增：總大廳按鈕的專屬藍色風格 */
+        .home-btn { background-color: #1565c0; border: 1px solid #0d47a1; }
+        .home-btn:hover { background-color: #0d47a1; }
+
         .target-hint { font-size: 24px; color: #ffffff; background: #222222; padding: 8px 30px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); display: inline-block; margin-bottom: 3%; border: 1px solid #444; }
         #target-word { color: #ff9800; font-weight: bold; }
         .game-wrapper { display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 3vw; width: 100%; flex-grow: 1; }
@@ -22,7 +31,6 @@
         .zone-title { background: #d32f2f; color: #ffffff; border-top-left-radius: 15px; border-top-right-radius: 15px; }
         #pool { display: flex; flex-wrap: wrap; align-content: flex-start; justify-content: center; padding-top: 60px; height: 100%; box-sizing: border-box; }
         
-        /* 預設大小為 130px，等一下會用語法自動覆蓋 */
         .part-img { width: 130px; height: 130px; object-fit: contain; cursor: grab; transition: transform 0.1s ease; z-index: 10; touch-action: none; }
         #pool .part-img { position: relative !important; left: auto !important; top: auto !important; margin: 8px; background-color: #fdfdfd; border: 2px solid #eaeaea; border-radius: 12px; }
         .part-img:active { cursor: grabbing; transform: scale(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
@@ -37,7 +45,10 @@
     <div class="canvas-16-9">
         <div class="header-area">
             <h1>🧩 第一關：部件拼拼樂</h1>
-            <a href="#" id="back-btn" class="back-btn">🏠 回課程大廳</a>
+            <div class="header-btns">
+                <a href="index.html" class="back-btn home-btn">🏠 回總大廳</a>
+                <a href="#" id="back-btn" class="back-btn">🔙 回課程選單</a>
+            </div>
         </div>
         <div class="target-hint">目標：<span id="target-word">字</span></div>
         <div class="game-wrapper">
@@ -81,7 +92,6 @@
                 let img = document.createElement('img'); img.src = src; img.className = 'part-img'; 
                 img.draggable = false;
                 
-                // 🌟 縮放魔法啟動！如果有設定 scale 屬性，就自動改變圖片大小
                 let partIdx = data.parts.indexOf(src);
                 if (data.pos[partIdx].scale) {
                     let newSize = 130 * data.pos[partIdx].scale;
@@ -189,7 +199,7 @@
                 document.getElementById('message').style.color = "#4CAF50";
                 document.getElementById('message').innerText = "🎉 恭喜！本關卡挑戰成功！"; 
                 let btn = document.getElementById('next-btn');
-                btn.innerText = '🏠 回課程大廳';
+                btn.innerText = '🔙 回課程選單'; // 這裡也貼心改為回課程選單
                 btn.onclick = () => { window.location.href = `lesson.html?id=${lessonId}`; };
             } 
         }
