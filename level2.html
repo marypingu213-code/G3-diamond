@@ -91,6 +91,11 @@
         .btn-start { background: var(--primary-color); }
         .btn-shuffle { background: var(--accent-color); font-size: 1.5rem; }
         .btn-reset { background: #666; }
+        
+        /* 🌟 新增：回大廳按鈕的專屬藍色風格與間距 */
+        .home-btn { background: #1565c0; text-decoration: none; margin-right: 15px; }
+        .home-btn:hover { background: #0d47a1; }
+        
         .btn:active { transform: scale(0.9); }
 
         /* 計時器樣式 */
@@ -157,6 +162,8 @@
 
 <div id="game-container">
     <div id="header-bar">
+        <a href="index.html" class="btn home-btn">🏠 回總大廳</a>
+
         <div id="input-group">
             <input type="text" id="wordInput" placeholder="輸入語詞用空格隔開（如：大象 蘋果 太陽）">
             <button class="btn btn-start" onclick="startGame()">產生棋盤</button>
