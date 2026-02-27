@@ -3,44 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>第三關：文意小偵探</title>
+    <title>第三關：語詞我最行</title>
     <script src="data.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #f0f9ff;
+            /* 避免平板下拉更新 */
             overscroll-behavior-y: none; 
         }
+
         .word-card {
-            cursor: grab; transition: all 0.2s; user-select: none; touch-action: none; 
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+            /* 🌟 防止平板拖曳時網頁滑動 */
+            touch-action: none; 
         }
-        .word-card:active { cursor: grabbing; transform: scale(1.05); }
+
+        .word-card:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+        }
+
         .drop-zone {
-            display: inline-flex; min-width: 120px; height: 40px; border-bottom: 3px dashed #3b82f6; margin: 0 8px; vertical-align: middle; justify-content: center; align-items: center; transition: background-color 0.3s; cursor: pointer;
+            display: inline-flex;
+            min-width: 120px;
+            height: 40px;
+            border-bottom: 3px dashed #3b82f6;
+            margin: 0 8px;
+            vertical-align: middle;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+            cursor: pointer;
         }
-        .drop-zone.hover { background-color: #dbeafe; border-radius: 8px; border-bottom-style: solid; }
-        .correct { color: #059669; border-bottom-color: #059669; border-bottom-style: solid; font-weight: bold; }
-        .wrong { color: #dc2626; border-bottom-color: #dc2626; border-bottom-style: solid; font-weight: bold; animation: shake 0.4s; }
+
+        .drop-zone.hover {
+            background-color: #dbeafe;
+            border-radius: 8px;
+            border-bottom-style: solid;
+        }
+
+        .correct {
+            color: #059669;
+            border-bottom-color: #059669;
+            border-bottom-style: solid;
+            font-weight: bold;
+        }
+
+        .wrong {
+            color: #dc2626;
+            border-bottom-color: #dc2626;
+            border-bottom-style: solid;
+            font-weight: bold;
+            animation: shake 0.4s;
+        }
+
+        /* 答錯搖晃動畫 */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
             50% { transform: translateX(5px); }
             75% { transform: translateX(-5px); }
         }
+
+        /* 標題按鈕區 */
+        .header-btns a { transition: transform 0.1s; }
+        .header-btns a:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-yellow-400 relative">
         
         <div class="bg-yellow-400 p-6 text-center relative">
-            <div class="absolute top-4 left-4 flex flex-col md:flex-row gap-2 z-50">
-                <a href="index.html" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow hover:bg-blue-700 text-sm md:text-base border-2 border-blue-800 transition transform active:scale-95">🏠 回總大廳</a>
-                <a href="#" id="back-btn" class="bg-white text-blue-800 font-bold py-2 px-4 rounded-full shadow hover:bg-gray-100 text-sm md:text-base border-2 border-gray-200 transition transform active:scale-95">🔙 回選單</a>
+            <div class="header-btns absolute top-4 left-4 flex flex-col md:flex-row gap-2 z-50">
+                <a href="index.html" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow hover:bg-blue-700 text-sm md:text-base border-2 border-blue-800">🏠 回總大廳</a>
+                <a href="#" id="back-btn" class="bg-white text-blue-800 font-bold py-2 px-4 rounded-full shadow hover:bg-gray-100 text-sm md:text-base border-2 border-gray-200">🔙 回選單</a>
             </div>
 
-            <h1 class="text-3xl md:text-4xl font-bold text-white drop-shadow-md mt-16 md:mt-0">📝 <span id="lesson-title">語詞填空測驗</span></h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white drop-shadow-md mt-16 md:mt-0">📝 <span id="lesson-title">語詞我最行</span></h1>
             <p class="text-yellow-900 mt-2 font-medium text-lg">請用手指將正確的語詞拖動到格子裡！</p>
         </div>
 
@@ -49,14 +94,16 @@
                 <span class="bg-yellow-200 px-3 py-1 rounded-full text-xs mr-2">語詞銀行</span>
                 長按語詞，拖曳到下方的底線中喔！
             </div>
-            <div id="word-bank" class="flex flex-wrap gap-3 justify-center min-h-[60px]"></div>
+            <div id="word-bank" class="flex flex-wrap gap-3 justify-center min-h-[60px]">
+                </div>
         </div>
 
         <div class="p-6 md:p-10">
-            <div id="quiz-list" class="space-y-8 min-h-[100px]"></div>
+            <div id="quiz-list" class="space-y-8 min-h-[100px]">
+                </div>
 
             <div class="mt-12 flex flex-col md:flex-row gap-4 justify-center items-center" id="action-btns">
-                <button onclick="checkAnswers()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-10 rounded-full shadow-lg transform transition active:scale-95 text-xl">
+                <button onclick="checkAnswers()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-10 rounded-full shadow-lg transform transition active:scale-95 text-xl flex items-center gap-2">
                     ✅ 完成挑戰！
                 </button>
                 <button onclick="resetQuiz()" class="text-blue-500 hover:text-blue-700 font-bold py-2 px-6 rounded-full border-2 border-blue-500 transition active:bg-blue-50">
@@ -67,7 +114,7 @@
             <div id="result-message" class="hidden mt-8 p-6 rounded-2xl text-center transform transition-all duration-500">
                 <h2 id="score-text" class="text-2xl font-bold mb-2"></h2>
                 <p id="feedback-text" class="text-lg"></p>
-                <a href="#" id="finish-btn" class="hidden inline-block mt-4 bg-green-500 text-white font-bold py-2 px-8 rounded-full shadow hover:bg-green-600 transition transform active:scale-95">回課程選單</a>
+                <a href="#" id="finish-btn" class="hidden inline-block mt-4 bg-green-500 text-white font-bold py-2 px-8 rounded-full shadow hover:bg-green-600 transition">回課程選單</a>
             </div>
         </div>
     </div>
@@ -76,7 +123,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const lessonId = urlParams.get('id') || "1"; 
         
-        // 🌟 防呆設計：就算 HTML 零件被刪掉也不會當機
         const backBtn = document.getElementById('back-btn');
         const finishBtn = document.getElementById('finish-btn');
         if(backBtn) backBtn.href = `lesson.html?id=${lessonId}`;
@@ -85,7 +131,7 @@
         let questions = [];
         let lessonData = null;
         
-        // 檢查大腦資料庫是否存在
+        // 確保 data.js 有正確載入
         if (typeof allLessonsData !== 'undefined') {
             lessonData = allLessonsData[lessonId];
             if (lessonData && lessonData.level3) {
@@ -94,6 +140,7 @@
         }
 
         let words = [];
+        // 平板專用：觸控拖曳變數
         let draggedWord = "";
         let ghostEl = null;
 
@@ -108,28 +155,32 @@
             const titleEl = document.getElementById('lesson-title');
 
             if (!questions || questions.length === 0) {
-                quizList.innerHTML = "<p class='text-center text-gray-500 text-xl font-bold w-full'>本課目前沒有第三關的題目喔！<br>（請確認大廳是否點選了正確的課次）</p>";
+                quizList.innerHTML = "<p class='text-center text-gray-500 text-xl font-bold w-full'>本課目前沒有第三關的題目喔！</p>";
                 actionBtns.style.display = 'none';
                 return;
             }
 
             actionBtns.style.display = 'flex'; 
 
-            // 自動替換標題
+            // 🌟 將標題改為「第一課名稱 (語詞我最行)」
             if (lessonData && titleEl) {
-                titleEl.innerText = lessonData.title + " (填空測驗)";
+                titleEl.innerText = lessonData.title + " (語詞我最行)";
             }
 
+            // 提取所有答案作為語詞銀行
             words = questions.map(q => q.answer);
             wordBank.innerHTML = '';
+            
             shuffle(words).forEach(word => {
                 const card = document.createElement('div');
                 card.className = 'word-card bg-white border-2 border-yellow-400 px-4 py-2 rounded-xl shadow-sm font-bold text-xl text-blue-800';
                 card.innerText = word;
+                // 綁定觸控事件
                 card.addEventListener('pointerdown', handlePointerDown);
                 wordBank.appendChild(card);
             });
 
+            // 生成題目
             quizList.innerHTML = '';
             questions.forEach((q, index) => {
                 let parts = q.text.split(/_+/);
@@ -147,6 +198,7 @@
                 quizList.appendChild(item);
             });
 
+            // 點擊可以清除作答內容
             document.querySelectorAll('.drop-zone').forEach(zone => {
                 zone.addEventListener('click', () => {
                     zone.innerText = '';
@@ -155,7 +207,7 @@
             });
         }
 
-        // 觸控拖曳邏輯
+        // ================= 觸控拖曳核心邏輯 =================
         function handlePointerDown(e) {
             e.preventDefault();
             draggedWord = this.innerText;
@@ -216,6 +268,7 @@
 
         function checkAnswers() {
             if (!questions || questions.length === 0) return;
+
             let correctCount = 0;
             const total = questions.length;
 
@@ -230,7 +283,9 @@
                     zone.classList.add('correct');
                 } else {
                     zone.classList.remove('correct');
-                    if (userAns !== '') zone.classList.add('wrong');
+                    if (userAns !== '') {
+                        zone.classList.add('wrong');
+                    }
                 }
             });
 
@@ -253,12 +308,14 @@
             } else {
                 resultMessage.classList.add('bg-yellow-100', 'text-yellow-800');
                 scoreText.innerText = `加油喔！得到了 ${correctCount} / ${total} 分`;
-                feedbackText.innerText = `有紅色標示的部分答錯了，點擊格子可以清空重選喔！`;
+                feedbackText.innerText = `有紅色搖晃標示的部分答錯了，點擊格子可以清空重選喔！`;
                 if(finishBtn) finishBtn.classList.add('hidden');
             }
             
             resultMessage.classList.remove('hidden');
-            setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 100);
+            setTimeout(() => {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 100);
         }
 
         function resetQuiz() {
