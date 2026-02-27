@@ -32,7 +32,7 @@
         .drop-zone {
             display: inline-flex;
             min-width: 120px;
-            height: 40px;
+            height: 36px;
             border-bottom: 3px dashed #3b82f6;
             margin: 0 8px;
             vertical-align: middle;
@@ -81,7 +81,7 @@
     </style>
 </head>
 <body class="p-4 md:p-8">
-    <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-yellow-300 relative">
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-yellow-300 relative">
         
         <div class="bg-yellow-400 p-6 text-center relative">
             <div class="header-btns absolute top-4 left-4 flex flex-col md:flex-row gap-2">
@@ -89,14 +89,14 @@
                 <a href="#" id="back-btn" class="bg-white text-blue-800 font-bold py-2 px-4 rounded-full shadow hover:bg-gray-100 text-sm md:text-base border-2 border-gray-200">🔙 回選單</a>
             </div>
 
-            <h1 id="lesson-title" class="text-3xl md:text-4xl font-bold text-white drop-shadow-md mt-12 md:mt-0">🔍 文意小偵探</h1>
-            <p class="text-yellow-900 mt-2 font-medium text-lg">請用手指將正確的語詞拖動到格子裡！</p>
+            <h1 id="lesson-title" class="text-3xl md:text-4xl font-bold text-white drop-shadow-md mt-12 md:mt-0">📝 語詞填空測驗</h1>
+            <p class="text-yellow-900 mt-2 font-medium text-lg">請將正確的語詞拖動到格子裡！</p>
         </div>
 
         <div class="p-6 bg-yellow-50 border-b-2 border-yellow-100">
             <div class="text-sm font-bold text-yellow-700 mb-3 flex items-center">
                 <span class="bg-yellow-200 px-3 py-1 rounded-full text-xs mr-2">語詞銀行</span>
-                長按語詞，拖曳到下方的底線中
+                可以用手指長按語詞，拖動到下方的底線中喔！
             </div>
             <div id="word-bank" class="flex flex-wrap gap-3 justify-center">
                 </div>
@@ -118,26 +118,24 @@
             <div id="result-message" class="hidden mt-8 p-6 rounded-2xl text-center transform transition-all duration-500">
                 <h2 id="score-text" class="text-2xl font-bold mb-2"></h2>
                 <p id="feedback-text" class="text-lg"></p>
-                <a href="#" id="finish-btn" class="hidden inline-block mt-4 bg-green-500 text-white font-bold py-2 px-8 rounded-full shadow hover:bg-green-600 transition">回課程選單</a>
             </div>
         </div>
     </div>
 
     <script>
+        // 🌟 抓取網址上的課程 ID (預設為 2)
         const urlParams = new URLSearchParams(window.location.search);
-        // 🌟 這裡修正為預設讀取第 1 課
-        const lessonId = urlParams.get('id') || "1"; 
-        const backBtn = document.getElementById('back-btn');
-        const finishBtn = document.getElementById('finish-btn');
-        backBtn.href = `lesson.html?id=${lessonId}`;
-        finishBtn.href = `lesson.html?id=${lessonId}`;
+        const lessonId = urlParams.get('id') || "2"; 
+        
+        // 設定回選單按鈕的連結
+        document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
 
-        // 從 data.js 讀取資料
+        // 🌟 從 data.js 讀取對應課次的資料
         const lessonData = allLessonsData[lessonId];
         let questions = lessonData ? lessonData.level3 : [];
         let words = [];
 
-        // 🌟 平板專用：觸控拖曳變數
+        // 平板專用：觸控拖曳變數
         let draggedWord = "";
         let ghostEl = null;
 
@@ -148,186 +146,4 @@
         function initQuiz() {
             if (!questions || questions.length === 0) {
                 document.getElementById('quiz-list').innerHTML = "<p class='text-center text-gray-500 text-xl font-bold'>本課目前沒有第三關的題目喔！</p>";
-                document.querySelector('.mt-12').style.display = 'none';
-                return;
-            }
-
-            // 🌟 讓標題自動顯示為「🔍 第一課：最美的模樣 (填空)」
-            if (lessonData) {
-                 document.getElementById('lesson-title').innerText = "🔍 " + lessonData.title + " (填空)";
-            }
-
-            // 提取所有答案作為語詞銀行
-            words = questions.map(q => q.answer);
-
-            // 生成語詞銀行
-            const wordBank = document.getElementById('word-bank');
-            wordBank.innerHTML = '';
-            shuffle(words).forEach(word => {
-                const card = document.createElement('div');
-                card.className = 'word-card bg-white border-2 border-yellow-400 px-4 py-2 rounded-xl shadow-sm font-bold text-xl text-blue-800';
-                card.innerText = word;
-                
-                // 🌟 改用 Pointer Events 支援平板觸控
-                card.addEventListener('pointerdown', handlePointerDown);
-                wordBank.appendChild(card);
-            });
-
-            // 生成題目
-            const quizList = document.getElementById('quiz-list');
-            quizList.innerHTML = '';
-            questions.forEach((q, index) => {
-                // 將題目中的 ________ 拆分成前後段
-                let parts = q.text.split(/_+/);
-                let prefix = parts[0] || "";
-                let suffix = parts[1] || "";
-
-                const item = document.createElement('div');
-                item.className = 'text-xl md:text-2xl leading-relaxed flex flex-wrap items-center text-gray-700';
-                item.innerHTML = `
-                    <span class="font-bold text-blue-400 mr-2 bg-blue-50 px-3 py-1 rounded-lg">${index + 1}</span>
-                    <span>${prefix}</span>
-                    <div class="drop-zone mx-2 text-blue-600" data-id="${index}"></div>
-                    <span>${suffix}</span>
-                `;
-                quizList.appendChild(item);
-            });
-
-            // 點擊可以清除作答內容
-            document.querySelectorAll('.drop-zone').forEach(zone => {
-                zone.addEventListener('click', () => {
-                    zone.innerText = '';
-                    zone.classList.remove('correct', 'wrong');
-                });
-            });
-        }
-
-        // ================= 觸控拖曳核心邏輯 =================
-        function handlePointerDown(e) {
-            e.preventDefault();
-            draggedWord = this.innerText;
-            
-            // 創建一個跟隨手指的「幽靈卡片」
-            ghostEl = this.cloneNode(true);
-            ghostEl.style.position = 'fixed';
-            ghostEl.style.zIndex = '9999';
-            ghostEl.style.opacity = '0.9';
-            ghostEl.style.pointerEvents = 'none'; // 讓感應穿透幽靈卡片，偵測下方的 drop-zone
-            ghostEl.style.boxShadow = '0 15px 25px rgba(0,0,0,0.2)';
-            ghostEl.style.transform = 'scale(1.1)';
-            
-            document.body.appendChild(ghostEl);
-            moveGhost(e.clientX, e.clientY);
-
-            document.addEventListener('pointermove', handlePointerMove);
-            document.addEventListener('pointerup', handlePointerUp);
-        }
-
-        function moveGhost(x, y) {
-            if(ghostEl) {
-                ghostEl.style.left = (x - ghostEl.offsetWidth / 2) + 'px';
-                ghostEl.style.top = (y - ghostEl.offsetHeight / 2) + 'px';
-            }
-        }
-
-        function handlePointerMove(e) {
-            e.preventDefault();
-            moveGhost(e.clientX, e.clientY);
-        }
-
-        function handlePointerUp(e) {
-            document.removeEventListener('pointermove', handlePointerMove);
-            document.removeEventListener('pointerup', handlePointerUp);
-            
-            if (ghostEl) {
-                // 暫時隱藏幽靈，來尋找手指下方的元素
-                ghostEl.style.display = 'none';
-                let dropZone = null;
-                
-                // 取得手指放開位置的所有元素
-                const elements = document.elementsFromPoint(e.clientX, e.clientY);
-                for (let el of elements) {
-                    if (el.classList.contains('drop-zone')) {
-                        dropZone = el;
-                        break;
-                    }
-                }
-                
-                // 如果放在格子裡，就把文字填進去
-                if (dropZone && draggedWord) {
-                    dropZone.innerText = draggedWord;
-                    dropZone.classList.remove('correct', 'wrong');
-                }
-                
-                ghostEl.remove();
-                ghostEl = null;
-            }
-            draggedWord = "";
-        }
-        // ===================================================
-
-        function checkAnswers() {
-            if (!questions || questions.length === 0) return;
-
-            let correctCount = 0;
-            const total = questions.length;
-
-            questions.forEach((q, index) => {
-                const zone = document.querySelector(`.drop-zone[data-id="${index}"]`);
-                const userAns = zone.innerText.trim();
-                
-                if (userAns === q.answer) {
-                    correctCount++;
-                    zone.classList.remove('wrong');
-                    zone.classList.add('correct');
-                } else {
-                    zone.classList.remove('correct');
-                    if (userAns !== '') {
-                        zone.classList.add('wrong');
-                    }
-                }
-            });
-
-            const resultMessage = document.getElementById('result-message');
-            const scoreText = document.getElementById('score-text');
-            const feedbackText = document.getElementById('feedback-text');
-
-            resultMessage.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-yellow-100', 'text-yellow-800');
-            
-            if (correctCount === total) {
-                resultMessage.classList.add('bg-green-100', 'text-green-800');
-                scoreText.innerText = `🏆 太神啦！滿分通關！`;
-                feedbackText.innerText = `你已經完全掌握這些語詞了！`;
-                finishBtn.classList.remove('hidden');
-                
-                // 滿分語音鼓勵
-                if ('speechSynthesis' in window) {
-                    let u = new SpeechSynthesisUtterance("太棒了，滿分通關！");
-                    u.lang = 'zh-TW'; window.speechSynthesis.speak(u);
-                }
-            } else {
-                resultMessage.classList.add('bg-yellow-100', 'text-yellow-800');
-                scoreText.innerText = `加油喔！得到了 ${correctCount} / ${total} 分`;
-                feedbackText.innerText = `有紅色搖晃標示的部分答錯了，點擊格子可以清空重選喔！`;
-                finishBtn.classList.add('hidden');
-            }
-            
-            resultMessage.classList.remove('hidden');
-            // 平滑滾動到結果
-            setTimeout(() => {
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            }, 100);
-        }
-
-        function resetQuiz() {
-            document.getElementById('result-message').classList.add('hidden');
-            finishBtn.classList.add('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(initQuiz, 300);
-        }
-
-        // 啟動測驗
-        window.onload = initQuiz;
-    </script>
-</body>
-</html>
+                document.querySelector('.mt-12').style.display
