@@ -3,90 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>課程關卡選擇</title>
+    <title>課程選單</title>
     <script src="data.js"></script>
     <style>
         body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #eef2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .canvas-16-9 { width: 95vw; max-width: 1400px; aspect-ratio: 16 / 9; background-color: #fdf5e6; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; padding: 3%; box-sizing: border-box; overflow: hidden; position: relative;}
+        .canvas-16-9 { position: relative; width: 95vw; max-width: 1400px; aspect-ratio: 16 / 9; background-color: #fdf5e6; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; padding: 3%; box-sizing: border-box; overflow: hidden; }
+        .header-area { text-align: center; margin-bottom: 4%; width: 100%; position: relative; display: flex; justify-content: center; align-items: center;}
+        .back-btn { position: absolute; left: 2%; background-color: #3498db; color: white; text-decoration: none; font-size: 1.5vw; font-weight: bold; padding: 1vw 2vw; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; }
+        .back-btn:hover { background-color: #2980b9; transform: scale(1.05); }
+        h1 { color: #5a4a42; font-size: 3.5vw; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
         
-        .back-btn { position: absolute; top: 3%; left: 3%; background-color: #fff; color: #5a4a42; text-decoration: none; font-size: 1.5vw; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; }
-        .back-btn:hover { background-color: #f0f0f0; transform: scale(1.05); }
+        .cards-container { display: flex; justify-content: space-around; width: 100%; height: 60%; gap: 2vw; }
+        
+        .level-card { flex: 1; background-color: #ffffff; border-radius: 2vw; box-shadow: 0 8px 16px rgba(0,0,0,0.08); text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease; border: 4px solid transparent; cursor: pointer; padding: 1vw; box-sizing: border-box; }
+        .level-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        
+        .icon { font-size: 6vw; margin-bottom: 1vw; }
+        .level-num { font-size: 1.8vw; font-weight: bold; margin-bottom: 0.5vw; }
+        .level-name { font-size: 2.2vw; font-weight: bold; margin-bottom: 1vw; }
+        .level-desc { font-size: 1.2vw; color: #7f8c8d; text-align: center; }
 
-        .header-area { text-align: center; margin-bottom: 3%; margin-top: 2%; }
-        h1 { color: #5a4a42; font-size: 3.5vw; margin: 0 0 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
-        .subtitle { font-size: 1.8vw; color: #7b6855; margin: 0; }
+        /* 個別關卡顏色設計 */
+        #card-1 { border-color: #ff9ff3; }
+        #card-1 .level-num, #card-1 .level-name { color: #f368e0; }
         
-        .level-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5vw; width: 100%; flex-grow: 1; }
-        .level-card { background-color: #ffffff; border-radius: 2vw; box-shadow: 0 8px 16px rgba(0,0,0,0.08); text-decoration: none; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.3s ease; border: 6px solid transparent; cursor: pointer; padding: 5%; text-align: center; }
-        .level-card:hover { transform: translateY(-15px) scale(1.03); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
-        .level-icon { font-size: 5vw; margin-bottom: 8%; }
-        .level-title { font-size: 2vw; font-weight: bold; margin-bottom: 8%; line-height: 1.3; }
-        .level-desc { font-size: 1.2vw; color: #666; font-weight: bold; }
+        #card-2 { border-color: #feca57; }
+        #card-2 .level-num, #card-2 .level-name { color: #ff9f43; }
         
-        .card-1 { border-color: #ff9999; } .card-1 .level-title { color: #e74c3c; }
-        .card-2 { border-color: #87cefa; } .card-2 .level-title { color: #3498db; }
-        .card-3 { border-color: #98fb98; } .card-3 .level-title { color: #2ecc71; }
-        .card-4 { border-color: #ffd700; } .card-4 .level-title { color: #f39c12; }
-
-        @media (min-width: 1400px) { h1 { font-size: 48px; } .back-btn { font-size: 20px; } .subtitle { font-size: 25px; } .level-icon { font-size: 70px; } .level-title { font-size: 28px; } .level-desc { font-size: 16px; } }
+        /* 🌟 第三關改為綠色系，符合您截圖的風格 */
+        #card-3 { border-color: #1dd1a1; }
+        #card-3 .level-num, #card-3 .level-name { color: #10ac84; } 
+        
+        #card-4 { border-color: #48dbfb; }
+        #card-4 .level-num, #card-4 .level-name { color: #0abde3; }
     </style>
 </head>
 <body>
     <div class="canvas-16-9">
-        <a href="index.html" class="back-btn">🏠 回到總首頁</a>
-
         <div class="header-area">
-            <h1 id="lesson-title-display">載入中...</h1>
-            <p class="subtitle">準備好挑戰四個關卡了嗎？</p>
+            <a href="index.html" class="back-btn">🏠 回大廳</a>
+            <h1 id="lesson-title">載入中...</h1>
         </div>
         
-        <div class="level-container">
-            <a href="#" id="link-lvl1" class="level-card card-1">
-                <div class="level-icon">🧩</div>
-                <div class="level-title">第一關<br>部件拼拼樂</div>
-                <div class="level-desc">把零件組合成字！</div>
+        <div class="cards-container">
+            <a href="#" id="btn-level1" class="level-card" id="card-1">
+                <div class="icon">🧩</div>
+                <div class="level-num">第一關</div>
+                <div class="level-name">部件拼拼樂</div>
+                <div class="level-desc">把散落的部件拼成完整的字</div>
             </a>
-            <a href="#" id="link-lvl2" class="level-card card-2">
-                <div class="level-icon">👀</div>
-                <div class="level-title">第二關<br>語詞翻翻樂</div>
-                <div class="level-desc">選出正確的字！</div>
+            
+            <a href="#" id="btn-level2" class="level-card" id="card-2">
+                <div class="icon">🃏</div>
+                <div class="level-num">第二關</div>
+                <div class="level-name">語詞翻翻樂</div>
+                <div class="level-desc">找出配對的語詞和圖片</div>
             </a>
-            <a href="#" id="link-lvl3" class="level-card card-3">
-                <div class="level-icon">🕵️‍♂️</div>
-                <div class="level-title">第三關<br>生字大富翁</div>
-                <div class="level-desc">找出正確答案！</div>
+            
+            <a href="#" id="btn-level3" class="level-card" id="card-3">
+                <div class="icon">🕵️‍♂️</div>
+                <div class="level-num">第三關</div>
+                <div class="level-name">語詞我最行</div>
+                <div class="level-desc">選出正確的語詞填入句子中</div>
             </a>
-            <a href="#" id="link-lvl4" class="level-card card-4">
-                <div class="level-icon">🚂</div>
-                <div class="level-title">第四關<br>語詞配對</div>
-                <div class="level-desc">找出正確答案！</div>
+            
+            <a href="#" id="btn-level4" class="level-card" id="card-4">
+                <div class="icon">👑</div>
+                <div class="level-num">第四關</div>
+                <div class="level-name">魔王大挑戰</div>
+                <div class="level-desc">綜合測驗，挑戰最高分！</div>
             </a>
         </div>
     </div>
 
     <script>
-        window.onload = function() {
-            // 1. 取得網址列的 id (例如 ?id=2)
-            const urlParams = new URLSearchParams(window.location.search);
-            const lessonId = urlParams.get('id');
+        // 自動抓取大廳傳來的課次 ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const lessonId = urlParams.get('id') || "1";
+        
+        // 自動顯示標題
+        if (typeof allLessonsData !== 'undefined' && allLessonsData[lessonId]) {
+            document.getElementById('lesson-title').innerText = allLessonsData[lessonId].title;
+        } else {
+            document.getElementById('lesson-title').innerText = `第 ${lessonId} 課`;
+        }
 
-            // 如果找不到這個課程，退回首頁
-            if (!lessonId || !allLessonsData[lessonId]) {
-                alert("找不到課程資料！即將返回首頁。");
-                window.location.href = "index.html";
-                return;
-            }
-
-            // 2. 把大標題換成這課的名稱
-            const lessonInfo = allLessonsData[lessonId];
-            document.getElementById('lesson-title-display').innerText = lessonInfo.title;
-
-            // 3. 把四個關卡的網址都加上 ?id=X 傳遞下去
-            document.getElementById('link-lvl1').href = `level1.html?id=${lessonId}`;
-            document.getElementById('link-lvl2').href = `level2.html?id=${lessonId}`;
-            document.getElementById('link-lvl3').href = `level3.html?id=${lessonId}`;
-            document.getElementById('link-lvl4').href = `level4.html?id=${lessonId}`;
-        };
+        // 把 ID 傳遞給每一關
+        document.getElementById('btn-level1').href = `level1.html?id=${lessonId}`;
+        document.getElementById('btn-level2').href = `level2.html?id=${lessonId}`;
+        document.getElementById('btn-level3').href = `level3.html?id=${lessonId}`;
+        document.getElementById('btn-level4').href = `level4.html?id=${lessonId}`;
     </script>
 </body>
 </html>
