@@ -1,258 +1,331 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第三關：文意小偵探 (選詞填空)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>第三關：文意小偵探</title>
     <script src="data.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #eef2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box; user-select: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
         
-        .canvas-16-9 { width: 100%; max-width: 1400px; min-height: 85vh; background-color: #fdf5e6; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; padding: 3%; box-sizing: border-box; position: relative; border: 4px solid #f39c12; }
-        
-        /* 頂部按鈕與標題 */
-        .header-area { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2%; }
-        h1 { color: #d35400; font-size: 28px; margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-        .header-btns { display: flex; gap: 10px; z-index: 50; }
-        .back-btn { background-color: #fff; color: #5a4a42; text-decoration: none; font-size: 18px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; border: 2px solid #ddd; }
-        .home-btn { background-color: #1565c0; color: white; border-color: #0d47a1; }
-        
-        /* 選項池 (頂部) */
-        .pool-zone { width: 100%; background-color: #fff; border: 4px dashed #3498db; border-radius: 20px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px; min-height: 100px; box-shadow: inset 0 4px 8px rgba(0,0,0,0.05); }
-        
-        /* 拖曳的語詞方塊 */
-        .word-card { background-color: #3498db; color: white; font-size: 28px; font-weight: bold; padding: 15px 30px; border-radius: 15px; cursor: grab; box-shadow: 0 6px 0 #2980b9; touch-action: none; transition: transform 0.1s; z-index: 10; position: relative; }
-        .word-card:active { cursor: grabbing; transform: scale(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 1000; }
-        .word-card.used { visibility: hidden; pointer-events: none; } /* 答對後隱藏 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f9ff;
+            /* 避免平板下拉更新 */
+            overscroll-behavior-y: none; 
+        }
 
-        /* 句子顯示區 (下方) */
-        .sentence-area { width: 100%; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #fff9e6; border-radius: 20px; padding: 40px; box-sizing: border-box; box-shadow: 0 8px 16px rgba(0,0,0,0.05); }
-        
-        .sentence-wrapper { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 10px; font-size: 36px; color: #2c3e50; font-weight: bold; line-height: 1.6; }
-        
-        .drop-box { min-width: 120px; height: 60px; border: 4px dashed #e74c3c; background-color: #fff; border-radius: 15px; display: inline-flex; justify-content: center; align-items: center; vertical-align: middle; margin: 0 10px; transition: 0.3s; }
-        .drop-box.correct { border: 4px solid #2ecc71; background-color: #eafaf1; color: #27ae60; font-size: 32px; font-weight: bold; box-shadow: 0 0 15px rgba(46, 204, 113, 0.5); }
+        .word-card {
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+            /* 🌟 關鍵：防止平板拖曳時網頁跟著滑動 */
+            touch-action: none; 
+        }
 
-        .speak-btn { background-color: #f1c40f; border: none; border-radius: 50px; font-size: 24px; padding: 10px 20px; cursor: pointer; box-shadow: 0 6px 0 #f39c12; font-weight: bold; color: #5a4a42; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .speak-btn:active { transform: translateY(6px); box-shadow: none; }
-        
-        /* 狀態訊息 */
-        .status-area { min-height: 60px; margin-top: 20px; font-size: 28px; font-weight: bold; color: #e74c3c; text-align: center; }
-        
-        /* 搖晃動畫 (答錯用) */
-        .shake { animation: shake 0.4s; border-color: #e74c3c !important; background-color: #ffeaea !important; }
-        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } 100% { transform: translateX(0); } }
+        .word-card:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+        }
+
+        .drop-zone {
+            display: inline-flex;
+            min-width: 120px;
+            height: 40px;
+            border-bottom: 3px dashed #3b82f6;
+            margin: 0 8px;
+            vertical-align: middle;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .drop-zone.hover {
+            background-color: #dbeafe;
+            border-radius: 8px;
+            border-bottom-style: solid;
+        }
+
+        .correct {
+            color: #059669;
+            border-bottom-color: #059669;
+            border-bottom-style: solid;
+            font-weight: bold;
+        }
+
+        .wrong {
+            color: #dc2626;
+            border-bottom-color: #dc2626;
+            border-bottom-style: solid;
+            font-weight: bold;
+            animation: shake 0.4s;
+        }
+
+        /* 答錯搖晃動畫 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        /* 標題按鈕區 */
+        .header-btns a {
+            transition: transform 0.1s;
+        }
+        .header-btns a:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
-<body>
-    <div class="canvas-16-9">
-        <div class="header-area">
-            <h1>🔍 第三關：文意小偵探</h1>
-            <div class="header-btns">
-                <a href="index.html" class="back-btn home-btn" onclick="stopSpeech()">🏠 回總大廳</a>
-                <a href="#" id="back-btn" class="back-btn" onclick="stopSpeech()">🔙 回課程選單</a>
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-yellow-300 relative">
+        
+        <div class="bg-yellow-400 p-6 text-center relative">
+            <div class="header-btns absolute top-4 left-4 flex flex-col md:flex-row gap-2">
+                <a href="index.html" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow hover:bg-blue-700 text-sm md:text-base border-2 border-blue-800">🏠 回總大廳</a>
+                <a href="#" id="back-btn" class="bg-white text-blue-800 font-bold py-2 px-4 rounded-full shadow hover:bg-gray-100 text-sm md:text-base border-2 border-gray-200">🔙 回選單</a>
             </div>
+
+            <h1 id="lesson-title" class="text-3xl md:text-4xl font-bold text-white drop-shadow-md mt-12 md:mt-0">🔍 文意小偵探</h1>
+            <p class="text-yellow-900 mt-2 font-medium text-lg">請用手指將正確的語詞拖動到格子裡！</p>
         </div>
 
-        <div class="pool-zone" id="word-pool"></div>
-
-        <div class="sentence-area">
-            <button class="speak-btn" onclick="readQuestion()">🔊 聽題目</button>
-            <div class="sentence-wrapper" id="sentence-container">
+        <div class="p-6 bg-yellow-50 border-b-2 border-yellow-100">
+            <div class="text-sm font-bold text-yellow-700 mb-3 flex items-center">
+                <span class="bg-yellow-200 px-3 py-1 rounded-full text-xs mr-2">語詞銀行</span>
+                長按語詞，拖曳到下方的底線中
+            </div>
+            <div id="word-bank" class="flex flex-wrap gap-3 justify-center">
                 </div>
-            <div class="status-area" id="message"></div>
+        </div>
+
+        <div class="p-6 md:p-10">
+            <div id="quiz-list" class="space-y-8">
+                </div>
+
+            <div class="mt-12 flex flex-col md:flex-row gap-4 justify-center items-center">
+                <button onclick="checkAnswers()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-10 rounded-full shadow-lg transform transition active:scale-95 text-xl flex items-center gap-2">
+                    ✅ 完成挑戰！
+                </button>
+                <button onclick="resetQuiz()" class="text-blue-500 hover:text-blue-700 font-bold py-2 px-6 rounded-full border-2 border-blue-500 transition active:bg-blue-50">
+                    🔄 重新開始
+                </button>
+            </div>
+
+            <div id="result-message" class="hidden mt-8 p-6 rounded-2xl text-center transform transition-all duration-500">
+                <h2 id="score-text" class="text-2xl font-bold mb-2"></h2>
+                <p id="feedback-text" class="text-lg"></p>
+                <a href="#" id="finish-btn" class="hidden inline-block mt-4 bg-green-500 text-white font-bold py-2 px-8 rounded-full shadow hover:bg-green-600 transition">回課程選單</a>
+            </div>
         </div>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const lessonId = urlParams.get('id') || "1"; 
-        document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
-        const questionsData = allLessonsData[lessonId] ? allLessonsData[lessonId].level3 : [];
+        const backBtn = document.getElementById('back-btn');
+        const finishBtn = document.getElementById('finish-btn');
+        backBtn.href = `lesson.html?id=${lessonId}`;
+        finishBtn.href = `lesson.html?id=${lessonId}`;
 
-        let currentIdx = 0;
-        let activeCard = null, offsetX = 0, offsetY = 0;
-        let startLeft = 0, startTop = 0;
+        // 從 data.js 讀取資料
+        const lessonData = allLessonsData[lessonId];
+        let questions = lessonData ? lessonData.level3 : [];
+        let words = [];
+
+        // 🌟 平板專用：觸控拖曳變數
+        let draggedWord = "";
+        let ghostEl = null;
 
         function shuffle(array) {
-            let arr = [...array];
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
+            return [...array].sort(() => Math.random() - 0.5);
         }
 
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'zh-TW'; utterance.rate = 0.85; 
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-        function stopSpeech() { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }
-        
-        function readQuestion() {
-            let q = questionsData[currentIdx];
-            // 把 ________ 替換成 "什麼"，讓語音念起來比較自然
-            let speakStr = q.text.replace(/_+/g, " 什麼 ");
-            speakText(speakStr);
-        }
-
-        function initGame() {
-            if (questionsData.length === 0) {
-                document.getElementById('sentence-container').innerHTML = "本課沒有第三關題目喔！";
+        function initQuiz() {
+            if (!questions || questions.length === 0) {
+                document.getElementById('quiz-list').innerHTML = "<p class='text-center text-gray-500 text-xl font-bold'>本課目前沒有第三關的題目喔！</p>";
+                document.querySelector('.mt-12').style.display = 'none';
                 return;
             }
-            
-            // 1. 抓出所有答案，打亂後放入上方的選項池
-            const allAnswers = questionsData.map(q => q.answer);
-            const shuffledAnswers = shuffle(allAnswers);
-            const pool = document.getElementById('word-pool');
-            pool.innerHTML = "";
-            
-            shuffledAnswers.forEach(word => {
-                let card = document.createElement('div');
-                card.className = 'word-card';
+
+            if (lessonData) {
+                document.getElementById('lesson-title').innerText = lessonData.title + " (填空)";
+            }
+
+            // 提取所有答案作為語詞銀行
+            words = questions.map(q => q.answer);
+
+            // 生成語詞銀行
+            const wordBank = document.getElementById('word-bank');
+            wordBank.innerHTML = '';
+            shuffle(words).forEach(word => {
+                const card = document.createElement('div');
+                card.className = 'word-card bg-white border-2 border-yellow-400 px-4 py-2 rounded-xl shadow-sm font-bold text-xl text-blue-800';
                 card.innerText = word;
+                
+                // 🌟 改用 Pointer Events 支援平板觸控
                 card.addEventListener('pointerdown', handlePointerDown);
-                pool.appendChild(card);
+                wordBank.appendChild(card);
             });
 
-            // 2. 載入第一題
-            currentIdx = 0;
-            loadQuestion();
+            // 生成題目
+            const quizList = document.getElementById('quiz-list');
+            quizList.innerHTML = '';
+            questions.forEach((q, index) => {
+                // 將題目中的 ________ 拆分成前後段
+                let parts = q.text.split(/_+/);
+                let prefix = parts[0] || "";
+                let suffix = parts[1] || "";
+
+                const item = document.createElement('div');
+                item.className = 'text-xl md:text-2xl leading-relaxed flex flex-wrap items-center text-gray-700';
+                item.innerHTML = `
+                    <span class="font-bold text-blue-400 mr-2 bg-blue-50 px-3 py-1 rounded-lg">${index + 1}</span>
+                    <span>${prefix}</span>
+                    <div class="drop-zone mx-2 text-blue-600" data-id="${index}"></div>
+                    <span>${suffix}</span>
+                `;
+                quizList.appendChild(item);
+            });
+
+            // 點擊可以清除作答內容
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.addEventListener('click', () => {
+                    zone.innerText = '';
+                    zone.classList.remove('correct', 'wrong');
+                });
+            });
         }
 
-        function loadQuestion() {
-            if (currentIdx >= questionsData.length) {
-                document.querySelector('.speak-btn').style.display = "none";
-                document.getElementById('word-pool').style.display = "none";
-                document.getElementById('sentence-container').innerHTML = "🎉 恭喜！所有的填空都完成了！";
-                document.getElementById('message').innerText = "";
-                speakText("恭喜！所有的填空都完成了！");
-                return;
-            }
-
-            let q = questionsData[currentIdx];
-            let container = document.getElementById('sentence-container');
-            container.innerHTML = "";
-            document.getElementById('message').innerText = "";
-
-            // 切割句子並放入 drop-box
-            let parts = q.text.split(/_+/);
-            
-            let span1 = document.createElement('span');
-            span1.innerText = parts[0];
-            container.appendChild(span1);
-
-            let dropBox = document.createElement('div');
-            dropBox.className = 'drop-box';
-            dropBox.id = 'drop-box';
-            container.appendChild(dropBox);
-
-            let span2 = document.createElement('span');
-            span2.innerText = parts[1] || "";
-            container.appendChild(span2);
-        }
-
-        // --- 觸控拖曳核心 ---
+        // ================= 觸控拖曳核心邏輯 =================
         function handlePointerDown(e) {
             e.preventDefault();
-            activeCard = this;
-            activeCard.setPointerCapture(e.pointerId);
-
-            let rect = activeCard.getBoundingClientRect();
-            startLeft = rect.left;
-            startTop = rect.top;
+            draggedWord = this.innerText;
             
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
+            // 創建一個跟隨手指的「幽靈卡片」
+            ghostEl = this.cloneNode(true);
+            ghostEl.style.position = 'fixed';
+            ghostEl.style.zIndex = '9999';
+            ghostEl.style.opacity = '0.9';
+            ghostEl.style.pointerEvents = 'none'; // 讓感應穿透幽靈卡片，偵測下方的 drop-zone
+            ghostEl.style.boxShadow = '0 15px 25px rgba(0,0,0,0.2)';
+            ghostEl.style.transform = 'scale(1.1)';
             
-            // 將卡片提升層級並改為 fixed 方便全螢幕拖曳
-            activeCard.style.position = 'fixed';
-            activeCard.style.left = startLeft + 'px';
-            activeCard.style.top = startTop + 'px';
-            activeCard.style.margin = '0'; 
-            document.body.appendChild(activeCard);
+            document.body.appendChild(ghostEl);
+            moveGhost(e.clientX, e.clientY);
 
-            activeCard.addEventListener('pointermove', handlePointerMove);
-            activeCard.addEventListener('pointerup', handlePointerUp);
+            document.addEventListener('pointermove', handlePointerMove);
+            document.addEventListener('pointerup', handlePointerUp);
+        }
+
+        function moveGhost(x, y) {
+            if(ghostEl) {
+                ghostEl.style.left = (x - ghostEl.offsetWidth / 2) + 'px';
+                ghostEl.style.top = (y - ghostEl.offsetHeight / 2) + 'px';
+            }
         }
 
         function handlePointerMove(e) {
-            if (!activeCard) return;
             e.preventDefault();
-            activeCard.style.left = (e.clientX - offsetX) + 'px';
-            activeCard.style.top = (e.clientY - offsetY) + 'px';
+            moveGhost(e.clientX, e.clientY);
         }
 
         function handlePointerUp(e) {
-            if (!activeCard) return;
-            activeCard.releasePointerCapture(e.pointerId);
-            activeCard.removeEventListener('pointermove', handlePointerMove);
-            activeCard.removeEventListener('pointerup', handlePointerUp);
+            document.removeEventListener('pointermove', handlePointerMove);
+            document.removeEventListener('pointerup', handlePointerUp);
+            
+            if (ghostEl) {
+                // 暫時隱藏幽靈，來尋找手指下方的元素
+                ghostEl.style.display = 'none';
+                let dropZone = null;
+                
+                // 取得手指放開位置的所有元素
+                const elements = document.elementsFromPoint(e.clientX, e.clientY);
+                for (let el of elements) {
+                    if (el.classList.contains('drop-zone')) {
+                        dropZone = el;
+                        break;
+                    }
+                }
+                
+                // 如果放在格子裡，就把文字填進去
+                if (dropZone && draggedWord) {
+                    dropZone.innerText = draggedWord;
+                    dropZone.classList.remove('correct', 'wrong');
+                }
+                
+                ghostEl.remove();
+                ghostEl = null;
+            }
+            draggedWord = "";
+        }
+        // ===================================================
 
-            let dropBox = document.getElementById('drop-box');
-            let dropRect = dropBox.getBoundingClientRect();
+        function checkAnswers() {
+            if (!questions || questions.length === 0) return;
 
-            // 判斷是否重疊 (簡單碰撞偵測)
-            let isOverlapping = !(
-                e.clientX < dropRect.left || 
-                e.clientX > dropRect.right || 
-                e.clientY < dropRect.top || 
-                e.clientY > dropRect.bottom
-            );
+            let correctCount = 0;
+            const total = questions.length;
 
-            let currentAnswer = questionsData[currentIdx].answer;
-
-            if (isOverlapping) {
-                if (activeCard.innerText === currentAnswer) {
-                    // 🌟 答對了！
-                    dropBox.innerText = currentAnswer;
-                    dropBox.classList.add('correct');
-                    activeCard.classList.add('used'); // 隱藏卡片
-                    
-                    document.getElementById('message').style.color = "#2ecc71";
-                    document.getElementById('message').innerText = "🌟 答對了！太棒了！";
-                    
-                    // 朗讀完整正確句子
-                    speakText(questionsData[currentIdx].text.replace(/_+/g, currentAnswer));
-                    
-                    // 等待 2.5 秒後換下一題 (讓學生有時間聽完句子)
-                    setTimeout(() => {
-                        currentIdx++;
-                        loadQuestion();
-                    }, 2500);
-
+            questions.forEach((q, index) => {
+                const zone = document.querySelector(`.drop-zone[data-id="${index}"]`);
+                const userAns = zone.innerText.trim();
+                
+                if (userAns === q.answer) {
+                    correctCount++;
+                    zone.classList.remove('wrong');
+                    zone.classList.add('correct');
                 } else {
-                    // ❌ 答錯了
-                    document.getElementById('message').style.color = "#e74c3c";
-                    document.getElementById('message').innerText = "哎呀，好像不是這個詞喔！";
-                    dropBox.classList.add('shake');
-                    speakText("哎呀，好像不是這個詞喔！");
-                    
-                    setTimeout(() => dropBox.classList.remove('shake'), 400);
-                    returnToPool(activeCard);
+                    zone.classList.remove('correct');
+                    if (userAns !== '') {
+                        zone.classList.add('wrong');
+                    }
+                }
+            });
+
+            const resultMessage = document.getElementById('result-message');
+            const scoreText = document.getElementById('score-text');
+            const feedbackText = document.getElementById('feedback-text');
+
+            resultMessage.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-yellow-100', 'text-yellow-800');
+            
+            if (correctCount === total) {
+                resultMessage.classList.add('bg-green-100', 'text-green-800');
+                scoreText.innerText = `🏆 太神啦！滿分通關！`;
+                feedbackText.innerText = `你已經完全掌握這些語詞了！`;
+                finishBtn.classList.remove('hidden');
+                
+                // 滿分語音鼓勵
+                if ('speechSynthesis' in window) {
+                    let u = new SpeechSynthesisUtterance("太棒了，滿分通關！");
+                    u.lang = 'zh-TW'; window.speechSynthesis.speak(u);
                 }
             } else {
-                // 沒丟進框框，彈回原位
-                returnToPool(activeCard);
+                resultMessage.classList.add('bg-yellow-100', 'text-yellow-800');
+                scoreText.innerText = `加油喔！得到了 ${correctCount} / ${total} 分`;
+                feedbackText.innerText = `有紅色搖晃標示的部分答錯了，點擊格子可以清空重選喔！`;
+                finishBtn.classList.add('hidden');
             }
-            activeCard = null;
+            
+            resultMessage.classList.remove('hidden');
+            // 平滑滾動到結果
+            setTimeout(() => {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 100);
         }
 
-        function returnToPool(card) {
-            let pool = document.getElementById('word-pool');
-            pool.appendChild(card);
-            card.style.position = 'relative';
-            card.style.left = 'auto';
-            card.style.top = 'auto';
-            card.style.margin = '0';
+        function resetQuiz() {
+            document.getElementById('result-message').classList.add('hidden');
+            finishBtn.classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(initQuiz, 300);
         }
 
-        window.onload = initGame;
+        // 啟動測驗
+        window.onload = initQuiz;
     </script>
 </body>
 </html>
