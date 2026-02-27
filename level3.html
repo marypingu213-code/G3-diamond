@@ -1,444 +1,258 @@
-<!doctype html>
-<html lang="zh-TW" class="h-full">
+<!DOCTYPE html>
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>生字語詞大富翁 - 多人搶答版</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三關：文意小偵探 (選詞填空)</title>
+    <script src="data.js"></script>
     <style>
-        body { font-family: 'Microsoft JhengHei', sans-serif; overflow: hidden; touch-action: manipulation; }
-        .word-cell { transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.8); }
-        .word-cell.active { transform: scale(1.15); z-index: 10; box-shadow: 0 0 25px rgba(255, 230, 109, 0.8); border-color: #fff; }
-        .buzzer-btn { 
-            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c0392b);
-            box-shadow: 0 10px 0 #96281b, 0 15px 20px rgba(0,0,0,0.4);
-            transition: all 0.1s;
-        }
-        .buzzer-btn:active { transform: translateY(10px); box-shadow: 0 0 0 #96281b, 0 5px 10px rgba(0,0,0,0.4); }
-        .buzzer-btn:disabled { filter: grayscale(100%); cursor: not-allowed; transform: translateY(10px); box-shadow: none; }
+        body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #eef2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box; user-select: none; }
         
-        /* 16:9 容器適配 */
-        .aspect-container { aspect-ratio: 16/9; max-height: 100vh; width: 100%; margin: 0 auto; position: relative; }
+        .canvas-16-9 { width: 100%; max-width: 1400px; min-height: 85vh; background-color: #fdf5e6; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; padding: 3%; box-sizing: border-box; position: relative; border: 4px solid #f39c12; }
         
-        /* 動畫 */
-        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 70% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
-        .pop-in { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* 頂部按鈕與標題 */
+        .header-area { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2%; }
+        h1 { color: #d35400; font-size: 28px; margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .header-btns { display: flex; gap: 10px; z-index: 50; }
+        .back-btn { background-color: #fff; color: #5a4a42; text-decoration: none; font-size: 18px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; border: 2px solid #ddd; }
+        .home-btn { background-color: #1565c0; color: white; border-color: #0d47a1; }
+        
+        /* 選項池 (頂部) */
+        .pool-zone { width: 100%; background-color: #fff; border: 4px dashed #3498db; border-radius: 20px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px; min-height: 100px; box-shadow: inset 0 4px 8px rgba(0,0,0,0.05); }
+        
+        /* 拖曳的語詞方塊 */
+        .word-card { background-color: #3498db; color: white; font-size: 28px; font-weight: bold; padding: 15px 30px; border-radius: 15px; cursor: grab; box-shadow: 0 6px 0 #2980b9; touch-action: none; transition: transform 0.1s; z-index: 10; position: relative; }
+        .word-card:active { cursor: grabbing; transform: scale(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 1000; }
+        .word-card.used { visibility: hidden; pointer-events: none; } /* 答對後隱藏 */
+
+        /* 句子顯示區 (下方) */
+        .sentence-area { width: 100%; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #fff9e6; border-radius: 20px; padding: 40px; box-sizing: border-box; box-shadow: 0 8px 16px rgba(0,0,0,0.05); }
+        
+        .sentence-wrapper { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 10px; font-size: 36px; color: #2c3e50; font-weight: bold; line-height: 1.6; }
+        
+        .drop-box { min-width: 120px; height: 60px; border: 4px dashed #e74c3c; background-color: #fff; border-radius: 15px; display: inline-flex; justify-content: center; align-items: center; vertical-align: middle; margin: 0 10px; transition: 0.3s; }
+        .drop-box.correct { border: 4px solid #2ecc71; background-color: #eafaf1; color: #27ae60; font-size: 32px; font-weight: bold; box-shadow: 0 0 15px rgba(46, 204, 113, 0.5); }
+
+        .speak-btn { background-color: #f1c40f; border: none; border-radius: 50px; font-size: 24px; padding: 10px 20px; cursor: pointer; box-shadow: 0 6px 0 #f39c12; font-weight: bold; color: #5a4a42; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .speak-btn:active { transform: translateY(6px); box-shadow: none; }
+        
+        /* 狀態訊息 */
+        .status-area { min-height: 60px; margin-top: 20px; font-size: 28px; font-weight: bold; color: #e74c3c; text-align: center; }
+        
+        /* 搖晃動畫 (答錯用) */
+        .shake { animation: shake 0.4s; border-color: #e74c3c !important; background-color: #ffeaea !important; }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } 100% { transform: translateX(0); } }
     </style>
 </head>
-<body class="h-full bg-gray-100 text-gray-800">
+<body>
+    <div class="canvas-16-9">
+        <div class="header-area">
+            <h1>🔍 第三關：文意小偵探</h1>
+            <div class="header-btns">
+                <a href="index.html" class="back-btn home-btn" onclick="stopSpeech()">🏠 回總大廳</a>
+                <a href="#" id="back-btn" class="back-btn" onclick="stopSpeech()">🔙 回課程選單</a>
+            </div>
+        </div>
 
-    <div id="app" class="w-full h-full flex flex-col items-center justify-center">
-        <div id="loadingScreen" class="text-2xl font-bold">系統初始化中...</div>
+        <div class="pool-zone" id="word-pool"></div>
+
+        <div class="sentence-area">
+            <button class="speak-btn" onclick="readQuestion()">🔊 聽題目</button>
+            <div class="sentence-wrapper" id="sentence-container">
+                </div>
+            <div class="status-area" id="message"></div>
+        </div>
     </div>
 
-    <template id="tpl-landing">
-        <div class="flex flex-col gap-6 items-center p-8 bg-white rounded-3xl shadow-xl max-w-lg w-full relative">
-            <h1 class="text-4xl font-bold text-gray-700 mb-2">生字大富翁</h1>
-            <button onclick="initTeacher()" class="w-full py-6 text-2xl font-bold text-white bg-blue-500 rounded-2xl shadow-lg hover:bg-blue-600 transition">
-                我是老師 (建立房間)
-            </button>
-            <div class="w-full border-t border-gray-200"></div>
-            <div class="w-full text-center text-gray-500">學生請掃描老師的 QR Code 加入</div>
-            
-            <a href="index.html" class="mt-2 px-6 py-2 bg-gray-100 text-blue-600 font-bold rounded-full hover:bg-blue-50 transition border border-blue-200 flex items-center gap-2">
-                🏠 返回課程大廳
-            </a>
-        </div>
-    </template>
-
-    <template id="tpl-teacher">
-        <div class="w-full h-full flex p-2 gap-2 overflow-hidden">
-            <div class="flex-1 relative bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
-                <div id="gameBoardArea" class="flex-1 relative flex items-center justify-center p-2">
-                    </div>
-            </div>
-
-            <div class="w-1/4 bg-white rounded-2xl shadow-lg flex flex-col p-4 overflow-hidden relative">
-                <div class="mb-4 text-center relative">
-                    <div class="absolute left-0 top-0">
-                        <a href="index.html" class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-bold hover:bg-blue-200 transition shadow-sm border border-blue-200">🏠 回大廳</a>
-                    </div>
-                    <h2 class="text-xl font-bold text-gray-700">控制台</h2>
-                    <div id="qrcode" class="flex justify-center my-2 p-2 bg-white border rounded"></div>
-                    <div class="text-xs text-gray-400 break-all" id="roomIdDisplay"></div>
-                </div>
-
-                <div class="flex-1 overflow-y-auto mb-4 border rounded-xl p-2 bg-gray-50">
-                    <h3 class="font-bold text-sm text-gray-500 mb-2 sticky top-0 bg-gray-50 pb-1">已連線學生 (<span id="studentCount">0</span>)</h3>
-                    <div id="studentList" class="space-y-2">
-                        </div>
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <button id="spinBtn" onclick="game.teacherSpin()" class="py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-xl shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
-                        開始轉動
-                    </button>
-                    <button id="resetBtn" onclick="game.resetRound()" class="py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-xl font-bold shadow-md transition hidden">
-                        下一題 (重置)
-                    </button>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <template id="tpl-student">
-        <div class="w-full h-full flex flex-col items-center justify-between p-6 bg-slate-800 text-white relative overflow-hidden">
-            <div class="w-full flex justify-between items-center z-10">
-                <div class="flex items-center gap-3">
-                    <a href="index.html" class="px-3 py-1 bg-white/20 rounded-full text-sm font-bold hover:bg-white/30 transition text-white">🏠 回大廳</a>
-                    <div class="text-lg opacity-80">學生: <span id="myStudentName" class="font-bold text-yellow-400"></span></div>
-                </div>
-                <div class="px-3 py-1 bg-white/10 rounded-full text-sm" id="connectionStatus">連線中...</div>
-            </div>
-
-            <div class="flex-1 flex flex-col items-center justify-center w-full z-10">
-                <div id="studentMessage" class="text-2xl text-gray-300 animate-pulse">等待老師開始...</div>
-                <div id="studentWord" class="text-6xl md:text-8xl font-bold text-white drop-shadow-lg hidden pop-in"></div>
-            </div>
-
-            <div class="w-full max-w-md aspect-square mb-8 z-10 flex items-center justify-center">
-                <button id="buzzerBtn" onclick="game.studentBuzz()" disabled 
-                    class="buzzer-btn w-64 h-64 rounded-full text-4xl font-bold text-white border-4 border-red-800 flex flex-col items-center justify-center gap-2">
-                    <span>搶答</span>
-                    <span class="text-sm opacity-80 font-normal">(等待轉停)</span>
-                </button>
-            </div>
-        </div>
-    </template>
-
-    <template id="tpl-login">
-        <div class="flex flex-col gap-6 items-center p-8 bg-white rounded-3xl shadow-xl max-w-sm w-full mx-4">
-            <h2 class="text-2xl font-bold text-gray-700">加入遊戲</h2>
-            <input type="text" id="inputName" placeholder="請輸入你的名字/代號" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-lg focus:border-blue-500 outline-none text-center">
-            <button onclick="joinGame()" class="w-full py-4 bg-blue-500 text-white rounded-xl font-bold text-xl shadow-lg active:scale-95 transition">加入房間</button>
-            
-            <a href="index.html" class="mt-2 text-blue-500 font-bold hover:underline flex items-center gap-1">
-                🏠 返回課程大廳
-            </a>
-        </div>
-    </template>
-
     <script>
-        // --- 設定與資料 ---
-        const words = [
-            '手背', '斑點', '皺紋', '寶藏', '仔細', '藝術', '雖然', '創意', '收藏', 
-            '圍巾', '近視', '籃框', '失誤', '垃圾', '愉快', '曾經', '機會', 
-            '整齊', '醫生', '聽筒', '準備', '病毒', '淘氣', '蘋果', '吃藥', '樹幹', 
-            '乾枯', '雪白', '事實', '反射', '皮膚', '頭腦', '記憶', '打滾', '誤會', '北極'
-        ];
+        const urlParams = new URLSearchParams(window.location.search);
+        const lessonId = urlParams.get('id') || "1"; 
+        document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
+        const questionsData = allLessonsData[lessonId] ? allLessonsData[lessonId].level3 : [];
 
-        // --- 全局變數 ---
-        let peer = null;
-        let connections = []; // 老師端用：存儲所有學生連線
-        let myConn = null;    // 學生端用：存儲與老師的連線
-        let isTeacher = false;
-        let currentStudentName = "";
-        let buzzerLocked = false; // 搶答鎖
+        let currentIdx = 0;
+        let activeCard = null, offsetX = 0, offsetY = 0;
+        let startLeft = 0, startTop = 0;
 
-        // --- 路由初始化 ---
-        window.onload = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const joinId = urlParams.get('join');
-            
-            if (joinId) {
-                // 如果網址有 join 參數，顯示學生登入頁
-                showTemplate('tpl-login');
-                window.roomId = joinId;
-            } else {
-                // 否則顯示首頁
-                showTemplate('tpl-landing');
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
             }
-        };
-
-        function showTemplate(id) {
-            document.getElementById('app').innerHTML = document.getElementById(id).innerHTML;
+            return arr;
         }
 
-        // --- 老師端邏輯 ---
-        function initTeacher() {
-            showTemplate('tpl-teacher');
-            isTeacher = true;
-            renderBoard(); // 繪製大富翁
-
-            // 初始化 PeerJS
-            peer = new Peer(null, { debug: 2 });
-
-            peer.on('open', (id) => {
-                console.log('Teacher ID:', id);
-                document.getElementById('roomIdDisplay').textContent = `房號: ${id}`;
-                
-                // 產生 QR Code (當前網址 + ?join=ID)
-                const joinUrl = `${window.location.origin}${window.location.pathname}?join=${id}`;
-                new QRCode(document.getElementById("qrcode"), {
-                    text: joinUrl,
-                    width: 128,
-                    height: 128
-                });
-            });
-
-            peer.on('connection', (conn) => {
-                conn.on('open', () => {
-                    // 暫存連線，等待學生傳送名字
-                });
-
-                conn.on('data', (data) => {
-                    handleTeacherData(conn, data);
-                });
-                
-                conn.on('close', () => {
-                    removeStudent(conn.peer);
-                });
-            });
-        }
-
-        function handleTeacherData(conn, data) {
-            if (data.type === 'JOIN') {
-                // 學生加入
-                conn.studentName = data.name;
-                connections.push(conn);
-                updateStudentList();
-                // 回傳歡迎訊息
-                conn.send({ type: 'WELCOME', msg: '成功加入！' });
-            } else if (data.type === 'BUZZ') {
-                // 學生搶答
-                if (!buzzerLocked) {
-                    buzzerLocked = true;
-                    // 廣播結果：誰搶到了
-                    broadcast({ type: 'WINNER', name: conn.studentName });
-                    // UI 顯示
-                    highlightWinner(conn.studentName, conn.peer);
-                    playAudio('buzz');
-                }
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-TW'; utterance.rate = 0.85; 
+                window.speechSynthesis.speak(utterance);
             }
         }
-
-        function updateStudentList() {
-            const list = document.getElementById('studentList');
-            document.getElementById('studentCount').textContent = connections.length;
-            list.innerHTML = connections.map(conn => `
-                <div id="student-${conn.peer}" class="flex items-center justify-between p-3 bg-white border rounded-lg shadow-sm">
-                    <span class="font-bold text-gray-700">${conn.studentName}</span>
-                    <div class="flex gap-2">
-                        <span class="score-badge bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">0 分</span>
-                        <button onclick="addScore('${conn.peer}', 1)" class="text-green-500 hover:bg-green-50 rounded px-1 text-sm border border-green-200">+1</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function addScore(peerId, points) {
-            const conn = connections.find(c => c.peer === peerId);
-            if (conn) {
-                conn.score = (conn.score || 0) + points;
-                // 更新 UI
-                const el = document.querySelector(`#student-${peerId} .score-badge`);
-                if(el) el.textContent = `${conn.score} 分`;
-            }
-        }
-
-        function highlightWinner(name, peerId) {
-            // 老師端視覺回饋
-            const msg = document.createElement('div');
-            msg.className = "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white px-8 py-6 rounded-3xl shadow-2xl text-4xl font-bold z-50 pop-in border-4 border-white";
-            msg.innerHTML = `🏆 ${name} 搶答成功！`;
-            msg.id = 'winnerMsg';
-            document.getElementById('gameBoardArea').appendChild(msg);
-
-            // 顯示重置按鈕，隱藏開始按鈕
-            document.getElementById('resetBtn').classList.remove('hidden');
-            document.getElementById('spinBtn').classList.add('hidden');
-        }
-
-        function broadcast(data) {
-            connections.forEach(c => c.send(data));
-        }
-
-        function removeStudent(peerId) {
-            connections = connections.filter(c => c.peer !== peerId);
-            if(isTeacher) updateStudentList();
-        }
-
-        // --- 學生端邏輯 ---
-        function joinGame() {
-            const name = document.getElementById('inputName').value.trim();
-            if (!name) return alert("請輸入名字");
-            
-            currentStudentName = name;
-            showTemplate('tpl-student');
-            document.getElementById('myStudentName').textContent = name;
-
-            // 連線到老師
-            peer = new Peer();
-            peer.on('open', () => {
-                const conn = peer.connect(window.roomId);
-                
-                conn.on('open', () => {
-                    document.getElementById('connectionStatus').textContent = "已連線";
-                    document.getElementById('connectionStatus').classList.replace('bg-white/10', 'bg-green-500');
-                    // 傳送名字
-                    conn.send({ type: 'JOIN', name: currentStudentName });
-                    myConn = conn;
-                });
-
-                conn.on('data', handleStudentData);
-                
-                conn.on('close', () => alert("老師已斷線"));
-            });
-        }
-
-        function handleStudentData(data) {
-            const msgEl = document.getElementById('studentMessage');
-            const wordEl = document.getElementById('studentWord');
-            const btn = document.getElementById('buzzerBtn');
-
-            if (data.type === 'SPIN_START') {
-                // 開始轉動
-                msgEl.textContent = "轉動中...";
-                wordEl.classList.add('hidden');
-                btn.disabled = true;
-                btn.querySelector('span:last-child').textContent = "(等待轉停)";
-            } 
-            else if (data.type === 'SPIN_RESULT') {
-                // 轉動結束，顯示結果並開放搶答
-                msgEl.textContent = "請搶答！";
-                wordEl.textContent = data.word;
-                wordEl.classList.remove('hidden');
-                
-                btn.disabled = false;
-                btn.classList.remove('opacity-50');
-                btn.querySelector('span:last-child').textContent = "按我搶答！";
-            }
-            else if (data.type === 'WINNER') {
-                // 有人搶答了
-                btn.disabled = true;
-                if (data.name === currentStudentName) {
-                    msgEl.textContent = "🎉 你搶到了！";
-                    btn.style.background = "#2ecc71"; // Green
-                } else {
-                    msgEl.textContent = `❌ ${data.name} 搶先了`;
-                    btn.classList.add('opacity-50');
-                }
-            }
-            else if (data.type === 'RESET') {
-                // 重置
-                msgEl.textContent = "等待下一題...";
-                wordEl.classList.add('hidden');
-                btn.disabled = true;
-                btn.style.background = ""; // Reset color
-                btn.classList.remove('opacity-50');
-                btn.querySelector('span:last-child').textContent = "(等待轉停)";
-            }
-        }
-
-        // --- 遊戲邏輯 (Game Controller) ---
-        const game = {
-            teacherSpin: function() {
-                if (connections.length === 0) {
-                    alert("目前沒有學生連線喔！");
-                    // 為了測試，允許單機操作，但正常應 return
-                }
-
-                const spinBtn = document.getElementById('spinBtn');
-                spinBtn.disabled = true;
-                buzzerLocked = true; // 轉動中不能搶
-                
-                // 廣播：開始轉動
-                broadcast({ type: 'SPIN_START' });
-
-                // 在老師端執行轉動動畫
-                this.runSpinAnimation().then((finalIndex) => {
-                    const word = words[finalIndex];
-                    buzzerLocked = false; // 開放搶答
-                    
-                    // 廣播：結果
-                    broadcast({ type: 'SPIN_RESULT', word: word });
-                });
-            },
-
-            runSpinAnimation: function() {
-                return new Promise((resolve) => {
-                    // 簡單的轉動邏輯模擬
-                    let index = 0;
-                    let speed = 50;
-                    let rounds = 0;
-                    const maxRounds = 34 + Math.floor(Math.random() * 20);
-                    
-                    const interval = setInterval(() => {
-                        // 移除舊高亮
-                        const prev = document.querySelector(`[data-index="${index}"]`);
-                        if(prev) prev.classList.remove('active');
-                        
-                        index = (index + 1) % 34; // 34格
-                        
-                        // 新高亮
-                        const curr = document.querySelector(`[data-index="${index}"]`);
-                        if(curr) curr.classList.add('active');
-                        
-                        rounds++;
-                        if(rounds > maxRounds) {
-                            clearInterval(interval);
-                            resolve(index);
-                        }
-                    }, speed);
-                });
-            },
-
-            studentBuzz: function() {
-                if(myConn) {
-                    myConn.send({ type: 'BUZZ' });
-                    // 本地立即鎖定防止連點
-                    document.getElementById('buzzerBtn').disabled = true;
-                }
-            },
-
-            resetRound: function() {
-                buzzerLocked = false;
-                // 清除勝利訊息
-                const msg = document.getElementById('winnerMsg');
-                if(msg) msg.remove();
-                
-                // UI 復原
-                document.getElementById('resetBtn').classList.add('hidden');
-                document.getElementById('spinBtn').classList.remove('hidden');
-                document.getElementById('spinBtn').disabled = false;
-                
-                // 廣播重置
-                broadcast({ type: 'RESET' });
-            }
-        };
-
-        // --- 輔助：繪製盤面 ---
-        function renderBoard() {
-            const container = document.getElementById('gameBoardArea');
-            container.innerHTML = `
-                <div class="relative w-full h-full aspect-square max-h-[80vh] bg-blue-100 rounded-xl p-2">
-                    <div class="absolute top-0 left-0 right-0 h-[12.5%] flex">${genCells(0,9,'h')}</div>
-                    <div class="absolute top-[12.5%] bottom-[12.5%] right-0 w-[12.5%] flex flex-col">${genCells(9,16,'v')}</div>
-                    <div class="absolute bottom-0 left-0 right-0 h-[12.5%] flex flex-row-reverse">${genCells(16,25,'h')}</div>
-                    <div class="absolute top-[12.5%] bottom-[12.5%] left-0 w-[12.5%] flex flex-col-reverse">${genCells(25,34,'v')}</div>
-                    <div class="absolute inset-[13%] bg-white rounded-lg flex items-center justify-center">
-                        <div class="text-gray-300 text-2xl font-bold">請按開始轉動</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function genCells(start, end, dir) {
-            let html = '';
-            for(let i=start; i<end; i++) {
-                html += `<div class="word-cell flex-1 flex items-center justify-center bg-teal-400 text-white font-bold m-0.5 rounded text-sm md:text-xl" data-index="${i}">${words[i%words.length]}</div>`;
-            }
-            return html;
-        }
+        function stopSpeech() { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }
         
-        // 簡單音效
-        function playAudio(type) {
-            // 實際專案可加入 Audio API
+        function readQuestion() {
+            let q = questionsData[currentIdx];
+            // 把 ________ 替換成 "什麼"，讓語音念起來比較自然
+            let speakStr = q.text.replace(/_+/g, " 什麼 ");
+            speakText(speakStr);
         }
 
+        function initGame() {
+            if (questionsData.length === 0) {
+                document.getElementById('sentence-container').innerHTML = "本課沒有第三關題目喔！";
+                return;
+            }
+            
+            // 1. 抓出所有答案，打亂後放入上方的選項池
+            const allAnswers = questionsData.map(q => q.answer);
+            const shuffledAnswers = shuffle(allAnswers);
+            const pool = document.getElementById('word-pool');
+            pool.innerHTML = "";
+            
+            shuffledAnswers.forEach(word => {
+                let card = document.createElement('div');
+                card.className = 'word-card';
+                card.innerText = word;
+                card.addEventListener('pointerdown', handlePointerDown);
+                pool.appendChild(card);
+            });
+
+            // 2. 載入第一題
+            currentIdx = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIdx >= questionsData.length) {
+                document.querySelector('.speak-btn').style.display = "none";
+                document.getElementById('word-pool').style.display = "none";
+                document.getElementById('sentence-container').innerHTML = "🎉 恭喜！所有的填空都完成了！";
+                document.getElementById('message').innerText = "";
+                speakText("恭喜！所有的填空都完成了！");
+                return;
+            }
+
+            let q = questionsData[currentIdx];
+            let container = document.getElementById('sentence-container');
+            container.innerHTML = "";
+            document.getElementById('message').innerText = "";
+
+            // 切割句子並放入 drop-box
+            let parts = q.text.split(/_+/);
+            
+            let span1 = document.createElement('span');
+            span1.innerText = parts[0];
+            container.appendChild(span1);
+
+            let dropBox = document.createElement('div');
+            dropBox.className = 'drop-box';
+            dropBox.id = 'drop-box';
+            container.appendChild(dropBox);
+
+            let span2 = document.createElement('span');
+            span2.innerText = parts[1] || "";
+            container.appendChild(span2);
+        }
+
+        // --- 觸控拖曳核心 ---
+        function handlePointerDown(e) {
+            e.preventDefault();
+            activeCard = this;
+            activeCard.setPointerCapture(e.pointerId);
+
+            let rect = activeCard.getBoundingClientRect();
+            startLeft = rect.left;
+            startTop = rect.top;
+            
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            
+            // 將卡片提升層級並改為 fixed 方便全螢幕拖曳
+            activeCard.style.position = 'fixed';
+            activeCard.style.left = startLeft + 'px';
+            activeCard.style.top = startTop + 'px';
+            activeCard.style.margin = '0'; 
+            document.body.appendChild(activeCard);
+
+            activeCard.addEventListener('pointermove', handlePointerMove);
+            activeCard.addEventListener('pointerup', handlePointerUp);
+        }
+
+        function handlePointerMove(e) {
+            if (!activeCard) return;
+            e.preventDefault();
+            activeCard.style.left = (e.clientX - offsetX) + 'px';
+            activeCard.style.top = (e.clientY - offsetY) + 'px';
+        }
+
+        function handlePointerUp(e) {
+            if (!activeCard) return;
+            activeCard.releasePointerCapture(e.pointerId);
+            activeCard.removeEventListener('pointermove', handlePointerMove);
+            activeCard.removeEventListener('pointerup', handlePointerUp);
+
+            let dropBox = document.getElementById('drop-box');
+            let dropRect = dropBox.getBoundingClientRect();
+
+            // 判斷是否重疊 (簡單碰撞偵測)
+            let isOverlapping = !(
+                e.clientX < dropRect.left || 
+                e.clientX > dropRect.right || 
+                e.clientY < dropRect.top || 
+                e.clientY > dropRect.bottom
+            );
+
+            let currentAnswer = questionsData[currentIdx].answer;
+
+            if (isOverlapping) {
+                if (activeCard.innerText === currentAnswer) {
+                    // 🌟 答對了！
+                    dropBox.innerText = currentAnswer;
+                    dropBox.classList.add('correct');
+                    activeCard.classList.add('used'); // 隱藏卡片
+                    
+                    document.getElementById('message').style.color = "#2ecc71";
+                    document.getElementById('message').innerText = "🌟 答對了！太棒了！";
+                    
+                    // 朗讀完整正確句子
+                    speakText(questionsData[currentIdx].text.replace(/_+/g, currentAnswer));
+                    
+                    // 等待 2.5 秒後換下一題 (讓學生有時間聽完句子)
+                    setTimeout(() => {
+                        currentIdx++;
+                        loadQuestion();
+                    }, 2500);
+
+                } else {
+                    // ❌ 答錯了
+                    document.getElementById('message').style.color = "#e74c3c";
+                    document.getElementById('message').innerText = "哎呀，好像不是這個詞喔！";
+                    dropBox.classList.add('shake');
+                    speakText("哎呀，好像不是這個詞喔！");
+                    
+                    setTimeout(() => dropBox.classList.remove('shake'), 400);
+                    returnToPool(activeCard);
+                }
+            } else {
+                // 沒丟進框框，彈回原位
+                returnToPool(activeCard);
+            }
+            activeCard = null;
+        }
+
+        function returnToPool(card) {
+            let pool = document.getElementById('word-pool');
+            pool.appendChild(card);
+            card.style.position = 'relative';
+            card.style.left = 'auto';
+            card.style.top = 'auto';
+            card.style.margin = '0';
+        }
+
+        window.onload = initGame;
     </script>
 </body>
 </html>
