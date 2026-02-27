@@ -89,7 +89,7 @@
                 <a href="#" id="back-btn" class="bg-white text-blue-800 font-bold py-2 px-4 rounded-full shadow hover:bg-gray-100 text-sm md:text-base border-2 border-gray-200">🔙 回選單</a>
             </div>
 
-            <h1 id="lesson-title" class="text-3xl md:text-4xl font-bold text-white drop-shadow-md mt-12 md:mt-0">🔍 語詞填空測驗</h1>
+            <h1 id="lesson-title" class="text-3xl md:text-4xl font-bold text-white drop-shadow-md mt-12 md:mt-0">🔍 文意小偵探</h1>
             <p class="text-yellow-900 mt-2 font-medium text-lg">請用手指將正確的語詞拖動到格子裡！</p>
         </div>
 
@@ -125,8 +125,8 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        // 🌟 預設讀取第三課
-        const lessonId = urlParams.get('id') || "3"; 
+        // 🌟 這裡修正為預設讀取第 1 課
+        const lessonId = urlParams.get('id') || "1"; 
         const backBtn = document.getElementById('back-btn');
         const finishBtn = document.getElementById('finish-btn');
         backBtn.href = `lesson.html?id=${lessonId}`;
@@ -152,13 +152,9 @@
                 return;
             }
 
+            // 🌟 讓標題自動顯示為「🔍 第一課：最美的模樣 (填空)」
             if (lessonData) {
-                // 如果是第三課，加入小彩蛋標題
-                if(lessonId === "3"){
-                     document.getElementById('lesson-title').innerText = "🍧 " + lessonData.title;
-                } else {
-                     document.getElementById('lesson-title').innerText = "🔍 " + lessonData.title;
-                }
+                 document.getElementById('lesson-title').innerText = "🔍 " + lessonData.title + " (填空)";
             }
 
             // 提取所有答案作為語詞銀行
