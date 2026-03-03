@@ -6,238 +6,209 @@
     <title>第三關：語詞填充我最行</title>
     <script src="data.js"></script>
     <style>
+        /* 恢復你的原始簡約風格 */
         body {
-            font-family: "Microsoft JhengHei", Arial, sans-serif;
-            background-color: #F0F8FF;
-            transition: background-color 1s ease;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #eef2f5; /* 參考你的 lesson.html 底色 */
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 20px;
+            min-height: 100vh;
             margin: 0;
-            user-select: none; /* 防止拖曳時選取到文字 */
+            user-select: none;
         }
 
-        .main-container {
-            background: white;
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 900px;
-            width: 95%;
+        .canvas-container {
+            background-color: #ffffff;
+            width: 90vw;
+            max-width: 1000px;
+            padding: 40px;
+            border-radius: 30px; /* 恢復你的大圓角設計 */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             text-align: center;
         }
 
-        /* 語詞選單區（拖曳源） */
+        /* 語詞選單區 - 改為卡片內的小區塊 */
         .word-bank {
-            background-color: #e3f2fd;
+            background-color: #f8f9fa;
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 20px;
             margin-bottom: 30px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
-            border: 2px dashed #2196F3;
-            min-height: 50px;
+            gap: 12px;
+            border: 2px dashed #3498db;
         }
 
         .word-item {
             background: #ffffff;
-            padding: 10px 20px;
+            padding: 8px 18px;
             border-radius: 12px;
-            font-size: 22px;
+            font-size: 1.2rem;
             font-weight: bold;
-            color: #1976D2;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: #2980b9;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             cursor: grab;
-            border: 2px solid #2196F3;
-            transition: transform 0.2s;
+            border: 2px solid #3498db;
         }
 
-        .word-item:active { cursor: grabbing; transform: scale(1.1); }
-        .word-item.dragging { opacity: 0.5; }
-
-        /* 題目列表樣式 */
-        .question-list { text-align: left; margin-top: 20px; }
+        /* 題目清單樣式 */
+        .question-list { text-align: left; }
         .question-row {
-            font-size: 24px;
-            margin-bottom: 30px;
-            line-height: 2;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            line-height: 1.8;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        /* 放置目標格樣式 */
+        /* 拖曳放置區 - 調整為符合你截圖的高度 */
         .drop-zone {
             display: inline-flex;
-            width: 140px;
-            height: 45px;
-            border: 2px dashed #bbb;
+            width: 130px;
+            height: 40px;
+            border: 2px dashed #bdc3c7;
             border-radius: 10px;
-            margin: 0 10px;
-            background-color: #fafafa;
+            margin: 0 8px;
+            background-color: #fff;
             vertical-align: middle;
             justify-content: center;
             align-items: center;
-            transition: all 0.3s;
+            font-weight: bold;
+            color: #2c3e50;
         }
 
-        .drop-zone.hover { background-color: #fff9c4; border-color: #fbc02d; }
-        .drop-zone.filled { border: 2px solid #4CAF50; background-color: #e8f5e9; }
-        .drop-zone.wrong { border: 2px solid #f44336; background-color: #ffebee; }
+        .drop-zone.hover { background-color: #e3f2fd; border-color: #3498db; }
+        .drop-zone.filled { border: 2px solid #2ecc71; background-color: #f0fff4; color: #27ae60; }
+        .drop-zone.wrong { border: 2px solid #e74c3c; background-color: #fff5f5; }
 
-        /* 挑戰版隱藏區 */
-        #challenge-section { display: none; margin-top: 40px; padding-top: 20px; border-top: 5px double #ff4d4d; }
-        .challenge-header { color: #d32f2f; font-size: 28px; margin-bottom: 20px; font-weight: bold; text-align: center; }
+        /* 挑戰區樣式 */
+        #challenge-section { display: none; margin-top: 40px; border-top: 4px double #e74c3c; padding-top: 20px; }
+        .challenge-title { color: #e74c3c; font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; }
 
-        #finish-btn {
-            font-size: 24px; padding: 15px 50px; background-color: #4CAF50; color: white;
-            border: none; border-radius: 50px; cursor: pointer; margin-top: 30px;
+        .submit-btn {
+            background-color: #2ecc71; /* 你的原始綠色按鈕 */
+            color: white;
+            font-size: 1.4rem;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.2s;
         }
+        .submit-btn:hover { background-color: #27ae60; transform: scale(1.05); }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <h1 id="lesson-title">載入中...</h1>
-        <p style="font-size: 1.3rem; color: #555; font-weight: bold;">請將正確的語詞「拖曳」到下方的空格中：</p>
+<div class="canvas-container">
+    <h1 id="lesson-title" style="color: #2c3e50; margin-bottom: 10px;">載入中...</h1>
+    <p style="color: #7f8c8d; margin-bottom: 30px;">請將語詞拖曳至正確的空格中</p>
 
-        <div class="word-bank" id="word-bank"></div>
+    <div class="word-bank" id="word-bank"></div>
 
-        <div class="question-list" id="basic-questions"></div>
+    <div class="question-list" id="basic-questions"></div>
 
-        <div id="challenge-section">
-            <div class="challenge-header">🔥 厲害！開啟挑戰練習 🔥</div>
-            <div class="question-list" id="challenge-questions"></div>
-        </div>
-
-        <button id="finish-btn" onclick="checkFinal()">完成練習</button>
+    <div id="challenge-section">
+        <div class="challenge-title">🔥 挑戰組練習</div>
+        <div class="question-list" id="challenge-questions"></div>
     </div>
 
-    <script>
-        // 修正第一課題目內容
-        const customL1 = [
-            { text: "藍藍的天空有白白的________。", answer: "雲朵" },
-            { text: "小鳥拍拍________，飛得很高。", answer: "翅膀" },
-            { text: "妹妹的________紅通通的，很可愛。", answer: "臉蛋" },
-            { text: "下雨了，我要撐開漂亮的________。", answer: "雨傘" },
-            { text: "玩具箱裡有一隻大大的綠色________。", answer: "恐龍" },
-            { text: "狗狗把客廳弄得亂七八糟，真愛________。", answer: "搗亂" },
-            { text: "鋼琴彈出的________，聽起來真美。", answer: "音符" },
-            { text: "大老虎張開嘴巴大聲________。", answer: "吼叫" },
-            { text: "爸爸穿上西裝的________，看起來好神氣。", answer: "模樣" }
-        ];
+    <button class="submit-btn" onclick="checkFinal()">完成練習</button>
+</div>
 
-        const urlParams = new URLSearchParams(window.location.search);
-        let lessonId = urlParams.get('id') || "4"; 
-        let lessonData = allLessonsData[lessonId];
-        
-        // 如果是第一課，使用修正後的內容
-        let currentQuestions = (lessonId === "1") ? customL1 : lessonData.level3;
+<script>
+    // 1. 修正第一課數據
+    const customL1 = [
+        { text: "藍藍的天空有白白的________。", answer: "雲朵" },
+        { text: "小鳥拍拍________，飛得很高。", answer: "翅膀" },
+        { text: "妹妹的________紅通通的，很可愛。", answer: "臉蛋" },
+        { text: "下雨了，我要撐開漂亮的________。", answer: "雨傘" },
+        { text: "玩具箱裡有一隻大大的綠色________。", answer: "恐龍" },
+        { text: "狗狗把客廳弄得亂七八糟，真愛________。", answer: "搗亂" },
+        { text: "鋼琴彈出的________，聽起來真美。", answer: "音符" },
+        { text: "大老虎張開嘴巴大聲________。", answer: "吼叫" },
+        { text: "爸爸穿上西裝的________，看起來好神氣。", answer: "模樣" }
+    ];
 
-        document.getElementById("lesson-title").innerText = (lessonId === "1") ? "第一課：最美的模樣" : lessonData.title;
+    const urlParams = new URLSearchParams(window.location.search);
+    const lessonId = urlParams.get('id') || "4"; 
+    let currentQuestions = (lessonId === "1") ? customL1 : allLessonsData[lessonId].level3;
 
-        function initGame() {
-            renderWordBank();
-            renderQuestions();
+    document.getElementById("lesson-title").innerText = (lessonId === "1") ? "第一課：最美的模樣" : allLessonsData[lessonId].title;
+
+    function init() {
+        // 生成語詞庫
+        const words = [...new Set(currentQuestions.map(q => q.answer))].sort(() => Math.random() - 0.5);
+        const bank = document.getElementById("word-bank");
+        words.forEach(word => {
+            const el = document.createElement("div");
+            el.className = "word-item";
+            el.innerText = word;
+            el.draggable = true;
+            el.ondragstart = (e) => e.dataTransfer.setData("text", word);
+            bank.appendChild(el);
+        });
+
+        // 生成題目
+        const basicBox = document.getElementById("basic-questions");
+        const challengeBox = document.getElementById("challenge-questions");
+
+        currentQuestions.forEach((q, i) => {
+            const row = document.createElement("div");
+            row.className = "question-row";
+            const parts = q.text.split("________");
+            row.innerHTML = `${i+1}. ${parts[0]} <div class="drop-zone" data-answer="${q.answer}"></div> ${parts[1]||""}`;
+            
+            if (i < 9) basicBox.appendChild(row);
+            else challengeBox.appendChild(row);
+        });
+
+        // 綁定拖曳邏輯
+        document.querySelectorAll(".drop-zone").forEach(zone => {
+            zone.ondragover = (e) => { e.preventDefault(); zone.classList.add("hover"); };
+            zone.ondragleave = () => zone.classList.remove("hover");
+            zone.ondrop = (e) => {
+                e.preventDefault();
+                zone.classList.remove("hover");
+                const word = e.dataTransfer.getData("text");
+                if(word === zone.dataset.answer) {
+                    zone.innerText = word;
+                    zone.className = "drop-zone filled";
+                    checkProgress();
+                } else {
+                    zone.className = "drop-zone wrong";
+                    setTimeout(() => zone.className = "drop-zone", 800);
+                }
+            };
+        });
+    }
+
+    function checkProgress() {
+        const filled = document.querySelectorAll("#basic-questions .drop-zone.filled").length;
+        if (lessonId === "4" && filled === 9) {
+            document.getElementById("challenge-section").style.display = "block";
+            // 輕微變色提示進入挑戰
+            document.querySelector(".canvas-container").style.border = "4px solid #e74c3c";
         }
+    }
 
-        function renderWordBank() {
-            const words = [...new Set(currentQuestions.map(q => q.answer))];
-            words.sort(() => Math.random() - 0.5); // 隨機排序增加趣味
-            const bank = document.getElementById("word-bank");
-            words.forEach(word => {
-                const div = document.createElement("div");
-                div.className = "word-item";
-                div.innerText = word;
-                div.draggable = true;
-                div.addEventListener("dragstart", (e) => {
-                    e.dataTransfer.setData("text", word);
-                    div.classList.add("dragging");
-                });
-                div.addEventListener("dragend", () => div.classList.remove("dragging"));
-                bank.appendChild(div);
-            });
+    function checkFinal() {
+        const required = currentQuestions.length;
+        const current = document.querySelectorAll(".drop-zone.filled").length;
+        if (current < 9) alert("加油！基礎組還沒完成喔！");
+        else {
+            alert("🎉 太棒了！全部完成！");
+            window.location.href = `lesson.html?id=${lessonId}`;
         }
+    }
 
-        function renderQuestions() {
-            const basicContainer = document.getElementById("basic-questions");
-            const challengeContainer = document.getElementById("challenge-questions");
-
-            currentQuestions.forEach((q, index) => {
-                const row = document.createElement("div");
-                row.className = "question-row";
-                const parts = q.text.split("________");
-                
-                row.innerHTML = `
-                    ${index + 1}. ${parts[0]} 
-                    <div class="drop-zone" data-answer="${q.answer}"></div> 
-                    ${parts[1] || ""}
-                `;
-
-                if (index < 9) basicContainer.appendChild(row);
-                else challengeContainer.appendChild(row);
-            });
-
-            // 綁定拖曳事件到所有 drop-zone
-            document.querySelectorAll(".drop-zone").forEach(zone => {
-                zone.addEventListener("dragover", (e) => {
-                    e.preventDefault();
-                    zone.classList.add("hover");
-                });
-                zone.addEventListener("dragleave", () => zone.classList.remove("hover"));
-                zone.addEventListener("drop", (e) => {
-                    e.preventDefault();
-                    zone.classList.remove("hover");
-                    const droppedWord = e.dataTransfer.getData("text");
-                    handleDrop(zone, droppedWord);
-                });
-            });
-        }
-
-        function handleDrop(zone, word) {
-            const correctAnswer = zone.getAttribute("data-answer");
-            if (word === correctAnswer) {
-                zone.innerText = word;
-                zone.className = "drop-zone filled";
-                checkProgress();
-            } else {
-                zone.innerText = word;
-                zone.className = "drop-zone wrong";
-                setTimeout(() => {
-                    zone.innerText = "";
-                    zone.className = "drop-zone";
-                }, 1000);
-            }
-        }
-
-        let unlocked = false;
-        function checkProgress() {
-            const basicFilled = document.querySelectorAll("#basic-questions .drop-zone.filled").length;
-            if (lessonId === "4" && basicFilled === 9 && !unlocked) {
-                unlocked = true;
-                document.getElementById("challenge-section").style.display = "block";
-                document.body.style.backgroundColor = "#FFF0F0";
-                alert("🔥 基礎練習全對！已開啟下方的挑戰組！");
-            }
-        }
-
-        function checkFinal() {
-            const totalRequired = currentQuestions.length;
-            const currentFilled = document.querySelectorAll(".drop-zone.filled").length;
-            if (currentFilled < totalRequired && !(lessonId === "4" && currentFilled === 9)) {
-                alert("加油！還有題目沒完成喔！");
-            } else {
-                alert("🎉 太棒了！全部完成練習！");
-                window.location.href = `lesson.html?id=${lessonId}`;
-            }
-        }
-
-        initGame();
-    </script>
+    init();
+</script>
 </body>
 </html>
