@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: "Microsoft JhengHei", Arial, sans-serif;
-            background-color: #F0F8FF; /* 基礎版底色 */
+            background-color: #F0F8FF;
             transition: background-color 0.8s ease;
             display: flex;
             flex-direction: column;
@@ -23,8 +23,8 @@
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 90%;
+            max-width: 650px;
+            width: 95%;
             text-align: center;
             margin-top: 50px;
         }
@@ -51,6 +51,7 @@
             font-weight: bold;
             line-height: 1.8;
             margin: 30px 0;
+            color: #333;
         }
 
         .answer-input {
@@ -65,22 +66,28 @@
 
         .submit-btn {
             font-size: 22px;
-            padding: 12px 40px;
+            padding: 12px 45px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 12px;
             cursor: pointer;
+            box-shadow: 0 4px 0 #388E3C;
+        }
+
+        .submit-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
         }
 
         #feedback {
             margin-top: 20px;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
-            min-height: 30px;
+            min-height: 35px;
         }
 
-        /* 過場畫面 */
+        /* 過場畫面樣式 */
         #transition-screen {
             display: none;
             position: fixed;
@@ -98,14 +105,14 @@
 <body>
 
     <div id="transition-screen">
-        <h1 style="font-size: 3rem;">🌱 基礎組完成！</h1>
-        <p style="font-size: 1.5rem;">你太厲害了！接下來要進入難度更高的「🔥 挑戰組」囉！</p>
-        <button onclick="startChallengeGroup()" style="background: white; color: #ff4d4d; font-size: 24px; padding: 15px 40px; border-radius: 15px; border:none; cursor:pointer; font-weight:bold;">點我開始挑戰！</button>
+        <h1 style="font-size: 3.5rem; margin-bottom: 10px;">🌱 基礎組完成！</h1>
+        <p style="font-size: 1.8rem; margin-bottom: 30px;">表現太棒了！準備好進入更難的「🔥 挑戰組」了嗎？</p>
+        <button onclick="startChallengeGroup()" style="background: white; color: #ff4d4d; font-size: 26px; padding: 15px 50px; border-radius: 15px; border:none; cursor:pointer; font-weight:bold;">開始挑戰！</button>
     </div>
 
     <div id="game-container">
-        <div id="status-badge">🌱 基礎練習</div>
-        <h2 id="lesson-title">載入中...</h2>
+        <div id="status-badge">載入中...</div>
+        <h2 id="lesson-title" style="color: #5a4a42; margin-top: 0;">載入中...</h2>
         
         <div class="question-text" id="question-display"></div>
 
@@ -117,13 +124,17 @@
     </div>
 
     <script>
-        // 設定目前的課次 (如果你是從選單進來的，通常會帶參數，這裡預設為第四課)
+        // 1. 統一使用 'id' 作為參數名稱（與選單頁對接）
         const urlParams = new URLSearchParams(window.location.search);
-        const lessonId = urlParams.get('lesson') || "4"; 
-        
-        let currentIndex = 0; 
+        let lessonId = urlParams.get('id'); 
+
+        // 預設保護機制：若沒抓到 ID 則預設為第四課
+        if (!lessonId) { lessonId = "4"; }
+
+        // 2. 抓取對應資料
         const lessonData = allLessonsData[lessonId];
-        const questions = lessonData.level3; // 這裡會讀到你在 data.js 設定的 18 題
+        const questions = lessonData.level3; 
+        let currentIndex = 0; 
 
         document.getElementById("lesson-title").innerText = lessonData.title;
 
@@ -131,11 +142,21 @@
             const badge = document.getElementById("status-badge");
             const q = questions[currentIndex];
 
-            // 更新上方標籤進度
-            if (currentIndex < 9) {
-                badge.innerText = `🌱 基礎練習 (${currentIndex + 1}/9)`;
+            // 3. 題號顯示邏輯
+            if (lessonId === "4") {
+                // 第四課專屬：分基礎與挑戰 (18題)
+                if (currentIndex < 9) {
+                    badge.innerText = `🌱 基礎練習 (${currentIndex + 1}/9)`;
+                    badge.style.background = "#e1f5fe";
+                    badge.style.color = "#0288d1";
+                } else {
+                    badge.innerText = `🔥 挑戰練習 (${currentIndex - 8}/9)`;
+                    badge.style.background = "#ffebee";
+                    badge.style.color = "#d32f2f";
+                }
             } else {
-                badge.innerText = `🔥 挑戰練習 (${currentIndex - 8}/9)`;
+                // 其他課次顯示一般進度
+                badge.innerText = `題目進度 (${currentIndex + 1}/${questions.length})`;
             }
 
             document.getElementById("question-display").innerText = q.text;
@@ -155,14 +176,14 @@
                 setTimeout(() => {
                     currentIndex++;
                     
-                    // 🌟 關鍵邏輯：第 9 題做完時 (index 變成 9) 跳出過場
-                    if (currentIndex === 9) {
+                    // 🌟 關鍵：當第四課做完第 9 題時觸發過場
+                    if (lessonId === "4" && currentIndex === 9) {
                         showTransition();
                     } else if (currentIndex < questions.length) {
                         showQuestion();
                     } else {
                         alert("🎉 恭喜！你完成了本課所有的練習！");
-                        window.location.href = "lesson.html";
+                        window.location.href = `lesson.html?id=${lessonId}`;
                     }
                 }, 800);
             } else {
@@ -178,19 +199,17 @@
         function startChallengeGroup() {
             document.getElementById("transition-screen").style.display = "none";
             
-            // 進入挑戰組的視覺變化
-            document.body.style.backgroundColor = "#FFF0F0"; // 背景變色
+            // 視覺切換效果
+            document.body.style.backgroundColor = "#FFF0F0"; 
             document.getElementById("game-container").classList.add("challenge-mode-container");
-            document.getElementById("status-badge").style.background = "#ffebee";
-            document.getElementById("status-badge").style.color = "#d32f2f";
             
             showQuestion();
         }
 
-        // 初始執行
+        // 初始啟動
         showQuestion();
 
-        // 支援 Enter 鍵
+        // 支援 Enter 鍵提交
         document.getElementById("user-answer").addEventListener("keypress", function(e) {
             if (e.key === "Enter") checkAnswer();
         });
