@@ -35,7 +35,24 @@ const allLessonsData = {
     // ================= 第二課 =================
     "2": { 
         title: "第二課：玩玩具", 
-        level1: [], level2: [], 
+        level1: [
+            { word: "鐵", parts: ["images/L2/筆順-鐵-部件-1.png", "images/L2/筆順-鐵-部件-2.png", "images/L2/筆順-鐵-部件-3.png", "images/L2/筆順-鐵-部件-4.png", "images/L2/筆順-鐵-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "碗", parts: ["images/L2/筆順-碗-部件-1.png", "images/L2/筆順-碗-部件-2.png", "images/L2/筆順-碗-部件-3.png", "images/L2/筆順-碗-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "另", parts: ["images/L2/筆順-另-部件-1.png", "images/L2/筆順-另-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "彎", parts: ["images/L2/筆順-彎-部件-1.png", "images/L2/筆順-彎-部件-2.png", "images/L2/筆順-彎-部件-3.png", "images/L2/筆順-彎-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "鉤", parts: ["images/L2/筆順-鉤-部件-1.png", "images/L2/筆順-鉤-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "推", parts: ["images/L2/筆順-推-部件-1.png", "images/L2/筆順-推-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "羨", parts: ["images/L2/筆順-羨-部件-1.png", "images/L2/筆順-羨-部件-2.png", "images/L2/筆順-羨-部件-3.png", "images/L2/筆順-羨-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "慕", parts: ["images/L2/筆順-慕-部件-1.png", "images/L2/筆順-慕-部件-2.png", "images/L2/筆順-慕-部件-3.png", "images/L2/筆順-慕-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "娃", parts: ["images/L2/筆順-娃-部件-1.png", "images/L2/筆順-娃-部件-2.png", "images/L2/筆順-娃-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "捲", parts: ["images/L2/筆順-捲-部件-1.png", "images/L2/筆順-捲-部件-2.png", "images/L2/筆順-捲-部件-3.png", "images/L2/筆順-捲-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "躺", parts: ["images/L2/筆順-躺-部件-1.png", "images/L2/筆順-躺-部件-2.png", "images/L2/筆順-躺-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "裙", parts: ["images/L2/筆順-裙-部件-1.png", "images/L2/筆順-裙-部件-2.png", "images/L2/筆順-裙-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "擺", parts: ["images/L2/筆順-擺-部件-1.png", "images/L2/筆順-擺-部件-2.png", "images/L2/筆順-擺-部件-3.png", "images/L2/筆順-擺-部件-4.png", "images/L2/筆順-擺-部件-5.png", "images/L2/筆順-擺-部件-6.png"], pos: [{x: 40, y: 180}, {x: 80, y: 180}, {x: 120, y: 180}, {x: 160, y: 180}, {x: 200, y: 180}, {x: 240, y: 180}] },
+            { word: "參", parts: ["images/L2/筆順-參-部件-1.png", "images/L2/筆順-參-部件-2.png", "images/L2/筆順-參-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "容", parts: ["images/L2/筆順-容-部件-1.png", "images/L2/筆順-容-部件-2.png", "images/L2/筆順-容-部件-3.png", "images/L2/筆順-容-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] }
+        ], 
+        level2: [], 
         level3: [
             { text: "看到同學有新玩具，我好________他。", answer: "羨慕" },
             { text: "妹妹轉一個圈，漂亮的________也跟著動。", answer: "裙擺" },
@@ -53,7 +70,24 @@ const allLessonsData = {
     // ================= 第三課 =================
     "3": { 
         title: "第三課：愛玉的變身術", 
-        level1: [], level2: [], 
+        level1: [
+            { word: "炎", parts: ["images/L3/筆順-炎-部件-1.png", "images/L3/筆順-炎-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "玉", parts: ["images/L3/筆順-玉-部件-1.png", "images/L3/筆順-玉-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "凍", parts: ["images/L3/筆順-凍-部件-1.png", "images/L3/筆順-凍-部件-2.png", "images/L3/筆順-凍-部件-3.png", "images/L3/筆順-凍-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "薄", parts: ["images/L3/筆順-薄-部件-1.png", "images/L3/筆順-薄-部件-2.png", "images/L3/筆順-薄-部件-3.png", "images/L3/筆順-薄-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "暑", parts: ["images/L3/筆順-暑-部件-1.png", "images/L3/筆順-暑-部件-2.png", "images/L3/筆順-暑-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "品", parts: ["images/L3/筆順-品-部件-1.png", "images/L3/筆順-品-部件-2.png", "images/L3/筆順-品-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "籽", parts: ["images/L3/筆順-籽-部件-1.png", "images/L3/筆順-籽-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "晒", parts: ["images/L3/筆順-晒-部件-1.png", "images/L3/筆順-晒-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "摸", parts: ["images/L3/筆順-摸-部件-1.png", "images/L3/筆順-摸-部件-2.png", "images/L3/筆順-摸-部件-3.png", "images/L3/筆順-摸-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "刺", parts: ["images/L3/筆順-刺-部件-1.png", "images/L3/筆順-刺-部件-2.png", "images/L3/筆順-刺-部件-3.png", "images/L3/筆順-刺-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "器", parts: ["images/L3/筆順-器-部件-1.png", "images/L3/筆順-器-部件-2.png", "images/L3/筆順-器-部件-3.png", "images/L3/筆順-器-部件-4.png", "images/L3/筆順-器-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "袋", parts: ["images/L3/筆順-袋-部件-1.png", "images/L3/筆順-袋-部件-2.png", "images/L3/筆順-袋-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "綁", parts: ["images/L3/筆順-綁-部件-1.png", "images/L3/筆順-綁-部件-2.png", "images/L3/筆順-綁-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "搓", parts: ["images/L3/筆順-搓-部件-1.png", "images/L3/筆順-搓-部件-2.png", "images/L3/筆順-搓-部件-3.png", "images/L3/筆順-搓-部件-4.png", "images/L3/筆順-搓-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "糖", parts: ["images/L3/筆順-糖-部件-1.png", "images/L3/筆順-糖-部件-2.png", "images/L3/筆順-糖-部件-3.png", "images/L3/筆順-糖-部件-4.png", "images/L3/筆順-糖-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] }
+        ], 
+        level2: [], 
         level3: [
             { text: "太陽好大，天氣很________。", answer: "炎熱" },
             { text: "我喜歡吃冰冰涼涼的________。", answer: "愛玉" },
