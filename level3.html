@@ -6,109 +6,181 @@
     <title>第三關：語詞填充我最行</title>
     <script src="data.js"></script>
     <style>
-        /* 恢復你的原始簡約風格 */
         body {
             font-family: "Microsoft JhengHei", sans-serif;
-            background-color: #eef2f5; /* 參考你的 lesson.html 底色 */
+            background-color: #eef2f5; 
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* 改為從上方開始排，避免內容太多時上下被截斷 */
             min-height: 100vh;
             margin: 0;
+            padding: 30px 4%; /* 外圍留一點呼吸空間 */
+            box-sizing: border-box;
             user-select: none;
         }
 
+        /* 滿版大白框 */
         .canvas-container {
             background-color: #ffffff;
-            width: 90vw;
-            max-width: 1000px;
-            padding: 40px;
-            border-radius: 30px; /* 恢復你的大圓角設計 */
+            width: 100%;
+            max-width: 1600px; /* 放寬最大寬度，充分利用大螢幕 */
+            padding: 50px 4%;
+            border-radius: 30px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             text-align: center;
+            box-sizing: border-box;
         }
 
-        /* 語詞選單區 - 改為卡片內的小區塊 */
+        /* 頂部標題與按鈕區 */
+        .header-area {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: clamp(32px, 3.5vw, 55px);
+            margin: 0;
+        }
+
+        .header-btns {
+            display: flex;
+            gap: 15px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: clamp(16px, 1.5vw, 24px);
+            font-weight: bold;
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .home-btn { background-color: #3498db; border: 2px solid #2980b9; }
+        .home-btn:hover { background-color: #2980b9; transform: scale(1.05); }
+        
+        .lesson-btn { background-color: #95a5a6; border: 2px solid #7f8c8d; }
+        .lesson-btn:hover { background-color: #7f8c8d; transform: scale(1.05); }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: clamp(20px, 2vw, 30px);
+            margin: 20px 0 40px 0;
+            font-weight: bold;
+        }
+
+        /* 語詞選單區放大 */
         .word-bank {
             background-color: #f8f9fa;
-            padding: 20px;
+            padding: 30px;
             border-radius: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
-            border: 2px dashed #3498db;
+            gap: 20px;
+            border: 3px dashed #3498db;
         }
 
         .word-item {
             background: #ffffff;
-            padding: 8px 18px;
-            border-radius: 12px;
-            font-size: 1.2rem;
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-size: clamp(22px, 2.2vw, 36px); /* 放大語詞卡片 */
             font-weight: bold;
             color: #2980b9;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.08);
             cursor: grab;
-            border: 2px solid #3498db;
+            border: 3px solid #3498db;
+            transition: transform 0.1s;
         }
+        .word-item:active { cursor: grabbing; transform: scale(1.1); }
 
-        /* 題目清單樣式 */
-        .question-list { text-align: left; }
+        /* 題目清單樣式放大 */
+        .question-list { text-align: left; max-width: 1300px; margin: 0 auto; }
         .question-row {
-            font-size: 1.3rem;
-            margin-bottom: 25px;
-            line-height: 1.8;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #f0f0f0;
+            font-size: clamp(24px, 2.2vw, 38px); /* 放大題目字體 */
+            margin-bottom: 30px;
+            line-height: 2;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
+            color: #34495e;
+            font-weight: bold;
         }
 
-        /* 拖曳放置區 - 調整為符合你截圖的高度 */
+        /* 拖曳放置區放大 */
         .drop-zone {
             display: inline-flex;
-            width: 130px;
-            height: 40px;
-            border: 2px dashed #bdc3c7;
-            border-radius: 10px;
-            margin: 0 8px;
+            width: clamp(140px, 12vw, 220px); /* 框框加長加大 */
+            height: clamp(45px, 4vw, 65px);
+            border: 3px dashed #bdc3c7;
+            border-radius: 12px;
+            margin: 0 12px;
             background-color: #fff;
             vertical-align: middle;
             justify-content: center;
             align-items: center;
             font-weight: bold;
             color: #2c3e50;
-        }
-
-        .drop-zone.hover { background-color: #e3f2fd; border-color: #3498db; }
-        .drop-zone.filled { border: 2px solid #2ecc71; background-color: #f0fff4; color: #27ae60; }
-        .drop-zone.wrong { border: 2px solid #e74c3c; background-color: #fff5f5; }
-
-        /* 挑戰區樣式 */
-        #challenge-section { display: none; margin-top: 40px; border-top: 4px double #e74c3c; padding-top: 20px; }
-        .challenge-title { color: #e74c3c; font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; }
-
-        .submit-btn {
-            background-color: #2ecc71; /* 你的原始綠色按鈕 */
-            color: white;
-            font-size: 1.4rem;
-            padding: 12px 40px;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            margin-top: 20px;
             transition: 0.2s;
         }
-        .submit-btn:hover { background-color: #27ae60; transform: scale(1.05); }
+
+        .drop-zone.hover { background-color: #e3f2fd; border-color: #3498db; transform: scale(1.05); }
+        .drop-zone.filled { border: 3px solid #2ecc71; background-color: #f0fff4; color: #27ae60; }
+        .drop-zone.wrong { border: 3px solid #e74c3c; background-color: #fff5f5; }
+
+        /* 挑戰區樣式 */
+        #challenge-section { display: none; margin-top: 50px; border-top: 5px double #e74c3c; padding-top: 30px; }
+        .challenge-title { color: #e74c3c; font-size: clamp(28px, 2.5vw, 40px); font-weight: bold; margin-bottom: 30px; }
+
+        .submit-btn {
+            background-color: #2ecc71; 
+            color: white;
+            font-size: clamp(24px, 2.2vw, 36px);
+            font-weight: bold;
+            padding: 15px 50px;
+            border: 4px solid #27ae60;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: 0.2s;
+            box-shadow: 0 8px 0 #27ae60;
+        }
+        .submit-btn:active { transform: translateY(8px); box-shadow: none; }
+
+        /* 手機與平板適應 */
+        @media (max-width: 768px) {
+            .header-area { flex-direction: column; gap: 20px; }
+            .question-row { line-height: 1.6; }
+            .drop-zone { margin: 10px 5px; } /* 窄螢幕時框框不要黏太緊 */
+        }
     </style>
 </head>
 <body>
 
 <div class="canvas-container">
-    <h1 id="lesson-title" style="color: #2c3e50; margin-bottom: 10px;">載入中...</h1>
-    <p style="color: #7f8c8d; margin-bottom: 30px;">請將語詞拖曳至正確的空格中</p>
+    <div class="header-area">
+        <h1 id="lesson-title">載入中...</h1>
+        <div class="header-btns">
+            <a href="index.html" class="back-btn home-btn">🏠 回總大廳</a>
+            <a href="#" id="back-btn" class="back-btn lesson-btn">🔙 回課程選單</a>
+        </div>
+    </div>
+    
+    <p class="subtitle">🎯 請將上方的語詞，拖曳至正確的空格中</p>
 
     <div class="word-bank" id="word-bank"></div>
 
@@ -119,11 +191,11 @@
         <div class="question-list" id="challenge-questions"></div>
     </div>
 
-    <button class="submit-btn" onclick="checkFinal()">完成練習</button>
+    <button class="submit-btn" onclick="checkFinal()">完成練習 ➡️</button>
 </div>
 
 <script>
-    // 1. 修正第一課數據
+    // 1. 修正第一課數據 (保留您原本客製化的資料)
     const customL1 = [
         { text: "藍藍的天空有白白的________。", answer: "雲朵" },
         { text: "小鳥拍拍________，飛得很高。", answer: "翅膀" },
@@ -138,11 +210,22 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const lessonId = urlParams.get('id') || "4"; 
+    
+    // 設定回課程選單的連結
+    document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
+
     let currentQuestions = (lessonId === "1") ? customL1 : allLessonsData[lessonId].level3;
 
     document.getElementById("lesson-title").innerText = (lessonId === "1") ? "第一課：最美的模樣" : allLessonsData[lessonId].title;
 
     function init() {
+        if (!currentQuestions || currentQuestions.length === 0) {
+            document.getElementById("basic-questions").innerHTML = "<h2 style='text-align:center; color:#e74c3c;'>此課程尚未建立題目喔！</h2>";
+            document.getElementById("word-bank").style.display = "none";
+            document.querySelector(".submit-btn").style.display = "none";
+            return;
+        }
+
         // 生成語詞庫
         const words = [...new Set(currentQuestions.map(q => q.answer))].sort(() => Math.random() - 0.5);
         const bank = document.getElementById("word-bank");
@@ -191,9 +274,9 @@
 
     function checkProgress() {
         const filled = document.querySelectorAll("#basic-questions .drop-zone.filled").length;
-        if (lessonId === "4" && filled === 9) {
+        // 如果是第四課且基礎9題完成，解鎖挑戰區
+        if (lessonId === "4" && filled === 9 && currentQuestions.length > 9) {
             document.getElementById("challenge-section").style.display = "block";
-            // 輕微變色提示進入挑戰
             document.querySelector(".canvas-container").style.border = "4px solid #e74c3c";
         }
     }
@@ -201,9 +284,10 @@
     function checkFinal() {
         const required = currentQuestions.length;
         const current = document.querySelectorAll(".drop-zone.filled").length;
-        if (current < 9) alert("加油！基礎組還沒完成喔！");
-        else {
-            alert("🎉 太棒了！全部完成！");
+        if (current < required) {
+            alert("加油！還有空格還沒填完喔！");
+        } else {
+            alert("🎉 太棒了！全部答對了！");
             window.location.href = `lesson.html?id=${lessonId}`;
         }
     }
