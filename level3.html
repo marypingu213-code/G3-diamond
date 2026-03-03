@@ -3,216 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第三關：語詞填充</title>
+    <title>第三關：語詞填充我最行</title>
     <script src="data.js"></script>
     <style>
         body {
             font-family: "Microsoft JhengHei", Arial, sans-serif;
             background-color: #F0F8FF;
-            transition: background-color 0.8s ease;
+            transition: background-color 1s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
             margin: 0;
-            min-height: 100vh;
         }
 
-        #game-container {
+        .main-container {
             background: white;
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            max-width: 650px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 900px;
             width: 95%;
             text-align: center;
-            margin-top: 50px;
         }
 
-        /* 挑戰版發光特效 */
-        .challenge-mode-container {
-            border: 5px solid #ff4d4d !important;
-            box-shadow: 0 0 25px rgba(255, 77, 77, 0.6) !important;
+        /* 上方語詞庫樣式 */
+        .word-bank {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            border: 2px dashed #2196F3;
         }
 
-        #status-badge {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 50px;
+        .word-item {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 20px;
             font-weight: bold;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            background: #e1f5fe;
-            color: #0288d1;
+            color: #1976D2;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
         }
 
-        .question-text {
-            font-size: 28px;
-            font-weight: bold;
-            line-height: 1.8;
-            margin: 30px 0;
-            color: #333;
+        /* 題目列表樣式 */
+        .question-list {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .question-row {
+            font-size: 22px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .answer-input {
-            font-size: 22px;
-            padding: 12px;
-            width: 80%;
-            border: 2px solid #ddd;
-            border-radius: 12px;
+            font-size: 20px;
+            padding: 5px 10px;
+            width: 120px;
+            margin: 0 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
             text-align: center;
-            margin-bottom: 20px;
+            transition: all 0.3s;
         }
 
-        .submit-btn {
-            font-size: 22px;
-            padding: 12px 45px;
+        .answer-input.correct {
+            border-color: #4CAF50;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* 挑戰版區塊預設隱藏 */
+        #challenge-section {
+            display: none;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 5px double #ff4d4d;
+        }
+
+        .challenge-header {
+            color: #d32f2f;
+            font-size: 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button#finish-btn {
+            font-size: 24px;
+            padding: 15px 50px;
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 0 #388E3C;
-        }
-
-        .submit-btn:active {
-            transform: translateY(4px);
-            box-shadow: none;
-        }
-
-        #feedback {
-            margin-top: 20px;
-            font-size: 22px;
-            font-weight: bold;
-            min-height: 35px;
-        }
-
-        /* 過場畫面樣式 */
-        #transition-screen {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 77, 77, 0.95);
-            color: white;
-            z-index: 100;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
         }
     </style>
 </head>
 <body>
 
-    <div id="transition-screen">
-        <h1 style="font-size: 3.5rem; margin-bottom: 10px;">🌱 基礎組完成！</h1>
-        <p style="font-size: 1.8rem; margin-bottom: 30px;">表現太棒了！準備好進入更難的「🔥 挑戰組」了嗎？</p>
-        <button onclick="startChallengeGroup()" style="background: white; color: #ff4d4d; font-size: 26px; padding: 15px 50px; border-radius: 15px; border:none; cursor:pointer; font-weight:bold;">開始挑戰！</button>
-    </div>
-
-    <div id="game-container">
-        <div id="status-badge">載入中...</div>
-        <h2 id="lesson-title" style="color: #5a4a42; margin-top: 0;">載入中...</h2>
+    <div class="main-container">
+        <h1 id="lesson-title">載入中...</h1>
         
-        <div class="question-text" id="question-display"></div>
+        <p style="font-size: 1.2rem; color: #666;">請參考提示語詞，在空格中輸入正確答案：</p>
 
-        <input type="text" id="user-answer" class="answer-input" placeholder="請輸入答案" autocomplete="off">
-        <br>
-        <button class="submit-btn" onclick="checkAnswer()">提交答案</button>
-        
-        <div id="feedback"></div>
+        <div class="word-bank" id="word-bank">
+            </div>
+
+        <div class="question-list" id="basic-questions">
+            </div>
+
+        <div id="challenge-section">
+            <div class="challenge-header">🔥 恭喜進階！挑戰組練習 🔥</div>
+            <div class="question-list" id="challenge-questions">
+                </div>
+        </div>
+
+        <button id="finish-btn" onclick="checkAllAndFinish()">完成練習</button>
     </div>
 
     <script>
-        // 1. 統一使用 'id' 作為參數名稱（與選單頁對接）
         const urlParams = new URLSearchParams(window.location.search);
-        let lessonId = urlParams.get('id'); 
-
-        // 預設保護機制：若沒抓到 ID 則預設為第四課
-        if (!lessonId) { lessonId = "4"; }
-
-        // 2. 抓取對應資料
+        let lessonId = urlParams.get('id') || "4"; 
         const lessonData = allLessonsData[lessonId];
-        const questions = lessonData.level3; 
-        let currentIndex = 0; 
+        const allQuestions = lessonData.level3;
 
         document.getElementById("lesson-title").innerText = lessonData.title;
 
-        function showQuestion() {
-            const badge = document.getElementById("status-badge");
-            const q = questions[currentIndex];
-
-            // 3. 題號顯示邏輯
-            if (lessonId === "4") {
-                // 第四課專屬：分基礎與挑戰 (18題)
-                if (currentIndex < 9) {
-                    badge.innerText = `🌱 基礎練習 (${currentIndex + 1}/9)`;
-                    badge.style.background = "#e1f5fe";
-                    badge.style.color = "#0288d1";
-                } else {
-                    badge.innerText = `🔥 挑戰練習 (${currentIndex - 8}/9)`;
-                    badge.style.background = "#ffebee";
-                    badge.style.color = "#d32f2f";
-                }
-            } else {
-                // 其他課次顯示一般進度
-                badge.innerText = `題目進度 (${currentIndex + 1}/${questions.length})`;
-            }
-
-            document.getElementById("question-display").innerText = q.text;
-            document.getElementById("user-answer").value = "";
-            document.getElementById("feedback").innerText = "";
-            document.getElementById("user-answer").focus();
+        // 1. 生成語詞庫 (去重處理)
+        function renderWordBank() {
+            const words = [...new Set(allQuestions.map(q => q.answer))];
+            const bank = document.getElementById("word-bank");
+            words.forEach(word => {
+                const div = document.createElement("div");
+                div.className = "word-item";
+                div.innerText = word;
+                bank.appendChild(div);
+            });
         }
 
-        function checkAnswer() {
-            const userAnswer = document.getElementById("user-answer").value.trim();
-            const correctAnswer = questions[currentIndex].answer;
+        // 2. 生成題目列表
+        function renderQuestions() {
+            const basicContainer = document.getElementById("basic-questions");
+            const challengeContainer = document.getElementById("challenge-questions");
+
+            allQuestions.forEach((q, index) => {
+                const row = document.createElement("div");
+                row.className = "question-row";
+                
+                // 將題目文字中的 ________ 替換成 input 框
+                const parts = q.text.split("________");
+                row.innerHTML = `
+                    ${index + 1}. ${parts[0]} 
+                    <input type="text" class="answer-input" data-answer="${q.answer}" oninput="checkSingle(this)"> 
+                    ${parts[1] || ""}
+                    <span class="status-icon" style="margin-left:10px;"></span>
+                `;
+
+                // 前 9 題放基礎，之後放挑戰
+                if (index < 9) {
+                    basicContainer.appendChild(row);
+                } else {
+                    challengeContainer.appendChild(row);
+                }
+            });
+        }
+
+        // 3. 即時檢查單題答案
+        function checkSingle(input) {
+            const userAnswer = input.value.trim();
+            const correctAnswer = input.getAttribute("data-answer");
+            const icon = input.nextElementSibling;
 
             if (userAnswer === correctAnswer) {
-                document.getElementById("feedback").style.color = "green";
-                document.getElementById("feedback").innerText = "✔ 太棒了！答對了！";
-                
-                setTimeout(() => {
-                    currentIndex++;
-                    
-                    // 🌟 關鍵：當第四課做完第 9 題時觸發過場
-                    if (lessonId === "4" && currentIndex === 9) {
-                        showTransition();
-                    } else if (currentIndex < questions.length) {
-                        showQuestion();
-                    } else {
-                        alert("🎉 恭喜！你完成了本課所有的練習！");
-                        window.location.href = `lesson.html?id=${lessonId}`;
-                    }
-                }, 800);
-            } else {
-                document.getElementById("feedback").style.color = "red";
-                document.getElementById("feedback").innerText = "❌ 再試試看喔！";
+                input.classList.add("correct");
+                input.disabled = true; // 答對就鎖定
+                icon.innerText = "✅";
+                checkProgress(); // 檢查是否達標進階
             }
         }
 
-        function showTransition() {
-            document.getElementById("transition-screen").style.display = "flex";
+        // 4. 檢查進度：是否完成前 9 題
+        let challengeUnlocked = false;
+        function checkProgress() {
+            const basicInputs = document.querySelectorAll("#basic-questions .answer-input");
+            const correctCount = Array.from(basicInputs).filter(input => input.classList.contains("correct")).length;
+
+            if (correctCount === 9 && !challengeUnlocked) {
+                challengeUnlocked = true;
+                unlockChallenge();
+            }
         }
 
-        function startChallengeGroup() {
-            document.getElementById("transition-screen").style.display = "none";
-            
-            // 視覺切換效果
+        // 5. 開啟挑戰組
+        function unlockChallenge() {
+            alert("🌟 太厲害了！前 9 題全部答對！\n下方已開啟「🔥 挑戰組練習」，試試看吧！");
             document.body.style.backgroundColor = "#FFF0F0"; 
-            document.getElementById("game-container").classList.add("challenge-mode-container");
-            
-            showQuestion();
+            document.getElementById("challenge-section").style.display = "block";
+            // 捲動到挑戰區
+            document.getElementById("challenge-section").scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 初始啟動
-        showQuestion();
+        function checkAllAndFinish() {
+            const allInputs = document.querySelectorAll(".answer-input:not([disabled])");
+            if (allInputs.length > 0 && !challengeUnlocked) {
+                alert("加油！基礎組還有題目沒完成喔！");
+            } else {
+                alert("🎉 恭喜完成練習！");
+                window.location.href = `lesson.html?id=${lessonId}`;
+            }
+        }
 
-        // 支援 Enter 鍵提交
-        document.getElementById("user-answer").addEventListener("keypress", function(e) {
-            if (e.key === "Enter") checkAnswer();
-        });
+        // 初始化
+        renderWordBank();
+        renderQuestions();
     </script>
 </body>
 </html>
