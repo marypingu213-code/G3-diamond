@@ -6,43 +6,211 @@
     <title>第一關：部件拼拼樂 (高對比深色版)</title>
     <script src="data.js"></script>
     <style>
-        body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #000000; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-        .canvas-16-9 { width: 100%; max-width: 1400px; min-height: 85vh; background-color: #1a1a1a; border-radius: 30px; box-shadow: 0 15px 35px rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; padding: 3% 3% 4% 3%; box-sizing: border-box; position: relative; border: 2px solid #333; }
-        .header-area { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2%; }
-        h1 { color: #FFD700; font-size: 28px; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        /* 讓 body 直接成為黑底，徹底滿版 */
+        body { 
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; 
+            background-color: #1a1a1a; /* 深鐵灰色，保護眼睛 */
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            box-sizing: border-box; 
+            /* 拿掉邊框，直接滿版 */
+        }
         
-        /* 🌟 新增：將右上角按鈕包起來，讓它們並排顯示 */
-        .header-btns { display: flex; gap: 10px; z-index: 50; }
+        .main-container { 
+            width: 100%; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 30px 4%; 
+            box-sizing: border-box; 
+        }
+
+        .header-area { 
+            width: 100%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 30px; 
+        }
         
-        .back-btn { background-color: #333333; color: #ffffff; text-decoration: none; font-size: 18px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); transition: 0.2s; border: 1px solid #555; display: flex; align-items: center;}
+        h1 { 
+            color: #FFD700; 
+            font-size: clamp(30px, 3.5vw, 50px); 
+            margin: 0; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); 
+        }
+        
+        .header-btns { display: flex; gap: 15px; z-index: 50; }
+        
+        .back-btn { 
+            background-color: #333333; 
+            color: #ffffff; 
+            text-decoration: none; 
+            font-size: clamp(16px, 1.5vw, 24px); 
+            font-weight: bold; 
+            padding: 12px 25px; 
+            border-radius: 50px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5); 
+            transition: 0.2s; 
+            border: 2px solid #555; 
+            display: flex; 
+            align-items: center;
+        }
         .back-btn:hover { background-color: #555555; transform: scale(1.05); }
         
-        /* 🌟 新增：總大廳按鈕的專屬藍色風格 */
-        .home-btn { background-color: #1565c0; border: 1px solid #0d47a1; }
+        .home-btn { background-color: #1565c0; border: 2px solid #0d47a1; }
         .home-btn:hover { background-color: #0d47a1; }
 
-        .target-hint { font-size: 24px; color: #ffffff; background: #222222; padding: 8px 30px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); display: inline-block; margin-bottom: 3%; border: 1px solid #444; }
-        #target-word { color: #ff9800; font-weight: bold; }
-        .game-wrapper { display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 3vw; width: 100%; flex-grow: 1; }
-        .box { width: 350px; height: 380px; background: #ffffff; border-radius: 20px; position: relative; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
-        .parts-pool { border: 4px dashed #888; } .drop-zone { border: 4px solid #ff5252; }
-        .box-title { width: 100%; padding: 10px 0; text-align: center; font-size: 20px; font-weight: bold; position: absolute; top: 0; left: 0; z-index: 5; pointer-events: none; }
-        .pool-title { background: #444444; color: #ffffff; border-top-left-radius: 15px; border-top-right-radius: 15px; } 
-        .zone-title { background: #d32f2f; color: #ffffff; border-top-left-radius: 15px; border-top-right-radius: 15px; }
-        #pool { display: flex; flex-wrap: wrap; align-content: flex-start; justify-content: center; padding-top: 60px; height: 100%; box-sizing: border-box; }
+        .target-hint { 
+            font-size: clamp(28px, 3vw, 40px); 
+            color: #ffffff; 
+            background: #222222; 
+            padding: 15px 40px; 
+            border-radius: 50px; 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.5); 
+            display: inline-block; 
+            margin-bottom: 40px; 
+            border: 2px solid #444; 
+        }
+        #target-word { color: #ff9800; font-weight: bold; font-size: 1.2em;}
+
+        /* 遊戲區域放大，間距拉開 */
+        .game-wrapper { 
+            display: flex; 
+            justify-content: center; 
+            align-items: stretch; /* 讓兩個框框一樣高 */
+            flex-wrap: wrap; 
+            gap: 5vw; 
+            width: 100%; 
+            max-width: 1600px;
+            flex-grow: 1; 
+        }
         
-        .part-img { width: 130px; height: 130px; object-fit: contain; cursor: grab; transition: transform 0.1s ease; z-index: 10; touch-action: none; }
-        #pool .part-img { position: relative !important; left: auto !important; top: auto !important; margin: 8px; background-color: #fdfdfd; border: 2px solid #eaeaea; border-radius: 12px; }
-        .part-img:active { cursor: grabbing; transform: scale(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        #zone-guide { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: #cccccc; font-weight: bold; pointer-events: none; width: 80%; text-align: center; }
-        .status-area { min-height: 80px; display: flex; justify-content: center; align-items: center; gap: 2vw; margin-top: 20px; width: 100%; }
-        #message { font-size: 24px; color: #4CAF50; font-weight: bold; margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
-        #next-btn { font-size: 24px; padding: 15px 40px; background-color: #4CAF50; color: white; border: none; border-radius: 50px; cursor: pointer; display: none; box-shadow: 0 6px 0 #2e7d32; font-weight: bold; }
-        #next-btn:active { transform: translateY(6px); box-shadow: none; }
+        /* 巨無霸拼圖框 */
+        .box { 
+            /* 寬度隨螢幕縮放，但最小不低於 350px，最大可達 500px 以上 */
+            flex: 1;
+            min-width: 350px;
+            max-width: 600px;
+            /* 讓高度維持正方形比例，或至少有 500px 高 */
+            min-height: 500px;
+            background: #ffffff; 
+            border-radius: 25px; 
+            position: relative; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+        }
+        
+        .parts-pool { border: 6px dashed #888; background-color: #f8f9fa;} 
+        .drop-zone { border: 6px solid #ff5252; }
+        
+        .box-title { 
+            width: 100%; 
+            padding: 15px 0; 
+            text-align: center; 
+            font-size: clamp(24px, 2vw, 30px); 
+            font-weight: bold; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            z-index: 5; 
+            pointer-events: none; 
+        }
+        .pool-title { background: #444444; color: #ffffff; border-top-left-radius: 18px; border-top-right-radius: 18px; } 
+        .zone-title { background: #d32f2f; color: #ffffff; border-top-left-radius: 18px; border-top-right-radius: 18px; }
+        
+        #pool { 
+            display: flex; 
+            flex-wrap: wrap; 
+            align-content: flex-start; 
+            justify-content: center; 
+            padding-top: 80px; 
+            height: 100%; 
+            box-sizing: border-box; 
+            gap: 15px; /* 部件之間的間距加大 */
+        }
+        
+        /* 部件圖片基礎大小放大，適應大框框 */
+        .part-img { 
+            /* 基礎寬高放大到 180px (原本是130px) */
+            width: 180px; 
+            height: 180px; 
+            object-fit: contain; 
+            cursor: grab; 
+            transition: transform 0.1s ease; 
+            z-index: 10; 
+            touch-action: none; 
+        }
+        #pool .part-img { 
+            position: relative !important; 
+            left: auto !important; 
+            top: auto !important; 
+            margin: 10px; 
+            background-color: #ffffff; 
+            border: 3px solid #eaeaea; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .part-img:active { cursor: grabbing; transform: scale(1.15); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        
+        #zone-guide { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            font-size: clamp(30px, 3vw, 45px); 
+            color: #cccccc; 
+            font-weight: bold; 
+            pointer-events: none; 
+            width: 80%; 
+            text-align: center; 
+        }
+        
+        .status-area { 
+            min-height: 100px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 3vw; 
+            margin-top: 40px; 
+            width: 100%; 
+        }
+        
+        #message { 
+            font-size: clamp(30px, 3vw, 45px); 
+            color: #4CAF50; 
+            font-weight: bold; 
+            margin: 0; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); 
+        }
+        
+        #next-btn { 
+            font-size: clamp(24px, 2vw, 36px); 
+            padding: 20px 50px; 
+            background-color: #4CAF50; 
+            color: white; 
+            border: 4px solid #388E3C; 
+            border-radius: 60px; 
+            cursor: pointer; 
+            display: none; 
+            box-shadow: 0 8px 0 #2e7d32; 
+            font-weight: bold; 
+            transition: 0.1s;
+        }
+        #next-btn:active { transform: translateY(8px); box-shadow: 0 0 0 #2e7d32; }
+
+        @media (max-width: 768px) {
+            .header-area { flex-direction: column; gap: 20px; }
+            .box { min-height: 400px; } /* 手機版稍微縮小高度 */
+            #pool { padding-top: 70px; }
+        }
     </style>
 </head>
 <body>
-    <div class="canvas-16-9">
+    <div class="main-container">
         <div class="header-area">
             <h1>🧩 第一關：部件拼拼樂</h1>
             <div class="header-btns">
@@ -66,6 +234,9 @@
 
         let gameWords = [], currentIdx = 0, placedCount = 0;
         let activePart = null, offsetX = 0, offsetY = 0;
+        
+        // 基礎部件大小 (配合 CSS 修改)
+        const BASE_PART_SIZE = 180; 
 
         function shuffle(array) {
             let currentIndex = array.length, randomIndex;
@@ -93,8 +264,9 @@
                 img.draggable = false;
                 
                 let partIdx = data.parts.indexOf(src);
-                if (data.pos[partIdx].scale) {
-                    let newSize = 130 * data.pos[partIdx].scale;
+                // 根據新版的 BASE_PART_SIZE 進行縮放
+                if (data.pos[partIdx] && data.pos[partIdx].scale) {
+                    let newSize = BASE_PART_SIZE * data.pos[partIdx].scale;
                     img.style.width = newSize + 'px';
                     img.style.height = newSize + 'px';
                 }
@@ -199,7 +371,7 @@
                 document.getElementById('message').style.color = "#4CAF50";
                 document.getElementById('message').innerText = "🎉 恭喜！本關卡挑戰成功！"; 
                 let btn = document.getElementById('next-btn');
-                btn.innerText = '🔙 回課程選單'; // 這裡也貼心改為回課程選單
+                btn.innerText = '🔙 回課程選單';
                 btn.onclick = () => { window.location.href = `lesson.html?id=${lessonId}`; };
             } 
         }
