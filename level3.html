@@ -8,8 +8,8 @@
     <style>
         body {
             font-family: "Microsoft JhengHei", Arial, sans-serif;
-            background-color: #F0F8FF; /* 基礎版：淡藍色 */
-            transition: background-color 1s ease;
+            background-color: #F0F8FF; /* 基礎版底色 */
+            transition: background-color 0.8s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -27,10 +27,9 @@
             width: 90%;
             text-align: center;
             margin-top: 50px;
-            position: relative;
         }
 
-        /* 挑戰版發光特效樣式 */
+        /* 挑戰版發光特效 */
         .challenge-mode-container {
             border: 5px solid #ff4d4d !important;
             box-shadow: 0 0 25px rgba(255, 77, 77, 0.6) !important;
@@ -72,21 +71,16 @@
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .submit-btn:active {
-            transform: scale(0.95);
         }
 
         #feedback {
             margin-top: 20px;
             font-size: 20px;
             font-weight: bold;
-            height: 30px;
+            min-height: 30px;
         }
 
-        /* 過場畫面樣式 */
+        /* 過場畫面 */
         #transition-screen {
             display: none;
             position: fixed;
@@ -105,12 +99,12 @@
 
     <div id="transition-screen">
         <h1 style="font-size: 3rem;">🌱 基礎組完成！</h1>
-        <p style="font-size: 1.5rem;">表現太棒了！準備好進入「🔥 挑戰組」了嗎？</p>
-        <button onclick="startChallengeGroup()" style="background: white; color: #ff4d4d; font-weight: bold;">開始挑戰！</button>
+        <p style="font-size: 1.5rem;">你太厲害了！接下來要進入難度更高的「🔥 挑戰組」囉！</p>
+        <button onclick="startChallengeGroup()" style="background: white; color: #ff4d4d; font-size: 24px; padding: 15px 40px; border-radius: 15px; border:none; cursor:pointer; font-weight:bold;">點我開始挑戰！</button>
     </div>
 
     <div id="game-container">
-        <div id="status-badge">🌱 基礎練習 (1/9)</div>
+        <div id="status-badge">🌱 基礎練習</div>
         <h2 id="lesson-title">載入中...</h2>
         
         <div class="question-text" id="question-display"></div>
@@ -123,26 +117,27 @@
     </div>
 
     <script>
+        // 設定目前的課次 (如果你是從選單進來的，通常會帶參數，這裡預設為第四課)
         const urlParams = new URLSearchParams(window.location.search);
         const lessonId = urlParams.get('lesson') || "4"; 
         
-        let currentIndex = 0; // 目前題號索引
+        let currentIndex = 0; 
         const lessonData = allLessonsData[lessonId];
-        const questions = lessonData.level3; // 18題都在這
+        const questions = lessonData.level3; // 這裡會讀到你在 data.js 設定的 18 題
 
         document.getElementById("lesson-title").innerText = lessonData.title;
 
         function showQuestion() {
             const badge = document.getElementById("status-badge");
-            
-            // 判斷題號顯示文字 (1/9)
+            const q = questions[currentIndex];
+
+            // 更新上方標籤進度
             if (currentIndex < 9) {
                 badge.innerText = `🌱 基礎練習 (${currentIndex + 1}/9)`;
             } else {
                 badge.innerText = `🔥 挑戰練習 (${currentIndex - 8}/9)`;
             }
 
-            const q = questions[currentIndex];
             document.getElementById("question-display").innerText = q.text;
             document.getElementById("user-answer").value = "";
             document.getElementById("feedback").innerText = "";
@@ -160,13 +155,13 @@
                 setTimeout(() => {
                     currentIndex++;
                     
-                    // 🌟 關鍵邏輯：當做完第 9 題時，暫停並顯示過場畫面
+                    // 🌟 關鍵邏輯：第 9 題做完時 (index 變成 9) 跳出過場
                     if (currentIndex === 9) {
                         showTransition();
                     } else if (currentIndex < questions.length) {
                         showQuestion();
                     } else {
-                        alert("🎉 太厲害了！你完成了所有基礎與挑戰練習！");
+                        alert("🎉 恭喜！你完成了本課所有的練習！");
                         window.location.href = "lesson.html";
                     }
                 }, 800);
@@ -176,28 +171,26 @@
             }
         }
 
-        // 顯示過場畫面
         function showTransition() {
             document.getElementById("transition-screen").style.display = "flex";
         }
 
-        // 從過場畫面進入挑戰組
         function startChallengeGroup() {
             document.getElementById("transition-screen").style.display = "none";
             
-            // 切換挑戰組視覺特效
+            // 進入挑戰組的視覺變化
             document.body.style.backgroundColor = "#FFF0F0"; // 背景變色
             document.getElementById("game-container").classList.add("challenge-mode-container");
             document.getElementById("status-badge").style.background = "#ffebee";
             document.getElementById("status-badge").style.color = "#d32f2f";
             
-            showQuestion(); // 顯示第 10 題
+            showQuestion();
         }
 
-        // 初始載入
+        // 初始執行
         showQuestion();
 
-        // 支援按下 Enter 鍵提交
+        // 支援 Enter 鍵
         document.getElementById("user-answer").addEventListener("keypress", function(e) {
             if (e.key === "Enter") checkAnswer();
         });
