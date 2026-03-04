@@ -6,102 +6,123 @@
     <title>特教國語遊戲網</title>
     <script src="data.js"></script>
     <style>
-        /* 讓 body 直接套用米黃色背景，不再有雙層背景 */
+        /* 恢復外層的淺灰藍色，作為大螢幕的邊界緩衝 */
         body { 
             font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; 
-            background-color: #fdf5e6; 
+            background-color: #eef2f5; 
             margin: 0; 
-            padding: 0;
+            padding: 2vh 2vw; /* 讓四周保留一點點好看的邊距 */
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
             min-height: 100vh; 
+            box-sizing: border-box;
         }
 
-        /* 拿掉最大寬度限制、拿掉圓角、拿掉陰影，徹底 100% 滿版 */
+        /* 巨無霸遊戲底板：佔據 95% 以上畫面，但有明確的圓角邊界 */
         .main-container { 
             position: relative; 
             width: 100%; 
-            min-height: 100vh; 
+            max-width: 1600px; /* 放到超大 */
+            min-height: 92vh; /* 高度幾乎撐滿 */
+            background-color: #fdf5e6; /* 溫暖的米黃底色 */
+            border-radius: 40px; /* 巨大的圓角顯得親切 */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15); /* 增加立體感 */
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 40px 3%; 
+            padding: 50px 3%; 
             box-sizing: border-box; 
         }
 
         .header-area { 
             text-align: center; 
-            margin-top: 20px;
-            margin-bottom: 40px; 
+            margin-top: 10px;
+            margin-bottom: 50px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
         }
 
+        /* 標題字體變得更巨大 */
         h1 { 
             color: #5a4a42; 
-            font-size: clamp(36px, 4.5vw, 70px); 
-            margin: 0 0 15px 0; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1); 
+            font-size: clamp(40px, 5vw, 80px); 
+            margin: 0 0 20px 0; 
+            text-shadow: 2px 3px 5px rgba(0,0,0,0.15); 
         }
         
         .subtitle { 
-            font-size: clamp(20px, 2.5vw, 32px); 
+            font-size: clamp(22px, 2.5vw, 36px); 
             color: #7b6855; 
             margin: 0; 
+            font-weight: bold;
         }
 
         .qr-box { 
             position: absolute; 
-            top: 30px; 
-            right: 40px; 
+            top: 40px; 
+            right: 50px; 
             background: #fff; 
-            padding: 15px; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            padding: 20px; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1); 
             text-align: center; 
-            border: 3px dashed #f39c12; 
+            border: 4px dashed #f39c12; 
         }
 
-        .qr-box p { margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #e74c3c; }
-        .qr-box img { width: 120px; height: 120px; }
+        .qr-box p { margin: 0 0 10px 0; font-size: 18px; font-weight: bold; color: #e74c3c; }
+        .qr-box img { width: 140px; height: 140px; } /* QR Code 也放大 */
 
-        /* 網格自動延伸填滿 */
+        /* 按鈕網格：按鈕變更寬、間距變更大，完美填滿空間 */
         .lesson-list { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 35px; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 40px; /* 按鈕之間的間距拉大，消除擁擠感 */
             width: 100%; 
-            max-width: 1600px; /* 放寬按鈕區的最大延伸範圍 */
-            padding: 20px; 
+            max-width: 1500px; 
+            padding: 10px 30px; 
             box-sizing: border-box; 
+            flex-grow: 1;
+            align-content: start;
         }
 
         .lesson-card { 
             background-color: #ffffff; 
-            border-radius: 20px; 
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08); 
+            border-radius: 25px; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08); 
             text-decoration: none; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s; 
-            border: 4px solid #3498db; 
-            min-height: 140px; 
+            border: 5px solid #3498db; /* 邊框加粗 */
+            min-height: 160px; /* 按鈕變高、變胖 */
             box-sizing: border-box; 
-            padding: 15px 20px; 
+            padding: 20px; 
         }
 
         .lesson-card:hover { 
-            transform: translateY(-8px); 
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+            transform: translateY(-10px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
             background-color: #eafaf1; 
             border-color: #2ecc71; 
         }
 
-        .lesson-title { font-size: clamp(22px, 2vw, 30px); font-weight: bold; color: #2c3e50; text-align: center; line-height: 1.4; }
+        /* 課文標題字體放大 */
+        .lesson-title { 
+            font-size: clamp(26px, 2.2vw, 36px); 
+            font-weight: bold; 
+            color: #2c3e50; 
+            text-align: center; 
+            line-height: 1.5; 
+        }
 
         @media (max-width: 768px) {
             .qr-box { display: none; }
-            .header-area { margin-top: 10px; }
+            .header-area { margin-top: 10px; margin-bottom: 30px;}
+            .main-container { padding: 30px 4%; }
+            .lesson-card { min-height: 120px; }
         }
     </style>
 </head>
