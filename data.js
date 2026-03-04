@@ -46,7 +46,7 @@ const allLessonsData = {
             { word: "慕", parts: ["images/L2/筆順-慕-部件-1.png", "images/L2/筆順-慕-部件-2.png", "images/L2/筆順-慕-部件-3.png", "images/L2/筆順-慕-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
             { word: "娃", parts: ["images/L2/筆順-娃-部件-1.png", "images/L2/筆順-娃-部件-2.png", "images/L2/筆順-娃-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
             { word: "捲", parts: ["images/L2/筆順-捲-部件-1.png", "images/L2/筆順-捲-部件-2.png", "images/L2/筆順-捲-部件-3.png", "images/L2/筆順-捲-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
-            { word: "躺", parts: ["images/L2/筆順-躺-部件-1.png", "images/L2/筆順-躺-部件-2.png", "images/L2/筆順-躺-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "躺", parts: ["images/L2/筆順-躺-部件-1.png", "images/L2/筆順-躺-部件-2.png", "images/L2/筆順-躺-部件-3.png""images/L2/筆順-躺-部件-4.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
             { word: "裙", parts: ["images/L2/筆順-裙-部件-1.png", "images/L2/筆順-裙-部件-2.png", "images/L2/筆順-裙-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
             { word: "擺", parts: ["images/L2/筆順-擺-部件-1.png", "images/L2/筆順-擺-部件-2.png", "images/L2/筆順-擺-部件-3.png", "images/L2/筆順-擺-部件-4.png", "images/L2/筆順-擺-部件-5.png", "images/L2/筆順-擺-部件-6.png"], pos: [{x: 40, y: 180}, {x: 80, y: 180}, {x: 120, y: 180}, {x: 160, y: 180}, {x: 200, y: 180}, {x: 240, y: 180}] },
             { word: "參", parts: ["images/L2/筆順-參-部件-1.png", "images/L2/筆順-參-部件-2.png", "images/L2/筆順-參-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
