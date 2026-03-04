@@ -46,7 +46,7 @@ const allLessonsData = {
             { word: "慕", parts: ["images/L2/筆順-慕-部件-1.png", "images/L2/筆順-慕-部件-2.png", "images/L2/筆順-慕-部件-3.png", "images/L2/筆順-慕-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
             { word: "娃", parts: ["images/L2/筆順-娃-部件-1.png", "images/L2/筆順-娃-部件-2.png", "images/L2/筆順-娃-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
             { word: "捲", parts: ["images/L2/筆順-捲-部件-1.png", "images/L2/筆順-捲-部件-2.png", "images/L2/筆順-捲-部件-3.png", "images/L2/筆順-捲-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
-            { word: "躺", parts: ["images/L2/筆順-躺-部件-1.png", "images/L2/筆順-躺-部件-2.png", "images/L2/筆順-躺-部件-3.png", "images/L2/筆順-躺-部件-4.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "躺", parts: ["images/L2/筆順-躺-部件-1.png", "images/L2/筆順-躺-部件-2.png", "images/L2/筆順-躺-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
             { word: "裙", parts: ["images/L2/筆順-裙-部件-1.png", "images/L2/筆順-裙-部件-2.png", "images/L2/筆順-裙-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
             { word: "擺", parts: ["images/L2/筆順-擺-部件-1.png", "images/L2/筆順-擺-部件-2.png", "images/L2/筆順-擺-部件-3.png", "images/L2/筆順-擺-部件-4.png", "images/L2/筆順-擺-部件-5.png", "images/L2/筆順-擺-部件-6.png"], pos: [{x: 40, y: 180}, {x: 80, y: 180}, {x: 120, y: 180}, {x: 160, y: 180}, {x: 200, y: 180}, {x: 240, y: 180}] },
             { word: "參", parts: ["images/L2/筆順-參-部件-1.png", "images/L2/筆順-參-部件-2.png", "images/L2/筆順-參-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
@@ -54,6 +54,7 @@ const allLessonsData = {
         ], 
         level2: [], 
         level3: [
+            // --- 基礎版 (簡單版) 題目 (0-8) ---
             { text: "看到同學有新玩具，我好________他。", answer: "羨慕" },
             { text: "妹妹轉一個圈，漂亮的________也跟著動。", answer: "裙擺" },
             { text: "我太累了，想在沙發上________休息。", answer: "躺下" },
@@ -186,7 +187,7 @@ const allLessonsData = {
             { word: "巨", parts: ["images/L6/筆順-巨-部件-1.png", "images/L6/筆順-巨-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180, scale: 0.6}] },
             { word: "引", parts: ["images/L6/筆順-引-部件-1.png", "images/L6/筆順-引-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
             { word: "觀", parts: ["images/L6/筆順-觀-部件-1.png", "images/L6/筆順-觀-部件-2.png", "images/L6/筆順-觀-部件-3.png", "images/L6/筆順-觀-部件-4.png", "images/L6/筆順-觀-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180, scale: 0.5}, {x: 130, y: 180, scale: 0.5}, {x: 170, y: 180, scale: 0.8}, {x: 210, y: 180, scale: 1.3}] },
-            { word: "咦", parts: ["images/L6/筆順-咦-部件-1.png", "images/L6/筆順-咦-部件-2.png", "images/L6/筆順-咦-部件-3.png", "images/L6/筆順-咦-部件-4.png"], pos: [{x: 90, y: 130, scale: 0.6}, {x: 150, y: 130, scale: 0.6}, {x: 90, y: 180, scale: 0.6}, {x: 150, y: 180}] },
+            { word: "咦", parts: ["images/L6/筆順-咦-部件-1.png", "images/L6/筆順-咦-部件-2.png", "images/L6/筆順-咦-部件-3.png", "images/L6/筆順-咦-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130, scale: 0.6}, {x: 90, y: 180, scale: 0.6}, {x: 150, y: 180}] },
             { word: "松", parts: ["images/L6/筆順-松-部件-1.png", "images/L6/筆順-松-部件-2.png", "images/L6/筆順-松-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180, scale: 0.5}] },
             { word: "鼠", parts: ["images/L6/筆順-鼠-部件-1.png", "images/L6/筆順-鼠-部件-2.png", "images/L6/筆順-鼠-部件-3.png"], pos: [{x: 70, y: 180, scale: 1.4}, {x: 120, y: 180}, {x: 170, y: 180}] },
             { word: "混", parts: ["images/L6/筆順-混-部件-1.png", "images/L6/筆順-混-部件-2.png", "images/L6/筆順-混-部件-3.png", "images/L6/筆順-混-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130, scale: 0.6}, {x: 90, y: 180, scale: 0.6}, {x: 150, y: 180, scale: 0.6}] }
