@@ -6,7 +6,7 @@
     <title>第一關：部件拼拼樂 (高對比深色版)</title>
     <script src="data.js"></script>
     <style>
-        /* 讓 body 直接成為黑底，徹底滿版 */
+        /* 讓 body 直接成為黑底，徹底滿版，拿掉多餘的邊界 */
         body { 
             font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; 
             background-color: #1a1a1a; /* 深鐵灰色，保護眼睛 */
@@ -16,9 +16,9 @@
             flex-direction: column; 
             min-height: 100vh; 
             box-sizing: border-box; 
-            /* 拿掉邊框，直接滿版 */
         }
         
+        /* 取代原本的 canvas-16-9，變為自由彈性的大容器 */
         .main-container { 
             width: 100%; 
             flex-grow: 1; 
@@ -46,6 +46,7 @@
         
         .header-btns { display: flex; gap: 15px; z-index: 50; }
         
+        /* 導覽按鈕放大 */
         .back-btn { 
             background-color: #333333; 
             color: #ffffff; 
@@ -65,6 +66,7 @@
         .home-btn { background-color: #1565c0; border: 2px solid #0d47a1; }
         .home-btn:hover { background-color: #0d47a1; }
 
+        /* 目標字提示放大 */
         .target-hint { 
             font-size: clamp(28px, 3vw, 40px); 
             color: #ffffff; 
@@ -78,7 +80,7 @@
         }
         #target-word { color: #ff9800; font-weight: bold; font-size: 1.2em;}
 
-        /* 遊戲區域放大，間距拉開 */
+        /* 遊戲區域放大，間距拉開，讓雙框盡情展開 */
         .game-wrapper { 
             display: flex; 
             justify-content: center; 
@@ -92,12 +94,10 @@
         
         /* 巨無霸拼圖框 */
         .box { 
-            /* 寬度隨螢幕縮放，但最小不低於 350px，最大可達 500px 以上 */
             flex: 1;
             min-width: 350px;
-            max-width: 600px;
-            /* 讓高度維持正方形比例，或至少有 500px 高 */
-            min-height: 500px;
+            max-width: 600px; /* 寬度上限大幅放寬 */
+            min-height: 500px; /* 高度變高 */
             background: #ffffff; 
             border-radius: 25px; 
             position: relative; 
@@ -133,9 +133,8 @@
             gap: 15px; /* 部件之間的間距加大 */
         }
         
-        /* 部件圖片基礎大小放大，適應大框框 */
+        /* 部件圖片基礎大小放大 (從130px升級為180px) */
         .part-img { 
-            /* 基礎寬高放大到 180px (原本是130px) */
             width: 180px; 
             height: 180px; 
             object-fit: contain; 
@@ -204,7 +203,7 @@
 
         @media (max-width: 768px) {
             .header-area { flex-direction: column; gap: 20px; }
-            .box { min-height: 400px; } /* 手機版稍微縮小高度 */
+            .box { min-height: 400px; } 
             #pool { padding-top: 70px; }
         }
     </style>
@@ -235,7 +234,7 @@
         let gameWords = [], currentIdx = 0, placedCount = 0;
         let activePart = null, offsetX = 0, offsetY = 0;
         
-        // 基礎部件大小 (配合 CSS 修改)
+        // 🌟 這裡配合 CSS 放大，把基礎大小提升到了 180
         const BASE_PART_SIZE = 180; 
 
         function shuffle(array) {
@@ -264,7 +263,7 @@
                 img.draggable = false;
                 
                 let partIdx = data.parts.indexOf(src);
-                // 根據新版的 BASE_PART_SIZE 進行縮放
+                // 根據放大後的 BASE_PART_SIZE 計算比例
                 if (data.pos[partIdx] && data.pos[partIdx].scale) {
                     let newSize = BASE_PART_SIZE * data.pos[partIdx].scale;
                     img.style.width = newSize + 'px';
