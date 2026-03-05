@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>語詞配對大挑戰</title>
+    <title>第四關：語詞配對大挑戰</title>
+    <script src="data.js"></script>
     <style>
         :root {
-            /* 優先使用華康寶風體W4(P) */
-            --font-family: "華康寶風體W4(P)", "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            --font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
             --primary-color: #2196F3;
             --match-color: #4CAF50;
         }
@@ -16,63 +16,97 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #f0f4c3;
             font-family: var(--font-family);
-            overflow: hidden;
-        }
-
-        /* 16:9 遊戲畫布 */
-        .game-screen {
-            width: 95vw;
-            height: 53.43vw;
-            max-height: 85vh;
-            max-width: 151vh;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
             padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(6, 1fr); /* 6行 x 3列，共18張牌 */
-            grid-template-rows: repeat(3, 1fr);
-            gap: 15px;
             box-sizing: border-box;
         }
 
-        /* 頂部資訊欄 */
-        .header {
-            width: 95vw;
-            max-width: 151vh;
+        .header-area {
+            width: 100%;
+            max-width: 1400px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .header-btns { display: flex; gap: 15px; }
+
+        .nav-btn {
+            background-color: #fff;
+            color: #558b2f;
+            text-decoration: none;
+            font-size: clamp(16px, 1.5vw, 24px);
             font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: 0.2s;
+            border: 2px solid #cddc39;
+        }
+        .nav-btn:hover { background-color: #f9fbe7; transform: scale(1.05); }
+
+        .title-box {
+            text-align: center;
             color: #558b2f;
         }
+        .title-box h1 { margin: 0; font-size: clamp(28px, 3vw, 40px); }
+        .title-box p { margin: 5px 0 0 0; font-size: clamp(18px, 2vw, 24px); font-weight: bold; }
 
-        /* 卡片容器 */
-        .card {
-            perspective: 1000px;
+        #btn-restart {
+            padding: 12px 25px;
+            font-size: clamp(18px, 2vw, 24px);
+            background: #689f38;
+            color: white;
+            border: none;
+            border-radius: 50px;
             cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        #btn-restart:hover { background: #558b2f; transform: scale(1.05); }
+
+        .game-screen {
+            width: 100%;
+            max-width: 1500px;
+            flex-grow: 1;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            display: grid;
+            /* 預設 6行 x 3列 (共18張牌，9組配對) */
+            grid-template-columns: repeat(6, 1fr); 
+            grid-template-rows: repeat(3, 1fr);
+            gap: 20px;
+            box-sizing: border-box;
+            min-height: 60vh;
         }
 
+        @media (max-width: 1024px) {
+            .game-screen { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .game-screen { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(6, 1fr); gap: 10px; padding: 15px;}
+            .header-area { flex-direction: column; gap: 15px; }
+        }
+
+        .card { perspective: 1000px; cursor: pointer; }
         .card-inner {
             position: relative;
             width: 100%;
             height: 100%;
             transition: transform 0.6s;
             transform-style: preserve-3d;
-            border-radius: 15px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* 翻牌動作 */
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
 
         .card-front, .card-back {
             position: absolute;
@@ -82,19 +116,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 15px;
+            border-radius: 20px;
             border: 4px solid #cddc39;
             box-sizing: border-box;
         }
 
-        /* 卡片背蓋 (未翻開) */
         .card-front {
             background-color: #8bc34a;
             color: white;
-            font-size: 4rem;
+            font-size: clamp(40px, 5vw, 80px);
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
         }
 
-        /* 卡片正面 (內容) */
         .card-back {
             background-color: white;
             transform: rotateY(180deg);
@@ -102,8 +135,11 @@
         }
 
         .card-back.text-node {
-            font-size: 3.5rem;
+            font-size: clamp(28px, 3vw, 50px);
             color: #33691e;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
         }
 
         .card-back img {
@@ -112,88 +148,59 @@
             object-fit: contain;
         }
 
-        /* 配對成功效果 */
-        .card.matched {
-            opacity: 0.3;
-            cursor: default;
-            pointer-events: none;
-            transition: opacity 0.5s;
-        }
-        
-        /* 🌟 新增與修改：按鈕區域樣式 */
-        .header-controls {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn {
-            padding: 10px 25px;
-            font-size: 1.5rem;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: var(--font-family);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: transform 0.1s;
-        }
-        .btn:active { transform: scale(0.95); }
-
-        #btn-restart { background: #689f38; }
-        .home-btn { background: #4caf50; border: 2px solid #388e3c; } /* 森林綠風格的回大廳按鈕 */
+        .card.matched { opacity: 0.3; cursor: default; pointer-events: none; transition: opacity 0.5s; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div>⏱️ 計時：<span id="timer">0</span> 秒</div>
-        <div style="font-size: 2.5rem;">語詞配對翻翻樂</div>
-        
-        <div class="header-controls">
-            <a href="index.html" class="btn home-btn">🏠 回總大廳</a>
-            <button class="btn" id="btn-restart" onclick="initGame()">重新開始</button>
+    <div class="header-area">
+        <div class="header-btns">
+            <a href="index.html" class="nav-btn">🏠 回總大廳</a>
+            <a href="#" id="back-btn" class="nav-btn">🔙 回課程選單</a>
         </div>
+        
+        <div class="title-box">
+            <h1 id="lesson-title">載入中...</h1>
+            <p>⏱️ 計時：<span id="timer">0</span> 秒</p>
+        </div>
+
+        <button id="btn-restart" onclick="initGame()">重新開始 🔄</button>
     </div>
 
-    <div class="game-screen" id="board">
-        </div>
+    <div class="game-screen" id="board"></div>
 
     <script>
-        // 🌟 修正後的資料庫：已將圖片路徑加上 images/ 前綴
-        const baseData = [
-            { text: "雲朵", img: "pic/L1/1.png" },
-            { text: "模樣", img: "pic/L1/2.png" },
-            { text: "臉蛋", img: "pic/L1/3.png" },
-            { text: "音符", img: "pic/L1/4.png" },
-            { text: "翅膀", img: "pic/L1/5.png" },
-            { text: "搗亂", img: "pic/L1/6.png" },
-            { text: "恐龍", img: "pic/L1/7.png" },
-            { text: "吼叫", img: "pic/L1/8.png" },
-            { text: "雨傘", img: "pic/L1/9.png" }
-        ];
+        // 🌟 1. 動態取得目前是第幾課
+        const urlParams = new URLSearchParams(window.location.search);
+        const lessonId = urlParams.get('id') || "1"; 
+        document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
+        
+        let baseData = [];
+        
+        // 🌟 2. 從 data.js 中抓取那一課的 level4 資料！
+        if (allLessonsData[lessonId]) {
+            document.getElementById('lesson-title').innerText = "第四關：" + allLessonsData[lessonId].title;
+            // 如果該課有 level4 資料就讀取，沒有就給空陣列
+            baseData = allLessonsData[lessonId].level4 || [];
+        }
 
-        let firstCard = null;
-        let secondCard = null;
-        let lockBoard = false;
-        let matchesFound = 0;
-        let seconds = 0;
-        let timer;
-
+        let firstCard = null, secondCard = null;
+        let lockBoard = false, matchesFound = 0, seconds = 0, timer;
         const board = document.getElementById('board');
         const timerLabel = document.getElementById('timer');
 
         function initGame() {
-            // 重置參數
             board.innerHTML = '';
-            matchesFound = 0;
-            seconds = 0;
-            timerLabel.textContent = '0';
+            matchesFound = 0; seconds = 0; timerLabel.textContent = '0';
             clearInterval(timer);
             startTimer();
 
-            // 建立 18 張牌 (9張字 + 9張圖)
+            // 🌟 3. 如果 data.js 裡這課的 level4 是空的，顯示提示
+            if (baseData.length === 0) {
+                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center; color: #e74c3c; align-self: center;">老師尚未建立這課的配對圖卡資料喔！</h2>';
+                return;
+            }
+
             let deck = [];
             baseData.forEach(item => {
                 deck.push({ content: item.text, type: 'text', match: item.text });
@@ -203,21 +210,18 @@
             // 洗牌
             deck.sort(() => Math.random() - 0.5);
 
-            // 渲染卡片
             deck.forEach(data => {
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.dataset.match = data.match;
-
                 card.innerHTML = `
                     <div class="card-inner">
                         <div class="card-front">?</div>
                         <div class="card-back ${data.type === 'text' ? 'text-node' : ''}">
-                            ${data.type === 'text' ? data.content : `<img src="${data.content}">`}
+                            ${data.type === 'text' ? data.content : `<img src="${data.content}" onerror="this.alt='圖片載入失敗'">`}
                         </div>
                     </div>
                 `;
-
                 card.addEventListener('click', flipCard);
                 board.appendChild(card);
             });
@@ -225,15 +229,10 @@
 
         function flipCard() {
             if (lockBoard || this === firstCard) return;
-
             this.classList.add('flipped');
-            speak(this.dataset.match); // 點擊時朗讀語詞
+            speak(this.dataset.match); 
 
-            if (!firstCard) {
-                firstCard = this;
-                return;
-            }
-
+            if (!firstCard) { firstCard = this; return; }
             secondCard = this;
             checkMatch();
         }
@@ -251,7 +250,9 @@
                 matchesFound++;
                 if (matchesFound === baseData.length) {
                     clearInterval(timer);
-                    alert(`恭喜完成！總共花了 ${seconds} 秒！`);
+                    setTimeout(() => {
+                        alert(`🎉 恭喜過關！\n總共花了 ${seconds} 秒完成配對！`);
+                    }, 300);
                 }
             }, 600);
         }
@@ -265,15 +266,10 @@
             }, 1000);
         }
 
-        function resetBoard() {
-            [firstCard, secondCard, lockBoard] = [null, null, false];
-        }
+        function resetBoard() { [firstCard, secondCard, lockBoard] = [null, null, false]; }
 
         function startTimer() {
-            timer = setInterval(() => {
-                seconds++;
-                timerLabel.textContent = seconds;
-            }, 1000);
+            timer = setInterval(() => { seconds++; timerLabel.textContent = seconds; }, 1000);
         }
 
         function speak(text) {
@@ -283,9 +279,7 @@
             synth.speak(utter);
         }
 
-        // 啟動遊戲
-        initGame();
+        window.onload = initGame;
     </script>
 </body>
 </html>
-
