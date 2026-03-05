@@ -30,15 +30,15 @@ const allLessonsData = {
             { text: "這是一首好聽的曲子，________在那裡跳來跳去。", answer: "音符" }
         ],
         level4: [
-            { text: "雲朵", img: "imagess/1.png" },
-            { text: "模樣", img: "imagess/2.png" },
-            { text: "臉蛋", img: "imagess/3.png" },
-            { text: "音符", img: "imagess/4.png" },
-            { text: "翅膀", img: "imagess/5.png" },
-            { text: "搗亂", img: "imagess/6.png" },
-            { text: "恐龍", img: "imagess/7.png" },
-            { text: "吼叫", img: "imagess/8.png" },
-            { text: "雨傘", img: "imagess/9.png" }]
+            { text: "雲朵", img: "images/L1/1.png" },
+            { text: "模樣", img: "images/L1/2.png" },
+            { text: "臉蛋", img: "images/L1/3.png" },
+            { text: "音符", img: "images/L1/4.png" },
+            { text: "翅膀", img: "images/L1/5.png" },
+            { text: "搗亂", img: "images/L1/6.png" },
+            { text: "恐龍", img: "images/L1/7.png" },
+            { text: "吼叫", img: "images/L1/8.png" },
+            { text: "雨傘", img: "images/L1/9.png" }]
     },
 
     // ================= 第二課 =================
@@ -74,7 +74,16 @@ const allLessonsData = {
             { text: "以前的小朋友喜歡在空地上玩滾________。", answer: "鐵環" },
             { text: "牆壁上有一個________，可以用來掛外套。", answer: "彎鉤" }
         ], 
-        level4: [] 
+        level4:  [
+            { text: "鐵環", img: "images/L2/1.png" },
+            { text: "湯碗", img: "images/L2/2.png" },
+            { text: "彎鉤", img: "images/L2/3.png" },
+            { text: "推動", img: "images/L2/4.png" },
+            { text: "羨慕", img: "images/L2/5.png" },
+            { text: "捲髮", img: "images/L2/6.png" },
+            { text: "躺下", img: "images/L2/7.png" },
+            { text: "裙擺", img: "images/L2/8.png" },
+            { text: "笑容", img: "images/L2/9.png" }] 
     },
 
     // ================= 第三課 =================
@@ -109,7 +118,16 @@ const allLessonsData = {
             { text: "把種子裝進白色的小________。", answer: "棉袋" },
             { text: "冰水裡加一點________，甜甜的好好喝。", answer: "糖水" }
         ], 
-        level4: [] 
+        level4: [
+            { text: "炎熱", img: "images/L3/1.png" },
+            { text: "愛玉", img: "images/L3/2.png" },
+            { text: "甜品", img: "images/L3/3.png" },
+            { text: "斑點", img: "images/L3/4.png" },
+            { text: "曬乾", img: "images/L3/5.png" },
+            { text: "搓洗", img: "images/L3/6.png" },
+            { text: "糖水", img: "images/L3/7.png" },
+            { text: "棉袋", img: "images/L3/8.png" },
+            { text: "容器", img: "images/L3/9.png" }]
     },
 
     // ================= 第四課 =================
@@ -155,7 +173,16 @@ const allLessonsData = {
             { text: "辛苦工作了一天，這碗濃郁香甜的________是妹妹最喜歡的點心。", answer: "奶酪" },
             { text: "班長代表全班去領獎，回來後向大家________比賽的結果。", answer: "回報" }
         ], 
-        level4: [] 
+        level4: [
+            { text: "丞相", img: "images/L4/1.png" },
+            { text: "反應", img: "images/L4/2.png" },
+            { text: "官府", img: "images/L4/3.png" },
+            { text: "門框", img: "images/L4/4.png" },
+            { text: "回報", img: "images/L4/5.png" },
+            { text: "奶酪", img: "images/L4/6.png" },
+            { text: "吃驚", img: "images/L4/7.png" },
+            { text: "出差", img: "images/L4/8.png" },
+            { text: "眼神", img: "images/L4/9.png" }] 
     },
 
     // ================= 第五課 =================
@@ -178,7 +205,17 @@ const allLessonsData = {
             { word: "偷", parts: ["images/L5/筆順-偷-部件-1.png", "images/L5/筆順-偷-部件-2.png", "images/L5/筆順-偷-部件-3.png", "images/L5/筆順-偷-部件-4.png", "images/L5/筆順-偷-部件-5.png"], pos: [{x: 50, y: 180, scale: 1.4}, {x: 90, y: 180}, {x: 130, y: 180, scale: 0.5}, {x: 170, y: 180, scale: 0.7}, {x: 210, y: 180, scale: 0.7}] },
             { word: "胡", parts: ["images/L5/筆順-胡-部件-1.png", "images/L5/筆順-胡-部件-2.png", "images/L5/筆順-胡-部件-3.png"], pos: [{x: 70, y: 180, scale: 0.7}, {x: 120, y: 180, scale: 0.7}, {x: 170, y: 180}] }
         ], 
-        level2: [], level3: [], level4: [] 
+        level2: [], level3: [], 
+        level4:  [
+            { text: "鞠躬", img: "images/L5/1.png" },
+            { text: "弄哭", img: "images/L5/2.png" },
+            { text: "厲害", img: "images/L5/3.png" },
+            { text: "鬥嘴", img: "images/L5/4.png" },
+            { text: "逗趣", img: "images/L5/5.png" },
+            { text: "睜眼閉眼", img: "images/L5/6.png" },
+            { text: "警察", img: "images/L5/7.png" },
+            { text: "小偷", img: "images/L5/8.png" },
+            { text: "胡說", img: "images/L5/9.png" }]  
     },
 
     // ================= 第六課 =================
