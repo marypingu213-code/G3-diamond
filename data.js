@@ -29,7 +29,16 @@ const allLessonsData = {
             { text: "外面下雨了，出門要記得帶________。", answer: "雨傘" },
             { text: "這是一首好聽的曲子，________在那裡跳來跳去。", answer: "音符" }
         ],
-        level4: []
+        level4: [
+            { text: "雲朵", img: "imagess/1.png" },
+            { text: "模樣", img: "imagess/2.png" },
+            { text: "臉蛋", img: "imagess/3.png" },
+            { text: "音符", img: "imagess/4.png" },
+            { text: "翅膀", img: "imagess/5.png" },
+            { text: "搗亂", img: "imagess/6.png" },
+            { text: "恐龍", img: "imagess/7.png" },
+            { text: "吼叫", img: "imagess/8.png" },
+            { text: "雨傘", img: "imagess/9.png" }]
     },
 
     // ================= 第二課 =================
