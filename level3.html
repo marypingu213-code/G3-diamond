@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>三年級第三課：Level 3 語詞挑戰</title>
+    <title>三年級國語：Level 3 語詞我最行</title>
     <style>
         :root { --primary-bg: #2c3e50; --container-bg: #34495e; --word-bg: #f1c40f; --drop-bg: rgba(255, 255, 255, 0.1); --correct-color: #2ecc71; }
         body { font-family: "Microsoft JhengHei", sans-serif; background-color: var(--primary-bg); color: white; text-align: center; margin: 0; padding: 20px; display: flex; justify-content: center; }
@@ -11,7 +11,6 @@
         .stage-indicator { font-size: 28px; color: #3498db; margin-bottom: 20px; font-weight: bold; background: rgba(0,0,0,0.2); display: inline-block; padding: 5px 20px; border-radius: 10px; }
         .word-bank { background: #1a252f; padding: 25px; border-radius: 20px; margin-bottom: 40px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; border: 4px dashed #f1c40f; min-height: 100px; }
         .word-item { background: var(--word-bg); color: #2c3e50; padding: 15px 30px; border-radius: 15px; font-weight: 900; font-size: 32px; cursor: grab; user-select: none; box-shadow: 0 6px 0 #d4ac0d; transition: 0.2s; }
-        .word-item:active { cursor: grabbing; transform: translateY(4px); box-shadow: 0 2px 0 #d4ac0d; }
         .quiz-area { text-align: left; background: rgba(0,0,0,0.1); padding: 30px; border-radius: 20px; }
         .question { font-size: 32px; margin: 25px 0; line-height: 1.8; display: flex; align-items: center; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
         .drop-zone { min-width: 160px; height: 60px; border: 3px dashed #f1c40f; margin: 5px 15px; display: inline-flex; align-items: center; justify-content: center; background: var(--drop-bg); border-radius: 12px; transition: 0.3s; font-size: 32px; color: #f1c40f; font-weight: bold; }
@@ -22,7 +21,7 @@
 <body>
 
 <div class="game-container">
-    <h2>💎 三年級第三課：語詞我最行 💎</h2>
+    <h2 id="main-title">💎 載入中... 💎</h2>
     <div class="stage-indicator" id="stageText">第一階段：基礎練習</div>
     <div class="word-bank" id="wordBank"></div>
     <div class="quiz-area" id="quizArea"></div>
@@ -30,44 +29,50 @@
 </div>
 
 <script>
-    const stages = {
-        1: {
-            text: "第一階段：基礎練習",
-            words: ["炎熱", "愛玉", "甜品", "曬乾", "斑點", "搓洗", "容器", "棉袋", "糖水"],
-            questions: [
-                "太陽好大，天氣很 @ 。",
-                "我喜歡吃冰冰涼涼的 @ 。",
-                "蛋糕是甜甜的 @ 。",
-                "衣服洗好了，拿去太陽下 @ 。",
-                "小狗的身上有黑色的 @ 。",
-                "我們在水裡用力 @ 愛玉子。",
-                "爸爸把水倒進透明的 @ 。",
-                "把種子裝進白色的小 @ 。",
-                "冰水裡加一點 @ ，甜甜的好好喝。"
-            ]
+    // 這裡整合了 1-4 課的所有資料
+    const allLessonContent = {
+        "1": {
+            title: "第一課：語詞我最行",
+            s1: { words: ["雲朵", "翅膀", "臉蛋", "雨傘", "恐龍", "搗亂", "音符", "吼叫", "模樣"], 
+                  qs: ["藍藍的天空有白白的 @ 。", "小鳥拍拍 @ ，飛得很高。", "妹妹的 @ 紅通通的。", "下雨了，我要撐開漂亮的 @ 。", "玩具箱裡有一隻大大的 @ 。", "狗狗把客廳弄亂，真愛 @ 。", "鋼琴彈出的 @ 真美。", "大老虎張開嘴巴大聲 @ 。", "爸爸穿西裝的 @ 很神氣。"] },
+            s2: { words: ["雲朵", "模樣", "臉蛋", "音符", "翅膀", "搗亂", "恐龍", "吼叫", "雨傘"], 
+                  qs: ["天空中有許多白白的 @ 。", "弟弟穿上披風後神氣的 @ 。", "妹妹紅通通的 @ 像小蘋果。", "琴譜上的 @ 跳來跳去。", "老鷹拍打強壯的 @ 。", "小貓咪在客廳裡 @ 。", "去博物館參觀巨大的 @ 化石。", "獅子發出巨大的 @ 聲。", "外面下大雨記得要帶 @ 。"] }
         },
-        2: {
-            text: "第二階段：挑戰練習",
-            words: ["炎熱", "曬乾", "斑點", "甜品", "棉袋", "搓洗", "愛玉", "糖水", "容器"],
-            questions: [
-                "夏天的太陽好大，天氣真是 @ 。",
-                "媽媽把洗好的衣服掛在陽台，準備讓太陽 @ 。",
-                "校狗拉拉的身上，布滿了黑色和白色的 @ 。",
-                "吃完晚餐後，姊姊最喜歡吃蛋糕或紅豆湯當作 @ 。",
-                "我們把種子放進小 @ 裡，準備來製作好吃的點心。",
-                "在盆子裡用力 @ 愛玉子，就會慢慢出現黏黏的果膠。",
-                "冰涼的 @ 凍吃起來QQ的，是夏天最受歡迎的小吃。",
-                "煮好的紅豆湯如果加上一點 @ ，喝起來會更香甜。",
-                "請把切好的水果裝進乾淨的 @ 裡，再放進冰箱保存。"
-            ]
+        "2": {
+            title: "第二課：語詞我最行",
+            s1: { words: ["羨慕", "裙擺", "躺下", "笑容", "推動", "湯碗", "捲髮", "鐵環", "彎鉤"], 
+                  qs: ["看到同學有新玩具，我好 @ 他。", "妹妹轉一個圈，漂亮的 @ 也動。", "我太累了，想在沙發上 @ 。", "看到好朋友，露出甜甜的 @ 。", "大家用力 @ ，把箱子移開。", "媽媽把好喝的湯裝在 @ 裡。", "小羊的毛彎彎的像 @ 。", "以前的小朋友玩滾 @ 。", "牆壁上有個 @ 可以掛外套。"] },
+            s2: { words: ["羨慕", "裙擺", "躺下", "笑容", "推動", "湯碗", "捲髮", "鐵環", "彎鉤"], 
+                  qs: ["看到新玩具，小明心裡很 @ 。", "妹妹穿洋裝轉圈， @ 飛了起來。", "玩一整天，一回到家就馬上 @ 。", "老師臉上掛著溫柔的 @ 。", "箱子太重，需要有人幫忙 @ 。", "媽媽煮好雞湯，盛在 @ 裡。", "阿姨天生有一頭波浪 @ 。", "以前的年代，小朋友玩滾 @ 。", "牆壁上釘了一個 @ 方便掛帽子。"] }
+        },
+        "3": {
+            title: "第三課：語詞我最行",
+            s1: { words: ["炎熱", "愛玉", "甜品", "曬乾", "斑點", "搓洗", "容器", "棉袋", "糖水"], 
+                  qs: ["太陽好大，天氣很 @ 。", "我喜歡吃涼涼的 @ 。", "蛋糕是甜甜的 @ 。", "衣服洗好了拿去 @ 。", "小狗身上有黑色的 @ 。", "我們在水裡用力 @ 愛玉子。", "爸爸把水倒進透明的 @ 。", "把種子裝進小 @ 。", "冰水裡加點 @ 好好喝。"] },
+            s2: { words: ["炎熱", "曬乾", "斑點", "甜品", "棉袋", "搓洗", "愛玉", "糖水", "容器"], 
+                  qs: ["夏天的太陽好大，天氣 @ 。", "洗好的衣服掛在陽台 @ 。", "校狗拉拉身上布滿 @ 。", "晚餐後喜歡吃蛋糕當 @ 。", "我們把種子放進小 @ 裡。", "盆子裡用力 @ 出現果膠。", "冰涼的 @ 凍吃起來QQ的。", "紅豆湯加上 @ 更香甜。", "水果裝進乾淨的 @ 裡。"] }
+        },
+        "4": {
+            title: "第四課：語詞我最行",
+            s1: { words: ["吃驚", "奶酪", "門框", "出差", "眼神", "反應", "官府", "丞相", "回報"], 
+                  qs: ["妹妹張大嘴巴，一臉 @ 。", "冰箱裡有一盒甜甜的 @ 。", "哥哥手不小心撞到了 @ 。", "爸爸去外地 @ 。", "看到好朋友受傷， @ 充滿擔心。", "躲避球的 @ 也非常快。", "以前被欺負會去 @ 找官員。", "諸葛亮是古代有名的 @ 。", "回教室向老師 @ 比分。"] },
+            s2: { words: ["反應", "吃驚", "官府", "門框", "眼神", "丞相", "奶酪", "回報"], 
+                  qs: ["小運動員的 @ 非常靈敏。", "看到牆壁被塗鴉，媽媽很 @ 。", "百姓前往 @ 請官員主持公道。", "弟弟頭頂快碰到 @ 了。", "老師從他的 @ 中看出自信。", "諸葛亮是一位有智慧的 @ 。", "濃郁香甜的 @ 是點心。", "班長向大家 @ 比賽結果。"] }
         }
     };
 
+    // 取得網址參數
+    const urlParams = new URLSearchParams(window.location.search);
+    const lessonId = urlParams.get('lesson') || "1";
+    const currentLesson = allLessonContent[lessonId];
+
+    document.getElementById('main-title').innerText = currentLesson.title;
     let currentStage = 1;
 
     function initStage(stageNum) {
-        const data = stages[stageNum];
-        document.getElementById('stageText').innerText = data.text;
+        const data = stageNum === 1 ? currentLesson.s1 : currentLesson.s2;
+        document.getElementById('stageText').innerText = stageNum === 1 ? "第一階段：基礎練習" : "第二階段：挑戰練習";
+        
         const wordBank = document.getElementById('wordBank');
         wordBank.innerHTML = '';
         [...data.words].sort(() => Math.random() - 0.5).forEach(w => {
@@ -79,25 +84,25 @@
 
         const quizArea = document.getElementById('quizArea');
         quizArea.innerHTML = '';
-        data.questions.forEach((q, i) => {
+        data.qs.forEach((q, i) => {
             const parts = q.split('@');
             const qDiv = document.createElement('div');
             qDiv.className = 'question';
-            qDiv.innerHTML = `${i+1}. ${parts[0]} <div class="drop-zone" data-ans="${data.words[i]}"></div> ${parts[1]}`;
+            qDiv.innerHTML = `${i+1}. ${parts[0]} <div class="drop-zone" data-ans="${data.words[i]}"></div> ${parts[1] || ''}`;
             quizArea.appendChild(qDiv);
         });
-        setupZones();
+
+        setupDragLogic();
     }
 
-    function setupZones() {
+    function setupDragLogic() {
         document.querySelectorAll('.drop-zone').forEach(zone => {
             zone.ondragover = e => e.preventDefault();
             zone.ondrop = e => {
                 e.preventDefault();
                 const word = e.dataTransfer.getData('text');
                 if (zone.innerText !== "") document.getElementById('word-' + zone.innerText).style.display = 'block';
-                zone.innerText = word;
-                zone.classList.add('filled');
+                zone.innerText = word; zone.classList.add('filled');
                 document.getElementById('word-' + word).style.display = 'none';
             };
             zone.onclick = () => {
@@ -113,27 +118,23 @@
         const zones = document.querySelectorAll('.drop-zone');
         let correctCount = 0;
         zones.forEach(z => {
-            if (z.innerText === z.dataset.ans) {
-                z.style.backgroundColor = "#2ecc71"; z.style.color = "white"; correctCount++;
-            } else {
-                z.style.backgroundColor = "#e74c3c"; z.style.color = "white";
-            }
+            if (z.innerText === z.dataset.ans) { z.style.backgroundColor = "#2ecc71"; z.style.color = "white"; correctCount++; }
+            else { z.style.backgroundColor = "#e74c3c"; z.style.color = "white"; }
         });
 
-        if (correctCount === 9) {
+        if (correctCount === zones.length) {
             if (currentStage === 1) {
-                alert("🏆 基礎練習全對！\n準備好進入「挑戰練習」了嗎？");
-                currentStage = 2;
-                initStage(2);
-                window.scrollTo(0, 0);
+                alert("🏆 基礎全對！準備進入魔王挑戰！");
+                currentStage = 2; initStage(2); window.scrollTo(0, 0);
             } else {
-                alert("🎉 恭喜！你完成了第三課所有的語詞挑戰！");
+                alert("🎉 恭喜！你完成了本課所有挑戰！");
                 location.href = 'index.html';
             }
         } else {
-            alert("還有地方放錯了，再檢查一下紅色的格子！");
+            alert("還有地方不對喔，再檢查一下！");
         }
     }
+
     initStage(1);
 </script>
 </body>
