@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>三年級國語：Level 3 語詞我最行</title>
+    <script src="data.js"></script>
     <style>
         :root { --primary-bg: #2c3e50; --container-bg: #34495e; --word-bg: #f1c40f; --drop-bg: rgba(255, 255, 255, 0.1); --correct-color: #2ecc71; }
         body { font-family: "Microsoft JhengHei", sans-serif; background-color: var(--primary-bg); color: white; text-align: center; margin: 0; padding: 20px; display: flex; justify-content: center; }
@@ -29,78 +30,40 @@
 </div>
 
 <script>
-    const allLessonContent = {
-        "1": {
-            title: "第一課：語詞我最行",
-            s1: { words: ["雲朵", "翅膀", "臉蛋", "雨傘", "恐龍", "搗亂", "音符", "吼叫", "模樣"], 
-                  qs: ["藍藍的天空有白白的 @ 。", "小鳥拍拍 @ ，飛得很高。", "妹妹的 @ 紅通通的。", "下雨了，我要撐開漂亮的 @ 。", "玩具箱裡有一隻大大的 @ 。", "狗狗把客廳弄亂，真愛 @ 。", "鋼琴彈出的 @ 真美。", "大老虎張開嘴巴大聲 @ 。", "爸爸穿西裝的 @ 很神氣。"] },
-            s2: { words: ["雲朵", "模樣", "臉蛋", "音符", "翅膀", "搗亂", "恐龍", "吼叫", "雨傘"], 
-                  qs: ["天空中有許多白白的 @ 。", "弟弟穿上披風後神氣的 @ 。", "妹妹紅通通的 @ 像小蘋果。", "琴譜上的 @ 跳來跳去。", "老鷹拍打強壯的 @ 。", "小貓咪在客廳裡 @ 。", "去博物館參觀巨大的 @ 化石。", "獅子發出巨大的 @ 聲。", "外面下大雨記得要帶 @ 。"] }
-        },
-        "2": {
-            title: "第二課：語詞我最行",
-            s1: { words: ["羨羨", "裙擺", "躺下", "笑容", "推動", "湯碗", "捲髮", "鐵環", "彎鉤"], 
-                  qs: ["看到同學有新玩具，我好 @ 他。", "妹妹轉一個圈，漂亮的 @ 也動。", "我太累了，想在沙發上 @ 。", "看到好朋友，露出甜甜的 @ 。", "大家用力 @ ，把箱子移開。", "媽媽把好喝的湯裝在 @ 裡。", "小羊的毛彎彎的像 @ 。", "以前的小朋友玩滾 @ 。", "牆壁上有個 @ 可以掛外套。"] },
-            s2: { words: ["羨羨", "裙擺", "躺下", "笑容", "推動", "湯碗", "捲髮", "鐵環", "彎鉤"], 
-                  qs: ["看到新玩具，小明心裡很 @ 。", "妹妹穿洋裝轉圈， @ 飛了起來。", "玩一整天，一回到家就馬上 @ 。", "老師臉上掛著溫柔的 @ 。", "箱子太重，需要有人幫忙 @ 。", "媽媽煮好雞湯，盛在 @ 裡。", "阿姨天生有一頭波浪 @ 。", "以前的年代，小朋友玩滾 @ 。", "牆壁上釘了一個 @ 方便掛帽子。"] }
-        },
-        "3": {
-            title: "第三課：語詞我最行",
-            s1: { words: ["炎熱", "愛玉", "甜品", "曬乾", "斑點", "搓洗", "容器", "棉袋", "糖水"], 
-                  qs: ["太陽好大，天氣很 @ 。", "我喜歡吃涼涼的 @ 。", "蛋糕是甜甜的 @ 。", "衣服洗好了拿去 @ 。", "小狗身上有黑色的 @ 。", "我們在水裡用力 @ 愛玉子。", "爸爸把水倒進透明的 @ 。", "把種子裝進小 @ 。", "冰水裡加點 @ 好好喝。"] },
-            s2: { words: ["炎熱", "曬乾", "斑點", "甜品", "棉袋", "搓洗", "愛玉", "糖水", "容器"], 
-                  qs: ["夏天的太陽好大，天氣 @ 。", "洗好的衣服掛在陽台 @ 。", "校狗拉拉身上布滿 @ 。", "晚餐後喜歡吃蛋糕當 @ 。", "我們把種子放進小 @ 裡。", "盆子裡用力 @ 出現果膠。", "冰涼的 @ 凍吃起來QQ的。", "紅豆湯加上 @ 更香甜。", "水果裝進乾淨的 @ 裡。"] }
-        },
-        "4": {
-            title: "第四課：語詞我最行",
-            s1: { words: ["吃驚", "奶酪", "門框", "出差", "眼神", "反應", "官府", "丞相", "回報"], 
-                  qs: ["妹妹張大嘴巴，一臉 @ 。", "冰箱裡有一盒甜甜的 @ 。", "哥哥手不小心撞到了 @ 。", "爸爸去外地 @ 。", "看到好朋友受傷， @ 充滿擔心。", "躲避球的 @ 也非常快。", "以前被欺負會去 @ 找官員。", "諸葛亮是古代有名的 @ 。", "回教室向老師 @ 比分。"] },
-            s2: { words: ["反應", "吃驚", "官府", "門框", "眼神", "丞相", "奶酪", "回報"], 
-                  qs: ["小運動員的 @ 非常靈敏。", "看到牆壁被塗鴉，媽媽很 @ 。", "百姓前往 @ 請官員主持公道。", "弟弟頭頂快碰到 @ 了。", "老師從他的 @ 中看出自信。", "諸葛亮是一位有智慧的 @ 。", "濃郁香甜的 @ 是點心。", "班長向大家 @ 比賽結果。"] }
-        },
-        "5": {
-            title: "第五課：語詞我最行",
-            s1: { words: ["鞠躬", "弄哭", "厲害", "鬥嘴", "逗趣", "閉眼", "警察", "小偷", "胡說"], 
-                  qs: ["表演結束了，小明有禮貌向大家 @ 。", "哥哥不小心弄壞玩具，把她 @ 了。", "能在十秒跑完百米，體育很 @ 。", "兩人為了玩玩具而 @ ，不讓誰。", "小猴子抓癢動作非常 @ ，大家笑。", "捉迷藏時，當鬼的人要先 @ 數十。", " @ 叔叔的工作是抓壞人，守安全。", "商店裡東西被 @ 偷偷搬走，老闆傷心。", "說謊是不對的，我們不能隨便 @ 。"] },
-            s2: { words: ["鞠躬", "弄哭", "厲害", "鬥嘴", "逗趣", "閉眼", "警察", "小偷", "胡說", "厲害"], 
-                  qs: ["台上的演員向觀眾深深一 @ 表示感謝。", "哥哥不小心弄壞心愛玩偶，把她 @ 了。", "小明獲得全國第一名，大家都讚他 @ 。", "雖然平時愛 @ ，遇到困難還是幫忙。", "馬戲團小丑表演非常 @ ，全場大笑。", "睡覺前，我習慣先 @ 冥想放鬆。", "正義的 @ 叔叔巡邏，保護財產安全。", "那名 @ 趁四下無人，爬窗進入行竊。", "請不要在這裡 @ ，沒有證據指責不對。", "魔術師的手法非常 @ ，看不出破綻。"] }
-        },
-        "6": {
-            title: "第六課：語詞我最行",
-            s1: { words: ["村莊", "發抖", "彈簧", "松鼠", "混亂", "建造", "展開", "巨大", "觀看"], 
-                  qs: ["山腳下有幾間小房子，那是漂亮的 @ 。", "外面好冷，小貓凍得不停 @ 。", "原子筆裡有小 @ ，按下去彈起來。", "樹林裡有隻小 @ ，正在找果實。", "弟弟把玩具灑一地，房間很 @ 。", "螞蟻分工合作，在泥土裡 @ 牠們家。", "老師把大畫紙 @ 在桌上教畫畫。", "大鯨魚身體非常 @ ，比小船大。", "全家人去公園 @ 精彩表演。"] },
-            s2: { words: ["村莊", "發抖", "彈簧", "松鼠", "混亂", "建造", "展開", "巨大", "觀看"], 
-                  qs: ["山腳下有一個安靜的小 @ ，空氣清新。", "寒流來時，大家都被凍得不停 @ 。", "彈珠床裡有很多 @ ，非常有彈性。", "可愛的 @ 正忙著在樹枝間跳躍。", "地震過後，商店貨架倒地畫面很 @ 。", "工程人員正在學校旁邊 @ 游泳池。", "弟弟把畫好的圖畫 @ 開來展示。", "遠處出現了一座 @ 雕像，比樓還高。", "周末爸爸帶我們去棒球場 @ 比賽。"] }
-        }
-    };
-
+    // 取得網址參數中的課程 ID
     const urlParams = new URLSearchParams(window.location.search);
     const lessonId = urlParams.get('lesson') || "1";
-    const currentLesson = allLessonContent[lessonId];
+    const lessonData = allLessonsData[lessonId]; // 從 data.js 讀取對應課程
 
-    document.getElementById('main-title').innerText = currentLesson.title;
+    document.getElementById('main-title').innerText = lessonData.title;
     let currentStage = 1;
 
     function initStage(stageNum) {
-        const data = stageNum === 1 ? currentLesson.s1 : currentLesson.s2;
+        // 第一階段取 level3[0-8]，第二階段取 level3[9-17]
+        const fullList = lessonData.level3;
+        const currentQuestions = stageNum === 1 ? fullList.slice(0, 9) : fullList.slice(9, 18);
+        
         document.getElementById('stageText').innerText = stageNum === 1 ? "第一階段：基礎練習" : "第二階段：挑戰練習";
         
+        // 渲染語詞庫
         const wordBank = document.getElementById('wordBank');
         wordBank.innerHTML = '';
-        [...data.words].sort(() => Math.random() - 0.5).forEach(w => {
+        const uniqueWords = [...new Set(currentQuestions.map(item => item.answer))];
+        uniqueWords.sort(() => Math.random() - 0.5).forEach(w => {
             const div = document.createElement('div');
             div.className = 'word-item'; div.innerText = w; div.draggable = true; div.id = 'word-' + w;
             div.ondragstart = e => e.dataTransfer.setData('text', w);
             wordBank.appendChild(div);
         });
 
+        // 渲染題目區
         const quizArea = document.getElementById('quizArea');
         quizArea.innerHTML = '';
-        data.qs.forEach((q, i) => {
-            const parts = q.split('@');
+        currentQuestions.forEach((item, i) => {
+            const parts = item.text.split('________');
             const qDiv = document.createElement('div');
             qDiv.className = 'question';
-            qDiv.innerHTML = `${i+1}. ${parts[0]} <div class="drop-zone" data-ans="${data.words[i]}"></div> ${parts[1] || ''}`;
+            qDiv.innerHTML = `${i+1}. ${parts[0]} <div class="drop-zone" data-ans="${item.answer}"></div> ${parts[1] || ''}`;
             quizArea.appendChild(qDiv);
         });
 
@@ -151,6 +114,7 @@
             alert("還有地方不對喔，再檢查一下紅色的格子！");
         }
     }
+
     initStage(1);
 </script>
 </body>
