@@ -18,44 +18,45 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh; /* 固定高度防止捲動 */
+            height: 100vh;
             background-color: #f0f4c3;
             font-family: var(--font-family);
-            padding: 10px; /* 縮小邊距 */
+            padding: 15px;
             box-sizing: border-box;
-            overflow: hidden; /* 禁止頁面捲動 */
+            overflow: hidden; 
         }
 
+        /* 標題區：移除 1200px 限制，改用百分比讓大螢幕也寬廣 */
         .header-area {
-            width: 100%;
-            max-width: 1200px;
+            width: 95%;
+            max-width: 2500px; 
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px; /* 縮小上方間距 */
+            margin-bottom: 15px;
         }
 
-        .header-btns { display: flex; gap: 10px; }
+        .header-btns { display: flex; gap: 15px; }
 
         .nav-btn {
             background-color: #fff;
             color: #558b2f;
             text-decoration: none;
-            font-size: 16px;
+            font-size: clamp(18px, 1.5vw, 28px); /* 隨螢幕變大的字體 */
             font-weight: bold;
-            padding: 8px 16px;
+            padding: 10px 25px;
             border-radius: 50px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             border: 2px solid #cddc39;
         }
 
         .title-box { text-align: center; color: #558b2f; }
-        .title-box h1 { margin: 0; font-size: 24px; } /* 縮小標題 */
-        .title-box p { margin: 2px 0 0 0; font-size: 18px; font-weight: bold; }
+        .title-box h1 { margin: 0; font-size: clamp(28px, 3vw, 50px); }
+        .title-box p { margin: 5px 0 0 0; font-size: clamp(20px, 2vw, 32px); font-weight: bold; }
 
         #btn-restart {
-            padding: 8px 20px;
-            font-size: 18px;
+            padding: 10px 25px;
+            font-size: clamp(20px, 1.5vw, 28px);
             background: #689f38;
             color: white;
             border: none;
@@ -64,25 +65,25 @@
             font-weight: bold;
         }
 
-        /* 🚀 平板優化版遊戲網格 🚀 */
+        /* 🚀 大螢幕滿版遊戲網格 🚀 */
         .game-screen {
-            width: 100%;
-            max-width: 1200px;
-            flex-grow: 1; /* 自動填滿剩餘空間 */
+            width: 95%; /* 撐開寬度 */
+            max-width: 2500px; 
+            flex-grow: 1;
             background: white;
-            border-radius: 20px;
-            padding: 15px;
+            border-radius: 30px;
+            padding: 20px;
             display: grid;
-            /* 固定一行 6 個 */
+            /* 強制一行 6 個，適應大螢幕 */
             grid-template-columns: repeat(6, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 12px;
+            gap: 20px;
             box-sizing: border-box;
-            max-height: calc(100vh - 100px); /* 限制最高高度 */
+            max-height: calc(100vh - 150px);
         }
 
         .card { 
-            perspective: 1000px; 
+            perspective: 1500px; 
             cursor: pointer;
             height: 100%;
         }
@@ -93,8 +94,8 @@
             height: 100%;
             transition: transform 0.6s;
             transform-style: preserve-3d;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
         .card.flipped .card-inner { transform: rotateY(180deg); }
@@ -107,16 +108,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 15px;
-            border: 3px solid #cddc39;
+            border-radius: 25px;
+            border: 5px solid #cddc39;
             box-sizing: border-box;
         }
 
         .card-front {
             background-color: var(--card-bg);
             color: white;
-            font-size: 40px; /* 縮小問號 */
-            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 10px, transparent 10px, transparent 20px);
+            font-size: clamp(60px, 8vw, 150px); /* 大螢幕下的問號會很大 */
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
         }
 
         .card-back {
@@ -126,23 +127,30 @@
         }
 
         .card-back.text-node {
-            font-size: 24px; /* 語詞字體稍微縮小以適應格子 */
+            font-size: clamp(32px, 3.5vw, 80px); /* 讓語詞在大螢幕上超級清晰 */
             color: #1b5e20;
             font-weight: 900;
             text-align: center;
-            padding: 5px;
+            padding: 10px;
         }
 
         .card-back img {
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 92%;
+            max-height: 92%;
             object-fit: contain;
         }
 
         .card.matched { 
-            opacity: 0.15; 
+            opacity: 0.1; 
             pointer-events: none; 
-            transform: scale(0.95);
+            transform: scale(0.92);
+            transition: all 0.5s;
+        }
+
+        /* 針對小螢幕與手機的降級處理 */
+        @media (max-width: 800px) {
+            .game-screen { gap: 10px; padding: 10px; }
+            .card-front, .card-back { border-width: 3px; }
         }
     </style>
 </head>
@@ -150,8 +158,8 @@
 
     <div class="header-area">
         <div class="header-btns">
-            <a href="index.html" class="nav-btn">🏠 大廳</a>
-            <a href="#" id="back-btn" class="nav-btn">🔙 選單</a>
+            <a href="index.html" class="nav-btn">🏠 回大廳</a>
+            <a href="#" id="back-btn" class="nav-btn">🔙 回選單</a>
         </div>
         
         <div class="title-box">
@@ -159,7 +167,7 @@
             <p>⏱️ <span id="timer">0</span> 秒</p>
         </div>
 
-        <button id="btn-restart" onclick="initGame()">🔄 重新</button>
+        <button id="btn-restart" onclick="initGame()">🔄 重新開始</button>
     </div>
 
     <div class="game-screen" id="board"></div>
@@ -170,8 +178,8 @@
         document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
         
         let baseData = [];
-        if (allLessonsData[lessonId]) {
-            document.getElementById('lesson-title').innerText = allLessonsData[lessonId].title;
+        if (typeof allLessonsData !== 'undefined' && allLessonsData[lessonId]) {
+            document.getElementById('lesson-title').innerText = "第四關：" + allLessonsData[lessonId].title;
             baseData = allLessonsData[lessonId].level4 || [];
         }
 
@@ -187,7 +195,7 @@
             startTimer();
 
             if (baseData.length === 0) {
-                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center;">無資料</h2>';
+                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center;">資料庫 level4 尚未填寫喔！</h2>';
                 return;
             }
 
@@ -207,7 +215,7 @@
                     <div class="card-inner">
                         <div class="card-front">?</div>
                         <div class="card-back ${data.type === 'text' ? 'text-node' : ''}">
-                            ${data.type === 'text' ? data.content : `<img src="${data.content}" onerror="this.style.display='none';">`}
+                            ${data.type === 'text' ? data.content : `<img src="${data.content}" onerror="this.style.visibility='hidden';">`}
                         </div>
                     </div>
                 `;
@@ -239,7 +247,7 @@
                 matchesFound++;
                 if (matchesFound === baseData.length) {
                     clearInterval(timer);
-                    setTimeout(() => { alert(`🎉 完成！花了 ${seconds} 秒`); }, 300);
+                    setTimeout(() => { alert(`🎉 太棒了！花了 ${seconds} 秒完成！`); }, 300);
                 }
             }, 500);
         }
