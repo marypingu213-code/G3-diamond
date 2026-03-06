@@ -6,15 +6,15 @@
     <title>三年級國語：Level 3 語詞我最行</title>
     <script src="data.js"></script>
     <style>
-        :root { --primary-bg: #2c3e50; --container-bg: #34495e; --word-bg: #f1c40f; --drop-bg: rgba(255, 255, 255, 0.1); --correct-color: #2ecc71; --home-btn: #3498db; }
+        :root { --primary-bg: #2c3e50; --container-bg: #34495e; --word-bg: #f1c40f; --drop-bg: rgba(255, 255, 255, 0.1); --correct-color: #2ecc71; --back-btn: #e67e22; }
         body { font-family: "Microsoft JhengHei", sans-serif; background-color: var(--primary-bg); color: white; text-align: center; margin: 0; padding: 20px; display: flex; justify-content: center; }
         .game-container { background-color: var(--container-bg); padding: 40px; border-radius: 30px; width: 95%; max-width: 1200px; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border: 4px solid #455a64; }
         h2 { font-size: 42px; color: #f1c40f; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-top: 0; margin-bottom: 10px; }
         
-        /* 回到大廳按鈕樣式 */
-        .home-link-btn { background-color: var(--home-btn); color: white; border: none; padding: 10px 30px; font-size: 20px; border-radius: 50px; cursor: pointer; margin-bottom: 20px; font-weight: bold; text-decoration: none; display: inline-block; box-shadow: 0 4px 0 #2980b9; transition: 0.2s; }
-        .home-link-btn:hover { background-color: #2980b9; transform: scale(1.05); }
-        .home-link-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #2980b9; }
+        /* 回到關卡選單按鈕樣式 */
+        .back-to-lesson-btn { background-color: var(--back-btn); color: white; border: none; padding: 10px 30px; font-size: 20px; border-radius: 50px; cursor: pointer; margin-bottom: 20px; font-weight: bold; text-decoration: none; display: inline-block; box-shadow: 0 4px 0 #d35400; transition: 0.2s; }
+        .back-to-lesson-btn:hover { background-color: #d35400; transform: scale(1.05); }
+        .back-to-lesson-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #d35400; }
 
         .stage-indicator { font-size: 28px; color: #3498db; margin-bottom: 20px; font-weight: bold; background: rgba(0,0,0,0.2); display: inline-block; padding: 5px 20px; border-radius: 10px; width: 100%; box-sizing: border-box; }
         .word-bank { background: #1a252f; padding: 25px; border-radius: 20px; margin-bottom: 40px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; border: 4px dashed #f1c40f; min-height: 100px; }
@@ -31,13 +31,13 @@
 <div class="game-container">
     <h2 id="main-title">💎 載入中... 💎</h2>
     
-    <a href="index.html" class="home-link-btn">🏠 回到課程大廳</a>
+    <a href="#" id="backBtn" class="back-to-lesson-btn">🔙 回到關卡選單</a>
     <br>
     
     <div class="stage-indicator" id="stageText">第一階段：基礎練習</div>
     <div class="word-bank" id="wordBank"></div>
     <div class="quiz-area" id="quizArea"></div>
-    <button class="check-btn" onclick="checkAnswers()">檢查答案 檢查看看</button>
+    <button class="check-btn" onclick="checkAnswers()">檢查答案</button>
 </div>
 
 <script>
@@ -46,32 +46,29 @@
     const lessonData = allLessonsData[lessonId];
 
     if (!lessonData) {
-        alert("找不到課程資料，請回首頁重新進入。");
+        alert("找不到課程資料。");
         location.href = 'index.html';
     }
 
+    // 動態設定按鈕連結，例如回到 lesson.html?id=4
+    document.getElementById('backBtn').href = `lesson.html?id=${lessonId}`;
     document.getElementById('main-title').innerText = lessonData.title;
+    
     let currentStage = 1;
 
     function initStage(stageNum) {
         const fullList = lessonData.level3;
-        // 抓取 0-8 或 9-17 題
         const currentQuestions = stageNum === 1 ? fullList.slice(0, 9) : fullList.slice(9, 18);
         
         document.getElementById('stageText').innerText = stageNum === 1 ? "第一階段：基礎練習" : "第二階段：挑戰練習";
         
         const wordBank = document.getElementById('wordBank');
         wordBank.innerHTML = '';
-        
-        // 抓取該階段所有正確答案並打亂順序
         const uniqueWords = [...new Set(currentQuestions.map(item => item.answer))];
         uniqueWords.sort(() => Math.random() - 0.5).forEach(w => {
             const div = document.createElement('div');
-            div.className = 'word-item'; 
-            div.innerText = w; 
-            div.id = 'word-' + w;
-            div.draggable = true;
-            div.ondragstart = e => e.dataTransfer.setData('text', w);
+            div.className = 'word-item'; div.innerText = w; div.id = 'word-' + w;
+            div.draggable = true; div.ondragstart = e => e.dataTransfer.setData('text', w);
             wordBank.appendChild(div);
         });
 
@@ -84,7 +81,6 @@
             qDiv.innerHTML = `${i+1}. ${parts[0]} <div class="drop-zone" data-ans="${item.answer}"></div> ${parts[1] || ''}`;
             quizArea.appendChild(qDiv);
         });
-
         setupDragLogic();
     }
 
@@ -98,53 +94,8 @@
                    const oldWord = document.getElementById('word-' + zone.innerText);
                    if(oldWord) oldWord.style.display = 'block';
                 }
-                zone.innerText = word; 
-                zone.classList.add('filled');
+                zone.innerText = word; zone.classList.add('filled');
                 const targetWord = document.getElementById('word-' + word);
                 if(targetWord) targetWord.style.display = 'none';
             };
             zone.onclick = () => {
-                if (zone.innerText !== "") {
-                    const oldWord = document.getElementById('word-' + zone.innerText);
-                    if(oldWord) oldWord.style.display = 'block';
-                    zone.innerText = ""; 
-                    zone.classList.remove('filled');
-                    zone.style.backgroundColor = ""; 
-                }
-            };
-        });
-    }
-
-    function checkAnswers() {
-        const zones = document.querySelectorAll('.drop-zone');
-        let correctCount = 0;
-        zones.forEach(z => {
-            if (z.innerText === z.dataset.ans) { 
-                z.style.backgroundColor = "#2ecc71"; 
-                z.style.color = "white"; 
-                correctCount++; 
-            } else { 
-                z.style.backgroundColor = "#e74c3c"; 
-                z.style.color = "white"; 
-            }
-        });
-
-        if (correctCount === zones.length) {
-            if (currentStage === 1) {
-                alert("🏆 基礎練習全對！\n準備好進入「挑戰練習」了嗎？");
-                currentStage = 2; 
-                initStage(2); 
-                window.scrollTo(0, 0);
-            } else {
-                alert("🎉 恭喜！你完成了所有的語詞挑戰！");
-                location.href = 'index.html';
-            }
-        } else {
-            alert("還有地方不對喔，再檢查一下紅色的格子！");
-        }
-    }
-
-    initStage(1);
-</script>
-</body>
-</html>
