@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>第四關：語詞配對大挑戰</title>
     <script src="data.js"></script>
     <style>
@@ -18,75 +18,73 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh; /* 固定高度防止捲動 */
             background-color: #f0f4c3;
             font-family: var(--font-family);
-            padding: 30px;
+            padding: 10px; /* 縮小邊距 */
             box-sizing: border-box;
+            overflow: hidden; /* 禁止頁面捲動 */
         }
 
         .header-area {
             width: 100%;
-            max-width: 1400px;
+            max-width: 1200px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px; /* 縮小上方間距 */
         }
 
-        .header-btns { display: flex; gap: 15px; }
+        .header-btns { display: flex; gap: 10px; }
 
         .nav-btn {
             background-color: #fff;
             color: #558b2f;
             text-decoration: none;
-            font-size: clamp(16px, 1.2vw, 20px);
+            font-size: 16px;
             font-weight: bold;
-            padding: 12px 24px;
+            padding: 8px 16px;
             border-radius: 50px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             border: 2px solid #cddc39;
         }
-        .nav-btn:hover { background-color: #f9fbe7; transform: scale(1.05); }
 
         .title-box { text-align: center; color: #558b2f; }
-        .title-box h1 { margin: 0; font-size: clamp(28px, 3vw, 40px); }
-        .title-box p { margin: 8px 0 0 0; font-size: clamp(18px, 1.5vw, 24px); font-weight: bold; }
+        .title-box h1 { margin: 0; font-size: 24px; } /* 縮小標題 */
+        .title-box p { margin: 2px 0 0 0; font-size: 18px; font-weight: bold; }
 
         #btn-restart {
-            padding: 12px 30px;
-            font-size: clamp(18px, 1.5vw, 22px);
+            padding: 8px 20px;
+            font-size: 18px;
             background: #689f38;
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            transition: 0.2s;
         }
-        #btn-restart:hover { background: #558b2f; transform: scale(1.05); }
 
-        /* 🌟 優化後的遊戲網格布局 🌟 */
+        /* 🚀 平板優化版遊戲網格 🚀 */
         .game-screen {
             width: 100%;
-            max-width: 1400px; /* 限制最大寬度避免在超寬螢幕變形 */
+            max-width: 1200px;
+            flex-grow: 1; /* 自動填滿剩餘空間 */
             background: white;
-            border-radius: 40px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-            padding: 40px;
+            border-radius: 20px;
+            padding: 15px;
             display: grid;
-            /* 使用 auto-fit 讓卡片自動換行，不會擠在一起 */
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 25px;
+            /* 固定一行 6 個 */
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 12px;
             box-sizing: border-box;
+            max-height: calc(100vh - 100px); /* 限制最高高度 */
         }
 
         .card { 
-            aspect-ratio: 3 / 4; /* 強制卡片比例統一為 3:4 */
             perspective: 1000px; 
-            cursor: pointer; 
+            cursor: pointer;
+            height: 100%;
         }
 
         .card-inner {
@@ -95,8 +93,8 @@
             height: 100%;
             transition: transform 0.6s;
             transform-style: preserve-3d;
-            border-radius: 25px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .card.flipped .card-inner { transform: rotateY(180deg); }
@@ -109,16 +107,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 25px;
-            border: 6px solid #cddc39;
+            border-radius: 15px;
+            border: 3px solid #cddc39;
             box-sizing: border-box;
         }
 
         .card-front {
             background-color: var(--card-bg);
             color: white;
-            font-size: clamp(50px, 6vw, 100px); /* 放大問號字體 */
-            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
+            font-size: 40px; /* 縮小問號 */
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 10px, transparent 10px, transparent 20px);
         }
 
         .card-back {
@@ -128,38 +126,23 @@
         }
 
         .card-back.text-node {
-            font-size: clamp(32px, 2.5vw, 55px); /* 放大語詞字體 */
+            font-size: 24px; /* 語詞字體稍微縮小以適應格子 */
             color: #1b5e20;
             font-weight: 900;
             text-align: center;
-            padding: 15px;
-            word-break: break-all;
+            padding: 5px;
         }
 
         .card-back img {
             max-width: 90%;
             max-height: 90%;
             object-fit: contain;
-            border-radius: 15px;
         }
 
         .card.matched { 
-            opacity: 0.2; 
-            cursor: default; 
+            opacity: 0.15; 
             pointer-events: none; 
-            transition: opacity 0.5s; 
             transform: scale(0.95);
-        }
-
-        /* 手機板微調 */
-        @media (max-width: 600px) {
-            .game-screen { 
-                grid-template-columns: repeat(3, 1fr); 
-                gap: 12px; 
-                padding: 15px;
-            }
-            .header-area { flex-direction: column; gap: 15px; }
-            .card-front, .card-back { border-width: 3px; }
         }
     </style>
 </head>
@@ -167,16 +150,16 @@
 
     <div class="header-area">
         <div class="header-btns">
-            <a href="index.html" class="nav-btn">🏠 回總大廳</a>
-            <a href="#" id="back-btn" class="nav-btn">🔙 回課程選單</a>
+            <a href="index.html" class="nav-btn">🏠 大廳</a>
+            <a href="#" id="back-btn" class="nav-btn">🔙 選單</a>
         </div>
         
         <div class="title-box">
             <h1 id="lesson-title">載入中...</h1>
-            <p>⏱️ 計時：<span id="timer">0</span> 秒</p>
+            <p>⏱️ <span id="timer">0</span> 秒</p>
         </div>
 
-        <button id="btn-restart" onclick="initGame()">重新開始 🔄</button>
+        <button id="btn-restart" onclick="initGame()">🔄 重新</button>
     </div>
 
     <div class="game-screen" id="board"></div>
@@ -187,9 +170,8 @@
         document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
         
         let baseData = [];
-        
         if (allLessonsData[lessonId]) {
-            document.getElementById('lesson-title').innerText = "第四關：" + allLessonsData[lessonId].title;
+            document.getElementById('lesson-title').innerText = allLessonsData[lessonId].title;
             baseData = allLessonsData[lessonId].level4 || [];
         }
 
@@ -205,7 +187,7 @@
             startTimer();
 
             if (baseData.length === 0) {
-                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center; color: #e74c3c; align-self: center; font-size: 32px;">老師尚未建立這課的配對圖卡資料喔！</h2>';
+                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center;">無資料</h2>';
                 return;
             }
 
@@ -225,7 +207,7 @@
                     <div class="card-inner">
                         <div class="card-front">?</div>
                         <div class="card-back ${data.type === 'text' ? 'text-node' : ''}">
-                            ${data.type === 'text' ? data.content : `<img src="${data.content}" onerror="this.src='pic/error.png';">`}
+                            ${data.type === 'text' ? data.content : `<img src="${data.content}" onerror="this.style.display='none';">`}
                         </div>
                     </div>
                 `;
@@ -257,11 +239,9 @@
                 matchesFound++;
                 if (matchesFound === baseData.length) {
                     clearInterval(timer);
-                    setTimeout(() => {
-                        alert(`🎉 恭喜過關！\n總共花了 ${seconds} 秒完成配對！`);
-                    }, 300);
+                    setTimeout(() => { alert(`🎉 完成！花了 ${seconds} 秒`); }, 300);
                 }
-            }, 600);
+            }, 500);
         }
 
         function unflipCards() {
@@ -270,22 +250,17 @@
                 firstCard.classList.remove('flipped');
                 secondCard.classList.remove('flipped');
                 resetBoard();
-            }, 1000);
+            }, 800);
         }
 
         function resetBoard() { [firstCard, secondCard, lockBoard] = [null, null, false]; }
-
-        function startTimer() {
-            timer = setInterval(() => { seconds++; timerLabel.textContent = seconds; }, 1000);
-        }
-
+        function startTimer() { timer = setInterval(() => { seconds++; timerLabel.textContent = seconds; }, 1000); }
         function speak(text) {
             const synth = window.speechSynthesis;
             const utter = new SpeechSynthesisUtterance(text);
             utter.lang = 'zh-TW';
             synth.speak(utter);
         }
-
         window.onload = initGame;
     </script>
 </body>
