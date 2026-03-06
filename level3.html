@@ -2,76 +2,63 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>三年級第一課：Level 3 語詞我最行</title>
+    <title>三年級第一課：Level 3 語詞挑戰</title>
     <style>
         :root { --primary-bg: #2c3e50; --container-bg: #34495e; --word-bg: #f1c40f; --drop-bg: rgba(255, 255, 255, 0.1); --correct-color: #2ecc71; }
         body { font-family: "Microsoft JhengHei", sans-serif; background-color: var(--primary-bg); color: white; text-align: center; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        
-        /* 保持 1200px 寬版 */
         .game-container { background-color: var(--container-bg); padding: 40px; border-radius: 30px; width: 95%; max-width: 1200px; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border: 4px solid #455a64; }
-        
         h2 { font-size: 42px; color: #f1c40f; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-top: 0; }
         .stage-indicator { font-size: 28px; color: #3498db; margin-bottom: 20px; font-weight: bold; background: rgba(0,0,0,0.2); display: inline-block; padding: 5px 20px; border-radius: 10px; }
-        
-        /* 語詞積木區 */
         .word-bank { background: #1a252f; padding: 25px; border-radius: 20px; margin-bottom: 40px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; border: 4px dashed #f1c40f; min-height: 100px; }
         .word-item { background: var(--word-bg); color: #2c3e50; padding: 15px 30px; border-radius: 15px; font-weight: 900; font-size: 32px; cursor: grab; user-select: none; box-shadow: 0 6px 0 #d4ac0d; transition: 0.2s; }
         .word-item:active { cursor: grabbing; transform: translateY(4px); box-shadow: 0 2px 0 #d4ac0d; }
-        
-        /* 題目區 */
         .quiz-area { text-align: left; background: rgba(0,0,0,0.1); padding: 30px; border-radius: 20px; }
         .question { font-size: 32px; margin: 25px 0; line-height: 1.8; display: flex; align-items: center; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
-        
-        /* 空格區 */
         .drop-zone { min-width: 160px; height: 60px; border: 3px dashed #f1c40f; margin: 5px 15px; display: inline-flex; align-items: center; justify-content: center; background: var(--drop-bg); border-radius: 12px; transition: 0.3s; font-size: 32px; color: #f1c40f; font-weight: bold; }
         .drop-zone.filled { background: #ffffff; color: #2c3e50; border: none; border-bottom: 6px solid #bdc3c7; }
-        
-        /* 按鈕 */
-        .check-btn { background-color: var(--correct-color); color: white; border: none; padding: 20px 60px; font-size: 36px; border-radius: 60px; cursor: pointer; margin-top: 40px; font-weight: 900; box-shadow: 0 8px 0 #27ae60; transition: 0.2s; }
-        .check-btn:hover { transform: scale(1.05); background-color: #2ecc71; }
+        .check-btn { background-color: var(--correct-color); color: white; border: none; padding: 20px 60px; font-size: 36px; border-radius: 60px; cursor: pointer; margin-top: 40px; font-weight: 900; box-shadow: 0 8px 0 #27ae60; }
     </style>
 </head>
 <body>
 
 <div class="game-container">
-    <h2>💎 三年級第一課：語詞挑戰 💎</h2>
+    <h2>💎 三年級第一課：語詞我最行 💎</h2>
     <div class="stage-indicator" id="stageText">第一階段：基礎練習</div>
     <div class="word-bank" id="wordBank"></div>
     <div class="quiz-area" id="quizArea"></div>
-    <button class="check-btn" onclick="checkAnswers()">檢查答案 檢查看看</button>
+    <button class="check-btn" onclick="checkAnswers()">檢查答案</button>
 </div>
 
 <script>
-    // 三年級第一課資料：基礎 9 題 + 挑戰 9 題
     const stages = {
         1: {
             text: "第一階段：基礎練習",
-            words: ["客廳", "燈盞", "灑水", "茶壺", "菊花", "閱讀", "附近", "眼眸", "留戀"],
+            words: ["雲朵", "翅膀", "臉蛋", "雨傘", "恐龍", "搗亂", "音符", "吼叫", "模樣"],
             questions: [
-                "晚飯後，全家人一起在 @ 聊天。",
-                "古時候人們只能靠著 @ 來照明。",
-                "園丁正在花園裡辛苦地為花草 @ 。",
-                "奶奶用漂亮的 @ 泡了一壺香醇的熱茶。",
-                "秋天到了，公園裡的 @ 全都盛開了。",
-                "多 @ 優良的課外讀物，可以增加知識。",
-                "我家 @ 有一座大操場，大家常去運動。",
-                "妹妹睜大亮晶晶的 @ ，好奇地看著櫥窗。",
-                "要離開母校，大家心裡都充滿了 @ 。"
+                "藍藍的天空有白白的 @ 。",
+                "小鳥拍拍 @ ，飛得很高。",
+                "妹妹的 @ 紅通通的，很可愛。",
+                "下雨了，我要撐開漂亮的 @ 。",
+                "玩具箱裡有一隻大大的綠色 @ 。",
+                "狗狗把客廳弄得亂七八糟，真愛 @ 。",
+                "鋼琴彈出的 @ ，聽起來真美。",
+                "大老虎張開嘴巴大聲 @ 。",
+                "爸爸穿上西裝的 @ ，看起來好神氣。"
             ]
         },
         2: {
             text: "第二階段：挑戰練習",
             words: ["雲朵", "模樣", "臉蛋", "音符", "翅膀", "搗亂", "恐龍", "吼叫", "雨傘"],
             questions: [
-                "天空中有許多白白的 @ ，看起來好像棉花糖。",
+                "天空中有許多白白的 @ ，看起來好像甜甜的棉花糖。",
                 "弟弟穿上超人披風後，一副神氣十足的 @ 。",
-                "妹妹紅通通的 @ 像顆小蘋果，大家都想親一下。",
-                "琴譜上的 @ 跳來跳去，組成一首好聽的曲子。",
-                "老鷹拍打著強壯的 @ ，在天空中盤旋。",
-                "小貓咪在客廳裡 @ ，把奶奶的毛線球弄散了。",
-                "我最喜歡去博物館參觀，看巨大的 @ 化石。",
-                "獅子發出巨大的 @ 聲，把小動物都嚇跑了。",
-                "外面突然下大雨，出門記得要帶 @ 喔！"
+                "妹妹紅通通的 @ 像顆小蘋果，大家看了都想親一下。",
+                "琴譜上的 @ 跳來跳去，組成了一首輕快好聽的曲子。",
+                "老鷹拍打著強壯的 @ ，在高高的天空中盤旋。",
+                "小貓咪在客廳裡 @ ，把奶奶剛捲好的毛線球弄散了。",
+                "我最喜歡去博物館參觀，看那些巨大的 @ 化石。",
+                "森林裡的獅子發出巨大的 @ 聲，把附近的小動物都嚇跑了。",
+                "外面突然下起大雨，出門記得要帶 @ 才不會淋濕喔！"
             ]
         }
     };
@@ -81,10 +68,8 @@
     function initStage(stageNum) {
         const data = stages[stageNum];
         document.getElementById('stageText').innerText = data.text;
-        
         const wordBank = document.getElementById('wordBank');
         wordBank.innerHTML = '';
-        // 每次載入時重新打亂語詞順序
         [...data.words].sort(() => Math.random() - 0.5).forEach(w => {
             const div = document.createElement('div');
             div.className = 'word-item'; div.innerText = w; div.draggable = true; div.id = 'word-' + w;
@@ -101,7 +86,6 @@
             qDiv.innerHTML = `${i+1}. ${parts[0]} <div class="drop-zone" data-ans="${data.words[i]}"></div> ${parts[1]}`;
             quizArea.appendChild(qDiv);
         });
-
         setupZones();
     }
 
@@ -138,19 +122,18 @@
 
         if (correctCount === 9) {
             if (currentStage === 1) {
-                alert("🏆 太棒了！基礎練習全對！\n現在準備進入「挑戰題」模式囉！");
+                alert("🏆 基礎練習全對！\n準備好進入「挑戰題」了嗎？");
                 currentStage = 2;
                 initStage(2);
-                window.scrollTo(0, 0); // 回到頂部方便看新題目
+                window.scrollTo(0, 0);
             } else {
                 alert("🎉 恭喜！你完成了所有的語詞挑戰！");
-                location.href = 'index.html'; // 回首頁
+                location.href = 'index.html';
             }
         } else {
-            alert("還有幾個地方放錯了，再仔細檢查一下紅色的格子！");
+            alert("還有地方放錯了，再檢查一下紅色的格子！");
         }
     }
-
     initStage(1);
 </script>
 </body>
