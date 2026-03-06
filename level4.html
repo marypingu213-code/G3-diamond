@@ -10,6 +10,7 @@
             --font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
             --primary-color: #2196F3;
             --match-color: #4CAF50;
+            --card-bg: #8bc34a;
         }
 
         body {
@@ -20,7 +21,7 @@
             min-height: 100vh;
             background-color: #f0f4c3;
             font-family: var(--font-family);
-            padding: 20px;
+            padding: 30px;
             box-sizing: border-box;
         }
 
@@ -30,7 +31,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .header-btns { display: flex; gap: 15px; }
@@ -39,9 +40,9 @@
             background-color: #fff;
             color: #558b2f;
             text-decoration: none;
-            font-size: clamp(16px, 1.5vw, 24px);
+            font-size: clamp(16px, 1.2vw, 20px);
             font-weight: bold;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 50px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: 0.2s;
@@ -49,16 +50,13 @@
         }
         .nav-btn:hover { background-color: #f9fbe7; transform: scale(1.05); }
 
-        .title-box {
-            text-align: center;
-            color: #558b2f;
-        }
+        .title-box { text-align: center; color: #558b2f; }
         .title-box h1 { margin: 0; font-size: clamp(28px, 3vw, 40px); }
-        .title-box p { margin: 5px 0 0 0; font-size: clamp(18px, 2vw, 24px); font-weight: bold; }
+        .title-box p { margin: 8px 0 0 0; font-size: clamp(18px, 1.5vw, 24px); font-weight: bold; }
 
         #btn-restart {
-            padding: 12px 25px;
-            font-size: clamp(18px, 2vw, 24px);
+            padding: 12px 30px;
+            font-size: clamp(18px, 1.5vw, 22px);
             background: #689f38;
             color: white;
             border: none;
@@ -70,40 +68,35 @@
         }
         #btn-restart:hover { background: #558b2f; transform: scale(1.05); }
 
+        /* 🌟 優化後的遊戲網格布局 🌟 */
         .game-screen {
             width: 100%;
-            max-width: 1500px;
-            flex-grow: 1;
+            max-width: 1400px; /* 限制最大寬度避免在超寬螢幕變形 */
             background: white;
-            border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 30px;
+            border-radius: 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            padding: 40px;
             display: grid;
-            /* 預設 6行 x 3列 (共18張牌，9組配對) */
-            grid-template-columns: repeat(6, 1fr); 
-            grid-template-rows: repeat(3, 1fr);
-            gap: 20px;
+            /* 使用 auto-fit 讓卡片自動換行，不會擠在一起 */
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 25px;
             box-sizing: border-box;
-            min-height: 60vh;
         }
 
-        @media (max-width: 1024px) {
-            .game-screen { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .game-screen { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(6, 1fr); gap: 10px; padding: 15px;}
-            .header-area { flex-direction: column; gap: 15px; }
+        .card { 
+            aspect-ratio: 3 / 4; /* 強制卡片比例統一為 3:4 */
+            perspective: 1000px; 
+            cursor: pointer; 
         }
 
-        .card { perspective: 1000px; cursor: pointer; }
         .card-inner {
             position: relative;
             width: 100%;
             height: 100%;
             transition: transform 0.6s;
             transform-style: preserve-3d;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
 
         .card.flipped .card-inner { transform: rotateY(180deg); }
@@ -116,15 +109,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 20px;
-            border: 4px solid #cddc39;
+            border-radius: 25px;
+            border: 6px solid #cddc39;
             box-sizing: border-box;
         }
 
         .card-front {
-            background-color: #8bc34a;
+            background-color: var(--card-bg);
             color: white;
-            font-size: clamp(40px, 5vw, 80px);
+            font-size: clamp(50px, 6vw, 100px); /* 放大問號字體 */
             background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
         }
 
@@ -135,20 +128,39 @@
         }
 
         .card-back.text-node {
-            font-size: clamp(28px, 3vw, 50px);
-            color: #33691e;
-            font-weight: bold;
+            font-size: clamp(32px, 2.5vw, 55px); /* 放大語詞字體 */
+            color: #1b5e20;
+            font-weight: 900;
             text-align: center;
-            padding: 10px;
+            padding: 15px;
+            word-break: break-all;
         }
 
         .card-back img {
-            max-width: 85%;
-            max-height: 85%;
+            max-width: 90%;
+            max-height: 90%;
             object-fit: contain;
+            border-radius: 15px;
         }
 
-        .card.matched { opacity: 0.3; cursor: default; pointer-events: none; transition: opacity 0.5s; }
+        .card.matched { 
+            opacity: 0.2; 
+            cursor: default; 
+            pointer-events: none; 
+            transition: opacity 0.5s; 
+            transform: scale(0.95);
+        }
+
+        /* 手機板微調 */
+        @media (max-width: 600px) {
+            .game-screen { 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 12px; 
+                padding: 15px;
+            }
+            .header-area { flex-direction: column; gap: 15px; }
+            .card-front, .card-back { border-width: 3px; }
+        }
     </style>
 </head>
 <body>
@@ -170,17 +182,14 @@
     <div class="game-screen" id="board"></div>
 
     <script>
-        // 🌟 1. 動態取得目前是第幾課
         const urlParams = new URLSearchParams(window.location.search);
         const lessonId = urlParams.get('id') || "1"; 
         document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
         
         let baseData = [];
         
-        // 🌟 2. 從 data.js 中抓取那一課的 level4 資料！
         if (allLessonsData[lessonId]) {
             document.getElementById('lesson-title').innerText = "第四關：" + allLessonsData[lessonId].title;
-            // 如果該課有 level4 資料就讀取，沒有就給空陣列
             baseData = allLessonsData[lessonId].level4 || [];
         }
 
@@ -195,9 +204,8 @@
             clearInterval(timer);
             startTimer();
 
-            // 🌟 3. 如果 data.js 裡這課的 level4 是空的，顯示提示
             if (baseData.length === 0) {
-                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center; color: #e74c3c; align-self: center;">老師尚未建立這課的配對圖卡資料喔！</h2>';
+                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center; color: #e74c3c; align-self: center; font-size: 32px;">老師尚未建立這課的配對圖卡資料喔！</h2>';
                 return;
             }
 
@@ -207,7 +215,6 @@
                 deck.push({ content: item.img, type: 'img', match: item.text });
             });
 
-            // 洗牌
             deck.sort(() => Math.random() - 0.5);
 
             deck.forEach(data => {
@@ -218,7 +225,7 @@
                     <div class="card-inner">
                         <div class="card-front">?</div>
                         <div class="card-back ${data.type === 'text' ? 'text-node' : ''}">
-                            ${data.type === 'text' ? data.content : `<img src="${data.content}" onerror="this.alt='圖片載入失敗'">`}
+                            ${data.type === 'text' ? data.content : `<img src="${data.content}" onerror="this.src='pic/error.png';">`}
                         </div>
                     </div>
                 `;
