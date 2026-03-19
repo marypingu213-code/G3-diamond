@@ -100,7 +100,7 @@ const allLessonsData = {
             { text: "湯碗", img: "pic/L2/2.png" },
             { text: "彎鉤", img: "pic/L2/3.png" },
             { text: "推動", img: "pic/L2/4.png" },
-            { text: "羨羨", img: "pic/L2/5.png" },
+            { text: "羨慕", img: "pic/L2/5.png" },
             { text: "捲髮", img: "pic/L2/6.png" },
             { text: "躺下", img: "pic/L2/7.png" },
             { text: "裙擺", img: "pic/L2/8.png" },
