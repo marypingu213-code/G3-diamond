@@ -1,296 +1,109 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作文小幫手 - 我最想擁有的超能力</title>
-    <!-- 使用 Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 使用 Lucide 圖示庫 -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>三年級國語樂園</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
         body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #2c3e50; /* 外圍深色背景，凸顯中間的遊戲區 */
+            font-family: 'Helvetica Neue', Arial, '微軟正黑體', sans-serif;
         }
-        .fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
+
+        .container {
+            /* 嚴格維持 16:9 比例 */
+            width: 100vw;
+            max-width: 1280px;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #e0f7fa, #80deea);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        h1 {
+            font-size: 4rem;
+            color: #006064;
+            margin-bottom: 60px;
+            text-shadow: 3px 3px 6px rgba(255,255,255,0.8);
+            letter-spacing: 4px;
+            font-weight: 900;
         }
+
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            width: 90%;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 240px;
+            height: 110px;
+            background-color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: bold;
+            border-radius: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            border: 6px solid transparent;
+            user-select: none; /* 防止誤觸反白文字 */
+        }
+
+        /* 點擊與懸浮的互動回饋 */
+        .nav-btn:hover, .nav-btn:active {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.25);
+        }
+
+        /* 為不同路徑設計專屬顏色與邊框 */
+        .btn-lesson { border-color: #ffb74d; color: #e65100; }
+        .btn-lesson:hover, .btn-lesson:active { background-color: #fff3e0; }
+
+        .btn-l1 { border-color: #81c784; color: #1b5e20; }
+        .btn-l1:hover, .btn-l1:active { background-color: #e8f5e9; }
+
+        .btn-l2 { border-color: #64b5f6; color: #0d47a1; }
+        .btn-l2:hover, .btn-l2:active { background-color: #e3f2fd; }
+
+        .btn-l3 { border-color: #ba68c8; color: #4a148c; }
+        .btn-l3:hover, .btn-l3:active { background-color: #f3e5f5; }
+
+        .btn-l4 { border-color: #f06292; color: #880e4f; }
+        .btn-l4:hover, .btn-l4:active { background-color: #fce4ec; }
+
     </style>
 </head>
-<body class="text-slate-900 selection:bg-blue-100">
-
-    <div class="min-h-screen p-4 md:p-12">
-        <div class="max-w-4xl mx-auto">
-            
-            <!-- Header 區塊 -->
-            <header class="mb-12 text-center fade-in">
-                <div class="inline-flex items-center justify-center p-4 bg-white text-blue-600 rounded-3xl mb-4 shadow-sm border border-slate-100">
-                    <i data-lucide="sparkles" class="w-10 h-10"></i>
-                </div>
-                <h1 class="text-4xl font-black text-slate-800 mb-2 tracking-tight">作文小幫手</h1>
-                <p class="text-slate-500 text-lg font-medium">題目：我最想擁有的超能力</p>
-            </header>
-
-            <!-- 進度指示器 -->
-            <div class="mb-12 px-2 fade-in">
-                <div class="flex justify-between mb-4 relative" id="progress-dots">
-                    <!-- 進度條底線 -->
-                    <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-200 -translate-y-1/2 -z-10 mx-4"></div>
-                    <!-- 點點會由 JS 動態生成 -->
-                </div>
-                <div class="h-1.5 bg-slate-200 rounded-full overflow-hidden shadow-inner">
-                    <div id="progress-bar" class="h-full bg-blue-600 transition-all duration-700 ease-out" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <!-- 主要內容區塊 -->
-            <div id="main-card" class="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 p-6 md:p-10 border border-white min-h-[500px] flex flex-col transition-all duration-500">
-                <!-- 內容會由 JS 動態注入 -->
-            </div>
-
-            <footer class="mt-12 text-center text-slate-400 text-sm font-medium border-t border-slate-200 pt-8">
-                <p>© 2024 互動式教育工具集 | 致力於讓學習變得有趣且簡單</p>
-            </footer>
+<body>
+    <div class="container">
+        <h1>🎡 三年級國語樂園 🎡</h1>
+        
+        <div class="button-grid">
+            <a href="lesson.html" class="nav-btn btn-lesson">📖 課程內容</a>
+            <a href="level1.html" class="nav-btn btn-l1">⭐ 第一關</a>
+            <a href="level2.html" class="nav-btn btn-l2">⭐⭐ 第二關</a>
+            <a href="level3.html" class="nav-btn btn-l3">⭐⭐⭐ 第三關</a>
+            <a href="level4.html" class="nav-btn btn-l4">💎 第四關</a>
         </div>
     </div>
 
-    <script>
-        // --- 資料設定 ---
-        const options = [
-            {
-                title: "第一步：選擇你最想要的超能力",
-                key: "ability",
-                items: [
-                    { id: "自由飛翔", label: "自由飛翔", icon: "🕊️", desc: "想像鳥兒一樣在雲端穿梭" },
-                    { id: "隱身術", label: "隱身術", icon: "👻", desc: "可以安靜地觀察，不被發現" },
-                    { id: "控制時間", label: "控制時間", icon: "⏳", desc: "讓美好的瞬間永遠停下來" },
-                    { id: "聽懂動物說話", label: "動物語言", icon: "🐱", desc: "知道流浪貓狗心裡在想什麼" },
-                    { id: "瞬間移動", label: "瞬間移動", icon: "🚪", desc: "一眨眼就能到達想去的地方" },
-                    { id: "超級力量", label: "超級力量", icon: "💪", desc: "可以幫助大家搬動沉重的東西" }
-                ]
-            },
-            {
-                title: "第二步：為什麼想要這個能力？",
-                key: "reason",
-                items: [
-                    { id: "不再遲到", label: "不再遲到", icon: "⏰", desc: "解決每天早上趕時間的煩惱" },
-                    { id: "想要安靜", label: "安靜放鬆", icon: "🤫", desc: "在害羞時能擁有自己的空間" },
-                    { id: "了解寵物", label: "了解寵物", icon: "🐶", desc: "想知道家裡的毛小孩為什麼難過" },
-                    { id: "減輕負擔", label: "減輕負擔", icon: "🎒", desc: "讓沉重的書包不再是壓力" },
-                    { id: "探索世界", label: "探索世界", icon: "🌍", desc: "去沒看過的遠方看看風景" }
-                ]
-            },
-            {
-                title: "第三步：你想用它做什麼好事？",
-                key: "action",
-                items: [
-                    { id: "救助受困的人", label: "拯救困難", icon: "🚑", desc: "在危急時刻勇敢保護大家" },
-                    { id: "讓地球變乾淨", label: "清理地球", icon: "♻️", desc: "用超能力讓森林和海洋變漂亮" },
-                    { id: "陪伴孤單的人", label: "溫暖陪伴", icon: "👴", desc: "讓孤單的人感受到快樂與笑容" },
-                    { id: "幫人找回失物", label: "尋找失物", icon: "🔍", desc: "幫同學找回那些遺失的寶貝" },
-                    { id: "保護弱小同學", label: "保護弱小", icon: "🦸", desc: "勇敢站出來，不讓別人被欺負" }
-                ]
-            },
-            {
-                title: "第四步：現在的我可以怎麼做？",
-                key: "realWorld",
-                items: [
-                    { id: "鍛鍊強壯體魄", label: "鍛鍊身體", icon: "🏃", desc: "每天運動，讓自己健康又有力" },
-                    { id: "充實知識大腦", label: "充實知識", icon: "📚", desc: "讀書學習，用智慧解決難題" },
-                    { id: "學習熱心助人", label: "熱心助人", icon: "❤️", desc: "就算沒法力，也能用愛心幫人" },
-                    { id: "認真做好每件事", label: "認真學習", icon: "✍️", desc: "練習專注，把每一件事都做好" }
-                ]
-            }
-        ];
-
-        // --- 狀態管理 ---
-        let currentStep = 0;
-        const selections = {
-            ability: '',
-            reason: '',
-            action: '',
-            realWorld: ''
-        };
-
-        // --- 初始化 Lucide 圖示 ---
-        function initIcons() {
-            lucide.createIcons();
-        }
-
-        // --- 渲染函數 ---
-        function render() {
-            renderProgress();
-            const mainCard = document.getElementById('main-card');
-            
-            if (currentStep < 4) {
-                const currentOption = options[currentStep];
-                mainCard.innerHTML = `
-                    <div class="fade-in flex-grow">
-                        <div class="flex items-center gap-3 mb-8">
-                            <div class="p-3 bg-blue-100 rounded-2xl text-blue-600">
-                                <i data-lucide="pencil" class="w-6 h-6"></i>
-                            </div>
-                            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">${currentOption.title}</h2>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            ${currentOption.items.map(item => `
-                                <button onclick="selectOption('${item.id}')" 
-                                    class="group p-6 rounded-3xl border-2 text-left transition-all hover:border-blue-400 hover:shadow-md active:scale-95 
-                                    ${selections[currentOption.key] === item.id ? 'border-blue-600 bg-blue-50/50 ring-4 ring-blue-50 shadow-sm' : 'border-slate-100 bg-white hover:bg-slate-50'}">
-                                    <div class="flex items-center gap-5">
-                                        <div class="text-5xl group-hover:scale-110 transition-transform duration-300">${item.icon}</div>
-                                        <div>
-                                            <div class="font-bold text-xl text-slate-800 mb-1">${item.label}</div>
-                                            <div class="text-sm text-slate-500 leading-snug">${item.desc}</div>
-                                        </div>
-                                    </div>
-                                </button>
-                            `).join('')}
-                        </div>
-
-                        <div class="mt-12">
-                            <button onclick="prevStep()" ${currentStep === 0 ? 'disabled' : ''} 
-                                class="flex items-center gap-2 px-6 py-2 rounded-xl font-bold transition-all ${currentStep === 0 ? 'text-slate-200 cursor-not-allowed opacity-50' : 'text-slate-500 hover:bg-slate-100'}">
-                                <i data-lucide="arrow-left" class="w-4 h-4"></i> 返回上一步
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else {
-                const essay = generateEssay();
-                mainCard.innerHTML = `
-                    <div class="fade-in">
-                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 border-b border-slate-50 pb-6">
-                            <div class="flex items-center gap-3">
-                                <div class="p-3 bg-green-100 rounded-2xl text-green-600 shadow-sm">
-                                    <i data-lucide="book-open" class="w-6 h-6"></i>
-                                </div>
-                                <div>
-                                    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">恭喜你完成初稿！</h2>
-                                    <p class="text-slate-400 text-sm">這是一份充滿想像力的文章</p>
-                                </div>
-                            </div>
-                            <button onclick="resetApp()" class="flex items-center gap-2 p-2 px-4 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all font-bold group">
-                                <i data-lucide="rotate-ccw" class="w-4 h-4 group-hover:rotate-[-45deg] transition-transform"></i> 重新開始
-                            </button>
-                        </div>
-                        
-                        <div class="bg-slate-50 border-2 border-slate-100 rounded-[2rem] p-8 mb-8 shadow-inner relative overflow-hidden group">
-                            <div class="absolute top-[-20px] right-[-20px] text-slate-200 opacity-20 rotate-12">
-                                <i data-lucide="star" class="w-32 h-32 fill-current"></i>
-                            </div>
-                            <pre id="essay-content" class="whitespace-pre-wrap font-serif text-xl leading-relaxed text-slate-700 relative z-10 selection:bg-blue-100">${essay}</pre>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <button id="copy-btn" onclick="copyText()" class="flex-1 flex items-center justify-center gap-2 px-8 py-5 rounded-2xl font-bold text-lg transition-all shadow-xl shadow-blue-200 active:scale-95 bg-blue-600 text-white hover:bg-blue-700">
-                                <i data-lucide="copy" class="w-6 h-6"></i> 複製整篇文章內容
-                            </button>
-                            <button onclick="resetApp()" class="px-8 py-5 rounded-2xl font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-all border border-slate-200">
-                                修改選項
-                            </button>
-                        </div>
-                        
-                        <div class="mt-10 flex items-center justify-center gap-2 text-slate-400">
-                            <i data-lucide="heart" class="w-4 h-4 text-red-300 fill-red-300"></i>
-                            <p class="text-sm font-semibold italic">你是最棒的小作家，繼續加油！</p>
-                        </div>
-                    </div>
-                `;
-            }
-            initIcons();
-        }
-
-        function renderProgress() {
-            const progressDots = document.getElementById('progress-dots');
-            const progressBar = document.getElementById('progress-bar');
-            
-            let html = '<div class="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-200 -translate-y-1/2 -z-10 mx-4"></div>';
-            for (let i = 0; i <= 4; i++) {
-                const isActive = currentStep === i;
-                const isCompleted = currentStep > i;
-                const colorClass = isActive ? 'bg-white border-blue-600 text-blue-600 scale-110 shadow-lg' : 
-                                   isCompleted ? 'bg-green-500 border-green-500 text-white' : 'bg-white border-slate-300 text-slate-400';
-                
-                html += `
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border-2 ${colorClass}">
-                        ${isCompleted ? '<i data-lucide="check-circle-2" class="w-5 h-5"></i>' : i + 1}
-                    </div>
-                `;
-            }
-            progressDots.innerHTML = html;
-            progressBar.style.width = `${(currentStep / 4) * 100}%`;
-        }
-
-        // --- 互動邏輯 ---
-        function selectOption(val) {
-            selections[options[currentStep].key] = val;
-            if (currentStep < 4) {
-                setTimeout(() => {
-                    currentStep++;
-                    render();
-                }, 300);
-            }
-        }
-
-        function prevStep() {
-            if (currentStep > 0) {
-                currentStep--;
-                render();
-            }
-        }
-
-        function generateEssay() {
-            const { ability, reason, action, realWorld } = selections;
-            return `我最想擁有的超能力是「${ability}」。
-
-如果我擁有這個能力，那該有多好！因為在生活中，我常常覺得「${reason}」這件事讓我很困擾，如果有這項超能力，我就可以輕鬆解決這些問題，生活也會變得更有趣。
-
-我不僅想讓自己方便，更想用這份力量去幫助別人。例如，我想嘗試「${action}」，看見別人臉上的笑容，我也會覺得非常有成就感，覺得自己像個真正的英雄。
-
-雖然我現在還沒有真正的超能力，但我相信，只要我願意「${realWorld}」，我也能成為一個優秀的人。我想，一顆願意助人的心，就是世界上最強大的超能力！`;
-        }
-
-        function copyText() {
-            const essay = generateEssay();
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = essay;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-
-            const btn = document.getElementById('copy-btn');
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="check-circle-2" class="w-6 h-6"></i> 複製成功了！';
-            btn.classList.replace('bg-blue-600', 'bg-green-600');
-            initIcons();
-            
-            setTimeout(() => {
-                btn.innerHTML = originalContent;
-                btn.classList.replace('bg-green-600', 'bg-blue-600');
-                initIcons();
-            }, 2000);
-        }
-
-        function resetApp() {
-            currentStep = 0;
-            selections.ability = '';
-            selections.reason = '';
-            selections.action = '';
-            selections.realWorld = '';
-            render();
-        }
-
-        // 初始載入
-        window.onload = render;
-    </script>
-</body>
+    </body>
 </html>
