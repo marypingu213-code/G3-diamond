@@ -118,12 +118,37 @@
             </a>
         </div>
     </div>
+    
     <script>
+        // 1. 將課文資料直接寫在這裡，雙重保險！
+        const localLessonsData = {
+            "1": "第一課：最美的模樣",
+            "2": "第二課：玩玩具",
+            "3": "第三課：愛玉的變身術",
+            "4": "第四課：楊修猜字",
+            "5": "第五課：唱反調",
+            "6": "第六課：一飛沖天",
+            "7": "第七課：井仔腳鹽田",
+            "8": "第八課：和魚一起游泳",
+            "9": "第九課：三峽老街樂藍染",
+            "10": "第十課：地球的眼淚",
+            "11": "第十一課：枯木是大飯店",
+            "12": "第十二課：騎樓"
+        };
+
         const urlParams = new URLSearchParams(window.location.search);
         const lessonId = urlParams.get('id') || "1";
-        if (allLessonsData[lessonId]) {
+        
+        // 2. 判斷邏輯：先看 data.js 有沒有資料，沒有就用上面的 localLessonsData
+        if (typeof allLessonsData !== 'undefined' && allLessonsData[lessonId]) {
             document.getElementById('lesson-title').innerText = allLessonsData[lessonId].title;
+        } else if (localLessonsData[lessonId]) {
+            document.getElementById('lesson-title').innerText = localLessonsData[lessonId];
+        } else {
+            document.getElementById('lesson-title').innerText = "未知的課文";
         }
+
+        // 3. 把 id 繼續傳遞給後面的四個關卡
         document.getElementById('btn-l1').href = `level1.html?id=${lessonId}`;
         document.getElementById('btn-l2').href = `level2.html?id=${lessonId}`;
         document.getElementById('btn-l3').href = `level3.html?id=${lessonId}`;
