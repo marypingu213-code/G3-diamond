@@ -7,103 +7,137 @@
     <style>
         body {
             margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #2c3e50; /* 外圍深色背景，凸顯中間的遊戲區 */
+            background-color: #2c3e50;
             font-family: 'Helvetica Neue', Arial, '微軟正黑體', sans-serif;
         }
 
         .container {
-            /* 嚴格維持 16:9 比例 */
             width: 100vw;
             max-width: 1280px;
             aspect-ratio: 16 / 9;
-            background: linear-gradient(135deg, #e0f7fa, #80deea);
+            background: #fbf8f1; /* 柔和的米白背景 */
             border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #2c3e50;
+            margin-top: 10px;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            width: 95%;
+            height: 100%;
+        }
+
+        .lesson-btn {
+            text-decoration: none;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative;
-            overflow: hidden;
-        }
-
-        h1 {
-            font-size: 4rem;
-            color: #006064;
-            margin-bottom: 60px;
-            text-shadow: 3px 3px 6px rgba(255,255,255,0.8);
-            letter-spacing: 4px;
-            font-weight: 900;
-        }
-
-        .button-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 40px;
-            width: 90%;
-        }
-
-        .nav-btn {
-            text-decoration: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 240px;
-            height: 110px;
             background-color: #ffffff;
-            font-size: 2.2rem;
+            border-radius: 20px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            border: 4px solid #e0e0e0;
+            transition: transform 0.1s, box-shadow 0.1s;
+            color: #333;
+            user-select: none;
+        }
+
+        .lesson-btn:active {
+            transform: scale(0.95);
+        }
+
+        .lesson-num {
+            font-size: 1.8rem;
             font-weight: bold;
-            border-radius: 25px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            border: 6px solid transparent;
-            user-select: none; /* 防止誤觸反白文字 */
+            color: #00796b;
+            margin-bottom: 8px;
         }
 
-        /* 點擊與懸浮的互動回饋 */
-        .nav-btn:hover, .nav-btn:active {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 15px 25px rgba(0,0,0,0.25);
+        .lesson-name {
+            font-size: 1.4rem;
+            color: #555;
         }
 
-        /* 為不同路徑設計專屬顏色與邊框 */
-        .btn-lesson { border-color: #ffb74d; color: #e65100; }
-        .btn-lesson:hover, .btn-lesson:active { background-color: #fff3e0; }
-
-        .btn-l1 { border-color: #81c784; color: #1b5e20; }
-        .btn-l1:hover, .btn-l1:active { background-color: #e8f5e9; }
-
-        .btn-l2 { border-color: #64b5f6; color: #0d47a1; }
-        .btn-l2:hover, .btn-l2:active { background-color: #e3f2fd; }
-
-        .btn-l3 { border-color: #ba68c8; color: #4a148c; }
-        .btn-l3:hover, .btn-l3:active { background-color: #f3e5f5; }
-
-        .btn-l4 { border-color: #f06292; color: #880e4f; }
-        .btn-l4:hover, .btn-l4:active { background-color: #fce4ec; }
-
+        /* 點擊回饋：依據不同行給予不同邊框顏色提示 */
+        .lesson-btn:nth-child(4n+1) { border-color: #ffb74d; }
+        .lesson-btn:nth-child(4n+2) { border-color: #81c784; }
+        .lesson-btn:nth-child(4n+3) { border-color: #64b5f6; }
+        .lesson-btn:nth-child(4n+4) { border-color: #ba68c8; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎡 三年級國語樂園 🎡</h1>
         
-        <div class="button-grid">
-            <a href="lesson.html" class="nav-btn btn-lesson">📖 課程內容</a>
-            <a href="level1.html" class="nav-btn btn-l1">⭐ 第一關</a>
-            <a href="level2.html" class="nav-btn btn-l2">⭐⭐ 第二關</a>
-            <a href="level3.html" class="nav-btn btn-l3">⭐⭐⭐ 第三關</a>
-            <a href="level4.html" class="nav-btn btn-l4">💎 第四關</a>
+        <div class="lesson-grid">
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第一課</div>
+                <div class="lesson-name">最美的模樣</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第二課</div>
+                <div class="lesson-name">玩玩具</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第三課</div>
+                <div class="lesson-name">愛玉的變身術</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第四課</div>
+                <div class="lesson-name">楊修猜字</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第五課</div>
+                <div class="lesson-name">唱反調</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第六課</div>
+                <div class="lesson-name">一飛沖天</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第七課</div>
+                <div class="lesson-name">井仔腳鹽田</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第八課</div>
+                <div class="lesson-name">和魚一起游泳</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第九課</div>
+                <div class="lesson-name">三峽老街樂藍染</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第十課</div>
+                <div class="lesson-name">地球的眼淚</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第十一課</div>
+                <div class="lesson-name">枯木是大飯店</div>
+            </a>
+            <a href="lesson.html" class="lesson-btn">
+                <div class="lesson-num">第十二課</div>
+                <div class="lesson-name">騎樓</div>
+            </a>
         </div>
     </div>
-
-    </body>
+</body>
 </html>
