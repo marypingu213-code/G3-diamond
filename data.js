@@ -281,7 +281,7 @@ const allLessonsData = {
         title: "第六課：一飛沖天", 
         level1: [
             { word: "村", parts: ["images/L6/筆順-村-部件-1.png", "images/L6/筆順-村-部件-2.png", "images/L6/筆順-村-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180, scale: 0.2}] },
-            { word: "猴", parts: ["images/L6/筆順-猴-部件-1.png", "images/L6/筆順-猴-部件-2.png", "images/L6/筆順-猴-部件-3.png", "images/L6/筆順-猴-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180, scale: 0.6}, {x: 150, y: 180, scale: 0.6}] },
+            { word: "猴", parts: ["images/L6/筆順-猴-部件-1.png", "images/L6/筆順-猴-部件-2.png", "images/L6/筆順-猴-部件-3.png", "images/L6/筆順-猴-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180, scale: 0.6}] },
             { word: "抖", parts: ["images/L6/筆順-抖-部件-1.png", "images/L6/筆順-抖-部件-2.png", "images/L6/筆順-抖-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180, scale: 0.5}, {x: 170, y: 180}] },
             { word: "造", parts: ["images/L6/筆順-造-部件-1.png", "images/L6/筆順-造-部件-2.png", "images/L6/筆順-造-部件-3.png"], pos: [{x: 70, y: 180, scale: 0.6}, {x: 120, y: 180, scale: 0.45}, {x: 170, y: 180}] },
             { word: "助", parts: ["images/L6/筆順-助-部件-1.png", "images/L6/筆順-助-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
@@ -360,7 +360,17 @@ const allLessonsData = {
             { text: "這盞華麗的________吊燈懸掛在大廳中央，看起來非常氣派。", answer: "水晶" },
             { text: "這種來自日本的傳統________，以其獨特的清香與微苦風味受到大眾歡迎。", answer: "抹茶" }
         ], 
-        level4: [] 
+        level4: [
+            { text: "擠滿", img: "pic/L7/1.png" },
+            { text: "燦爛", img: "pic/L7/2.png" },
+            { text: "攪動", img: "pic/L7/3.png" },
+            { text: "耙子", img: "pic/L7/4.png" },
+            { text: "抹茶", img: "pic/L7/5.png" },
+            { text: "水晶", img: "pic/L7/6.png" },
+            { text: "教堂", img: "pic/L7/7.png" },
+            { text: "雕刻", img: "pic/L7/8.png" },
+            { text: "彩霞", img: "pic/L7/9.png" }
+        ] 
     },
 
     // ================= 第八至十二課 =================
