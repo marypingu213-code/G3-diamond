@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>第三關：選擇題大挑戰</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f3e5f5; /* 淡紫色系背景 */
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* 頂部導覽與進度 */
+        .header {
+            background: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        .back-btn {
+            padding: 12px 20px;
+            background: #e2e8f0;
+            color: #4a5568;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .progress-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #8e44ad;
+        }
+
+        /* 題目顯示區 */
+        .content-area {
+            flex: 1;
+            padding: 30px 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* 選擇題卡片樣式 */
+        .question-card {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            padding: 25px 30px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .speak-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 22px;
+            cursor: pointer;
+            margin-right: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        .speak-btn:active { transform: scale(0.95); }
+        .q-text {
+            font-size: 26px;
+            line-height: 1.6;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        /* 選項網格 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+        .option-btn {
+            padding: 15px 20px;
+            font-size: 22px;
+            color: #34495e;
+            background: #f8f9fa;
+            border: 3px solid #dee2e6;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .option-num {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #e2e8f0;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        /* 選項狀態 */
+        .option-btn.selected {
+            background: #f4ecf7;
+            border-color: #9b59b6;
+            box-shadow: 0 4px 8px rgba(155, 89, 182, 0.2);
+        }
+        .option-btn.selected .option-num { background: #9b59b6; color: white; }
+        
+        .option-btn.correct { background: #d5f5e3; border-color: #2ecc71; color: #27ae60; pointer-events: none;}
+        .option-btn.correct .option-num { background: #2ecc71; color: white; }
+        
+        .option-btn.wrong { background: #fadbd8; border-color: #e74c3c; color: #c0392b; pointer-events: none;}
+        .option-btn.wrong .option-num { background: #e74c3c; color: white; }
+
+        /* 底部控制區 */
+        .controls-area {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+        .action-btn {
+            padding: 15px 40px;
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+            background: #8e44ad;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #732d91;
+            transition: 0.2s;
+        }
+        .action-btn:active { transform: translateY(5px); box-shadow: 0 0 0; }
+        
+        #feedback-msg {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="back-btn">⬅ 返回首頁</a>
+        <div class="progress-title" id="stage-title">第三關：選擇題 (1/5)</div>
+        <div style="width: 100px;"></div>
+    </div>
+
+    <div class="content-area" id="quiz-container">
+        </div>
+
+    <div class="controls-area">
+        <div id="feedback-msg"></div>
+        <div class="controls">
+            <button class="action-btn" id="check-btn" onclick="checkAnswers()">對答案</button>
+            <button class="action-btn" id="next-btn" style="display:none; background:#2980b9; box-shadow: 0 5px 0 #1f618d;" onclick="nextPart()">下一頁 ➡</button>
+        </div>
+    </div>
+
+    <script>
+        // 題庫資料 (已將圖片題目依邏輯分組，每頁 2~3 題)
+        const quizData = [
+            {
+                title: "第三關：選擇題 (1/5)",
+                questions: [
+                    { text: "下列哪一個字，部首和「丑」相同？", options: ["母", "千", "丞", "巨"], answer: "丞" },
+                    { text: "「遊艇在大海上□□了一個多小時。」□中適合填入哪個語詞？", options: ["流行", "航行", "品行", "銀行"], answer: "航行" },
+                    { text: "下列哪一組字的部首兩兩相同？", options: ["築／村", "義／羨", "僅／樓", "腐／度"], answer: "義／羨" }
+                ]
+            },
+            {
+                title: "第三關：選擇題 (2/5)",
+                questions: [
+                    { text: "阿土伯看到結實纍纍的稻田，臉上露出□□微笑。", options: ["一角", "一抹", "一直", "一起"], answer: "一抹" },
+                    { text: "媽媽不斷用湯勺□□鍋子裡的食材，不一會兒，一鍋好喝的玉米濃湯就完成了。", options: ["行動", "感動", "移動", "攪動"], answer: "攪動" },
+                    { text: "弟弟不小心打破了爸爸珍藏的古董花瓶，把爸爸氣得渾身□□。", options: ["發現", "發行", "發射", "發抖"], answer: "發抖" }
+                ]
+            },
+            {
+                title: "第三關：選擇題 (3/5)",
+                questions: [
+                    { text: "學校舉辦繪畫比賽，讓學生能□□□□。", options: ["一望無際", "四腳朝天", "大展身手", "胡說八道"], answer: "大展身手" },
+                    { text: "□□天氣如何，爺爺□會到公園散步。", options: ["無論／都", "雖然／但", "如果／就", "自從／就"], answer: "無論／都" },
+                    { text: "「這個小鎮的居民熱情好客，讓遊客感受到濃濃的□□□，有賓至如歸的感覺。」□中最適合填入哪一個語詞？", options: ["人情味", "展示間", "古早味", "手工藝"], answer: "人情味" }
+                ]
+            },
+            {
+                title: "第三關：選擇題 (4/5)",
+                questions: [
+                    { text: "「砌牆」的「砌」，讀音與哪一個字相同？", options: ["切", "七", "旗", "器"], answer: "器" },
+                    { text: "「那棟高聳的□□已經廢棄許久，即將被政府拆除。」□中應填入哪一個語詞？", options: ["建議", "建築", "建立", "建功"], answer: "建築" },
+                    { text: "哪一個字的部首和其他三個字不一樣？", options: ["品", "古", "巨", "另"], answer: "巨" }
+                ]
+            },
+            {
+                title: "第三關：選擇題 (5/5) - 課文回顧",
+                questions: [
+                    { text: "依據課文內容，作者全家人去了哪裡？", options: ["蘭嶼", "澎湖", "墾丁", "綠島"], answer: "綠島" },
+                    { text: "依據課文內容，下列哪個不是騎樓的功能？", options: ["讓汽機車可隨意停放", "讓商店展示商品", "給行人逛街的空間", "讓行人躲避大雨"], answer: "讓汽機車可隨意停放" },
+                    { text: "課文中，關於水的旅行，下列哪個敘述正確？", options: ["水滴蒸發時會把鹽分一起帶走", "河川的水和海水一樣鹹", "水流到海裡後就不會再改變型態", "水被太陽照射後會蒸發成水蒸氣"], answer: "水被太陽照射後會蒸發成水蒸氣" }
+                ]
+            }
+        ];
+
+        let currentPartIndex = 0;
+        let userSelections = []; // 紀錄目前頁面使用者的選擇
+
+        function renderPart(index) {
+            const part = quizData[index];
+            document.getElementById('stage-title').innerText = part.title;
+            
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            document.getElementById('feedback-msg').innerText = '';
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('check-btn').style.display = 'block';
+            
+            userSelections = new Array(part.questions.length).fill(null);
+
+            part.questions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+
+                // 標題區塊 (含語音按鈕)
+                const header = document.createElement('div');
+                header.className = 'q-header';
+                
+                const speakBtn = document.createElement('button');
+                speakBtn.className = 'speak-btn';
+                speakBtn.innerText = '🔊';
+                // 語音報讀題目文字
+                speakBtn.onclick = () => speakText(q.text.replace(/□/g, "空格"));
+                
+                const qText = document.createElement('div');
+                qText.className = 'q-text';
+                qText.innerText = `${qIndex + 1}. ${q.text}`;
+
+                header.appendChild(speakBtn);
+                header.appendChild(qText);
+                card.appendChild(header);
+
+                // 選項區塊
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                optionsGrid.id = `options-group-${qIndex}`;
+
+                q.options.forEach((opt, optIndex) => {
+                    const btn = document.createElement('div');
+                    btn.className = 'option-btn';
+                    
+                    const numSpan = document.createElement('span');
+                    numSpan.className = 'option-num';
+                    numSpan.innerText = optIndex + 1; // 顯示 1, 2, 3, 4
+                    
+                    btn.appendChild(numSpan);
+                    btn.appendChild(document.createTextNode(opt));
+                    
+                    btn.onclick = () => selectOption(qIndex, opt, btn);
+                    optionsGrid.appendChild(btn);
+                });
+
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+        }
+
+        // 選擇選項的邏輯 (單選)
+        function selectOption(qIndex, selectedValue, btnElement) {
+            // 如果已經答對/答錯(對過答案)，就不允許再點擊
+            if (btnElement.classList.contains('correct') || btnElement.classList.contains('wrong')) return;
+
+            const group = document.getElementById(`options-group-${qIndex}`);
+            const buttons = group.querySelectorAll('.option-btn');
+            
+            // 清除同群組其他按鈕的選取狀態
+            buttons.forEach(b => b.classList.remove('selected'));
+            
+            // 標記當前按鈕
+            btnElement.classList.add('selected');
+            
+            // 紀錄答案
+            userSelections[qIndex] = selectedValue;
+        }
+
+        function checkAnswers() {
+            const part = quizData[currentPartIndex];
+            let correctCount = 0;
+            let allAnswered = true;
+
+            // 檢查是否每題都作答了
+            for (let i = 0; i < userSelections.length; i++) {
+                if (userSelections[i] === null) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            if (!allAnswered) {
+                const msg = document.getElementById('feedback-msg');
+                msg.innerText = "⚠️ 還有題目沒選到答案喔！";
+                msg.style.color = "#e67e22";
+                return;
+            }
+
+            // 對答案
+            part.questions.forEach((q, qIndex) => {
+                const group = document.getElementById(`options-group-${qIndex}`);
+                const buttons = group.querySelectorAll('.option-btn');
+                const userAns = userSelections[qIndex];
+                
+                buttons.forEach(btn => {
+                    const optText = btn.childNodes[1].nodeValue; // 取得按鈕上的文字
+                    if (optText === q.answer) {
+                        // 正確答案亮綠色
+                        btn.classList.add('correct');
+                        btn.classList.remove('selected');
+                    } else if (btn.classList.contains('selected')) {
+                        // 選錯的亮紅色
+                        btn.classList.add('wrong');
+                        btn.classList.remove('selected');
+                    }
+                });
+
+                if (userAns === q.answer) {
+                    correctCount++;
+                }
+            });
+
+            const msg = document.getElementById('feedback-msg');
+            if (correctCount === part.questions.length) {
+                msg.innerText = "🎉 太棒了！全部答對！";
+                msg.style.color = "#27ae60";
+                speakText("太棒了，全部答對！");
+                
+                document.getElementById('check-btn').style.display = 'none';
+                
+                if (currentPartIndex < quizData.length - 1) {
+                    document.getElementById('next-btn').style.display = 'block';
+                } else {
+                    document.getElementById('next-btn').style.display = 'block';
+                    document.getElementById('next-btn').innerText = "🏆 恭喜完成第三關！回首頁";
+                    document.getElementById('next-btn').onclick = () => window.location.href = 'index.html';
+                }
+            } else {
+                msg.innerText = "💪 喔噢，有幾題答錯了，我把紅色的標記出來了，請重新選擇！";
+                msg.style.color = "#c0392b";
+                
+                // 將錯的選項清空，讓學生重選
+                part.questions.forEach((q, qIndex) => {
+                    if (userSelections[qIndex] !== q.answer) {
+                        userSelections[qIndex] = null;
+                        const group = document.getElementById(`options-group-${qIndex}`);
+                        setTimeout(() => {
+                            group.querySelectorAll('.wrong').forEach(b => b.classList.remove('wrong'));
+                        }, 1500); // 1.5秒後紅色消失讓學生重按
+                    }
+                });
+            }
+        }
+
+        function nextPart() {
+            currentPartIndex++;
+            if (currentPartIndex < quizData.length) {
+                renderPart(currentPartIndex);
+                // 畫面捲動回頂部
+                document.querySelector('.content-area').scrollTop = 0; 
+            }
+        }
+
+        // Web Speech API (語音報讀)
+        function speakText(text) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-TW';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 載入第一部分
+        renderPart(currentPartIndex);
+    </script>
+</body>
+</html>
