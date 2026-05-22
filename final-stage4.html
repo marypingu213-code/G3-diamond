@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: "Microsoft JhengHei", sans-serif;
-            background-color: #e0f7fa; /* 清新的湖水藍背景 */
+            background-color: #e0f7fa;
             margin: 0;
             padding: 0;
             height: 100vh;
@@ -51,6 +51,17 @@
             align-items: center;
         }
         
+        .instruction {
+            font-size: 24px;
+            color: #d35400;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: #fff3cd;
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
         /* 題目卡片樣式 */
         .question-card {
             background: white;
@@ -61,55 +72,67 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.05);
             margin-bottom: 25px;
         }
-        .q-header {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-        .speak-btn {
-            background: #00bcd4;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            font-size: 22px;
-            cursor: pointer;
-            margin-right: 15px;
-            flex-shrink: 0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            transition: 0.2s;
-        }
-        .speak-btn:active { transform: scale(0.95); }
-        .q-text {
-            font-size: 26px;
-            line-height: 1.6;
+        
+        .sentence-container {
+            font-size: 32px;
+            line-height: 1.8;
             color: #2c3e50;
             font-weight: bold;
+            margin-bottom: 15px;
+            user-select: none;
         }
 
-        /* 錯字標記 */
-        .typo-mark {
-            color: #e74c3c;
-            font-size: 30px;
-            background: #fadbd8;
-            padding: 0 5px;
+        /* 句子裡的每一個字 */
+        .char-span {
+            cursor: pointer;
+            padding: 2px 4px;
             border-radius: 8px;
+            transition: 0.2s;
             display: inline-block;
-            transition: 0.5s;
         }
-        .typo-mark.fixed {
-            color: #27ae60;
-            background: #d5f5e3;
-            transform: scale(1.1);
+        
+        /* 點錯時的震動動畫 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); color: #e74c3c; }
+            75% { transform: translateX(5px); color: #e74c3c; }
+        }
+        .error-shake {
+            animation: shake 0.4s;
         }
 
-        /* 待選字按鈕 (3個) */
+        /* 找出錯字時的樣式 */
+        .char-span.found {
+            background-color: #ffeaa7;
+            color: #d35400;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 改正後的樣式 */
+        .char-span.fixed {
+            color: #27ae60;
+            background-color: transparent;
+            transform: scale(1);
+            box-shadow: none;
+            pointer-events: none; /* 改對了就不能再點 */
+        }
+
+        /* 待選字按鈕 (預設隱藏) */
         .options-container {
-            display: flex;
+            display: none; /* 一開始隱藏 */
             gap: 15px;
             justify-content: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed #b2ebf2;
+            animation: fadeIn 0.4s;
         }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .option-btn {
             flex: 1;
             padding: 15px 0;
@@ -123,14 +146,7 @@
             transition: 0.2s;
             text-align: center;
         }
-        
-        /* 選項狀態 */
-        .option-btn.selected {
-            background: #e0f7fa;
-            border-color: #00bcd4;
-            box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
-            color: #00838f;
-        }
+        .option-btn:active { transform: scale(0.95); }
         .option-btn.correct { background: #d5f5e3; border-color: #2ecc71; color: #27ae60; pointer-events: none;}
         .option-btn.wrong { background: #fadbd8; border-color: #e74c3c; color: #c0392b; pointer-events: none;}
 
@@ -144,22 +160,16 @@
             align-items: center;
             z-index: 10;
         }
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-        }
         .action-btn {
             padding: 15px 40px;
             font-size: 26px;
             font-weight: bold;
             color: white;
-            background: #00acc1;
+            background: #f39c12;
             border: none;
             border-radius: 15px;
             cursor: pointer;
-            box-shadow: 0 5px 0 #00838f;
+            box-shadow: 0 5px 0 #d68910;
             transition: 0.2s;
         }
         .action-btn:active { transform: translateY(5px); box-shadow: 0 0 0; }
@@ -169,6 +179,7 @@
             font-weight: bold;
             text-align: center;
             margin-bottom: 15px;
+            color: #27ae60;
         }
     </style>
 </head>
@@ -179,67 +190,65 @@
         <div style="width: 100px;"></div>
     </div>
 
-    <div class="content-area" id="quiz-container">
-        </div>
+    <div class="content-area">
+        <div class="instruction">💡 請先點擊句子裡的「錯字」，再選出正確的字！</div>
+        <div id="quiz-container">
+            </div>
+    </div>
 
     <div class="controls-area">
         <div id="feedback-msg"></div>
-        <div class="controls">
-            <button class="action-btn" id="check-btn" onclick="checkAnswers()">對答案</button>
-            <button class="action-btn" id="next-btn" style="display:none; background:#f39c12; box-shadow: 0 5px 0 #d68910;" onclick="nextPart()">下一頁 ➡</button>
-        </div>
+        <button class="action-btn" id="next-btn" style="display:none;" onclick="nextPart()">下一頁 ➡</button>
     </div>
 
     <script>
-        // 題庫資料 (已依邏輯分組，每頁 3 題)
-        // typoChar 是題目裡顯示的錯字，correctChar 是正確答案
+        // 題庫資料
         const quizData = [
             {
                 title: "第四關：改錯字魔王 (1/5)",
                 questions: [
-                    { text: "太魯閣【俠】谷是非常著名的景點。", typoChar: "俠", options: ["峽", "狹", "夾"], answer: "峽" },
-                    { text: "這條巷子太【乍】，只有機車可以通行。", typoChar: "乍", options: ["榨", "窄", "昨"], answer: "窄" },
-                    { text: "那座年代已久的【供】門需要整修，近期內將會施工。", typoChar: "供", options: ["烘", "哄", "拱"], answer: "拱" }
+                    { text: "太魯閣俠谷是非常著名的景點。", typoChar: "俠", options: ["峽", "狹", "夾"], answer: "峽" },
+                    { text: "這條巷子太乍，只有機車可以通行。", typoChar: "乍", options: ["榨", "窄", "昨"], answer: "窄" },
+                    { text: "那座年代已久的供門需要整修，近期內將會施工。", typoChar: "供", options: ["烘", "哄", "拱"], answer: "拱" }
                 ]
             },
             {
                 title: "第四關：改錯字魔王 (2/5)",
                 questions: [
-                    { text: "農夫拿著釘【靶】，辛苦的翻鬆泥土。", typoChar: "靶", options: ["把", "耙", "吧"], answer: "耙" },
-                    { text: "來到美麗的大草原，阿姨將所有煩【腦】都拋到九霄雲外。", typoChar: "腦", options: ["惱", "瑙", "灑"], answer: "惱" },
-                    { text: "連續幾天的疲勞，讓阿姨覺得身體有點不【滴】。", typoChar: "滴", options: ["摘", "敵", "適"], answer: "適" }
+                    { text: "農夫拿著釘靶，辛苦的翻鬆泥土。", typoChar: "靶", options: ["把", "耙", "吧"], answer: "耙" },
+                    { text: "來到美麗的大草原，阿姨將所有煩腦都拋到九霄雲外。", typoChar: "腦", options: ["惱", "瑙", "灑"], answer: "惱" },
+                    { text: "連續幾天的疲勞，讓阿姨覺得身體有點不滴。", typoChar: "滴", options: ["摘", "敵", "適"], answer: "適" }
                 ]
             },
             {
                 title: "第四關：改錯字魔王 (3/5)",
                 questions: [
-                    { text: "奶奶煮的香【姑】雞湯，濃而不膩，喝起來非常順口。", typoChar: "姑", options: ["估", "枯", "菇"], answer: "菇" },
-                    { text: "天氣預報說今天會有【靈】星的陣雨，記得帶雨具。", typoChar: "靈", options: ["零", "鈴", "領"], answer: "零" },
-                    { text: "新娘穿著一件大紅色的改良式【棋】袍，看起來優雅貴氣。", typoChar: "棋", options: ["其", "旗", "期"], answer: "旗" }
+                    { text: "奶奶煮的香姑雞湯，濃而不膩，喝起來非常順口。", typoChar: "姑", options: ["估", "枯", "菇"], answer: "菇" },
+                    { text: "天氣預報說今天會有靈星的陣雨，記得帶雨具。", typoChar: "靈", options: ["零", "鈴", "領"], answer: "零" },
+                    { text: "新娘穿著一件大紅色的改良式棋袍，看起來優雅貴氣。", typoChar: "棋", options: ["其", "旗", "期"], answer: "旗" }
                 ]
             },
             {
                 title: "第四關：改錯字魔王 (4/5)",
                 questions: [
-                    { text: "突然一陣大雨，把我【林】成落湯雞。", typoChar: "林", options: ["淋", "琳", "霖"], answer: "淋" },
-                    { text: "看著剛出生的小堂妹，叔叔忍不住【俊】笑起來。", typoChar: "俊", options: ["優", "傻", "擾"], answer: "傻" },
-                    { text: "男孩從小就是個孤兒，流浪的日子讓他骨瘦如【紫】。", typoChar: "紫", options: ["些", "此", "柴"], answer: "柴" }
+                    { text: "突然一陣大雨，把我林成落湯雞。", typoChar: "林", options: ["淋", "琳", "霖"], answer: "淋" },
+                    { text: "看著剛出生的小堂妹，叔叔忍不住俊笑起來。", typoChar: "俊", options: ["優", "傻", "擾"], answer: "傻" },
+                    { text: "男孩從小就是個孤兒，流浪的日子讓他骨瘦如紫。", typoChar: "紫", options: ["些", "此", "柴"], answer: "柴" }
                 ]
             },
             {
                 title: "第四關：改錯字魔王 (5/5)",
                 questions: [
-                    { text: "那些岩石被大自然的力量【凋】刻成各種不同的造形。", typoChar: "凋", options: ["雕", "調", "週"], answer: "雕" },
-                    { text: "長時間沒下雨，讓許多河川都乾【古】了。", typoChar: "古", options: ["涸", "固", "枯"], answer: "涸" },
-                    { text: "故事中，商人們不但獨【杏】所有鹽巴，還藉機抬高物價。", typoChar: "杏", options: ["吞", "否", "呆"], answer: "吞" }
+                    { text: "那些岩石被大自然的力量凋刻成各種不同的造形。", typoChar: "凋", options: ["雕", "調", "週"], answer: "雕" },
+                    { text: "長時間沒下雨，讓許多河川都乾古了。", typoChar: "古", options: ["涸", "固", "枯"], answer: "涸" },
+                    { text: "故事中，商人們不但獨杏所有鹽巴，還藉機抬高物價。", typoChar: "杏", options: ["吞", "否", "呆"], answer: "吞" }
                 ]
             }
         ];
 
         let currentPartIndex = 0;
-        let userSelections = [];
+        let solvedCount = 0; // 記錄當頁解決了幾題
 
-        // 💡 核心功能：打亂選項陣列順序
         function shuffleArray(array) {
             const shuffled = [...array];
             for (let i = shuffled.length - 1; i > 0; i--) {
@@ -257,52 +266,52 @@
             container.innerHTML = '';
             document.getElementById('feedback-msg').innerText = '';
             document.getElementById('next-btn').style.display = 'none';
-            document.getElementById('check-btn').style.display = 'block';
-            
-            userSelections = new Array(part.questions.length).fill(null);
+            solvedCount = 0;
 
             part.questions.forEach((q, qIndex) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
 
-                // 標題區塊 (含語音按鈕)
-                const header = document.createElement('div');
-                header.className = 'q-header';
+                // 句子區塊
+                const sentenceDiv = document.createElement('div');
+                sentenceDiv.className = 'sentence-container';
                 
-                // 處理句子文字，將 【錯字】 包裝成 span 以便後續變色
-                const displayHtml = q.text.replace(
-                    `【${q.typoChar}】`, 
-                    `<span class="typo-mark" id="typo-${qIndex}">【${q.typoChar}】</span>`
-                );
+                // 題號
+                const numSpan = document.createElement('span');
+                numSpan.innerText = `${qIndex + 1}. `;
+                sentenceDiv.appendChild(numSpan);
 
-                const speakBtn = document.createElement('button');
-                speakBtn.className = 'speak-btn';
-                speakBtn.innerText = '🔊';
-                // 語音報讀時，把框框拿掉直接唸，聽起來才自然
-                const textToSpeak = q.text.replace(/【|】/g, "");
-                speakBtn.onclick = () => speakText(textToSpeak);
-                
-                const qText = document.createElement('div');
-                qText.className = 'q-text';
-                qText.innerHTML = `${qIndex + 1}. ${displayHtml}`;
+                // 將句子的每一個字變成可以點擊的 span
+                const chars = q.text.split('');
+                chars.forEach(c => {
+                    const span = document.createElement('span');
+                    span.innerText = c;
+                    span.className = 'char-span';
+                    
+                    if (c === q.typoChar) {
+                        span.dataset.isTypo = "true";
+                        span.id = `typo-span-${qIndex}`; 
+                    }
+                    
+                    // 點擊事件：尋找錯字
+                    span.onclick = () => handleCharClick(qIndex, span);
+                    sentenceDiv.appendChild(span);
+                });
 
-                header.appendChild(speakBtn);
-                header.appendChild(qText);
-                card.appendChild(header);
+                card.appendChild(sentenceDiv);
 
-                // 待選字區塊 (3個按鈕)
+                // 待選字區塊 (一開始隱藏)
                 const optionsContainer = document.createElement('div');
                 optionsContainer.className = 'options-container';
                 optionsContainer.id = `options-group-${qIndex}`;
 
-                // 打亂選項順序，防止死背位置
                 const shuffledOptions = shuffleArray(q.options);
-
                 shuffledOptions.forEach((opt) => {
                     const btn = document.createElement('div');
                     btn.className = 'option-btn';
                     btn.innerText = opt;
                     
+                    // 點擊事件：選擇正確的字
                     btn.onclick = () => selectOption(qIndex, opt, btn);
                     optionsContainer.appendChild(btn);
                 });
@@ -312,92 +321,64 @@
             });
         }
 
-        // 選擇選項的邏輯
-        function selectOption(qIndex, selectedValue, btnElement) {
-            if (btnElement.classList.contains('correct') || btnElement.classList.contains('wrong')) return;
+        // 處理學生點擊句子中的字
+        function handleCharClick(qIndex, spanElement) {
+            // 如果已經改對了，就不能再點
+            if (spanElement.classList.contains('fixed') || document.getElementById(`options-group-${qIndex}`).style.display === 'flex') return;
 
-            const group = document.getElementById(`options-group-${qIndex}`);
-            const buttons = group.querySelectorAll('.option-btn');
-            
-            buttons.forEach(b => b.classList.remove('selected'));
-            btnElement.classList.add('selected');
-            
-            userSelections[qIndex] = selectedValue;
+            if (spanElement.dataset.isTypo === "true") {
+                // 點對了錯字！
+                spanElement.classList.add('found');
+                document.getElementById(`options-group-${qIndex}`).style.display = 'flex';
+            } else {
+                // 點錯了，給予震動提示
+                spanElement.classList.add('error-shake');
+                setTimeout(() => spanElement.classList.remove('error-shake'), 400);
+            }
         }
 
-        function checkAnswers() {
+        // 處理學生選擇待選字
+        function selectOption(qIndex, selectedValue, btnElement) {
             const part = quizData[currentPartIndex];
-            let correctCount = 0;
-            let allAnswered = true;
+            const q = part.questions[qIndex];
 
-            for (let i = 0; i < userSelections.length; i++) {
-                if (userSelections[i] === null) {
-                    allAnswered = false;
-                    break;
-                }
-            }
-
-            if (!allAnswered) {
-                const msg = document.getElementById('feedback-msg');
-                msg.innerText = "⚠️ 還有錯字沒有選到正確的字喔！";
-                msg.style.color = "#e67e22";
-                return;
-            }
-
-            // 對答案
-            part.questions.forEach((q, qIndex) => {
-                const group = document.getElementById(`options-group-${qIndex}`);
-                const buttons = group.querySelectorAll('.option-btn');
-                const userAns = userSelections[qIndex];
-                const typoSpan = document.getElementById(`typo-${qIndex}`);
+            if (selectedValue === q.answer) {
+                // 選對了！
+                btnElement.classList.add('correct');
+                const typoSpan = document.getElementById(`typo-span-${qIndex}`);
                 
-                buttons.forEach(btn => {
-                    if (btn.innerText === q.answer) {
-                        btn.classList.add('correct');
-                        btn.classList.remove('selected');
-                    } else if (btn.classList.contains('selected')) {
-                        btn.classList.add('wrong');
-                        btn.classList.remove('selected');
-                    }
-                });
-
-                if (userAns === q.answer) {
-                    correctCount++;
-                    // 答對時，把句子裡的錯字替換成正確的綠字
-                    typoSpan.innerText = `【${q.answer}】`;
-                    typoSpan.classList.add('fixed');
-                }
-            });
-
-            const msg = document.getElementById('feedback-msg');
-            if (correctCount === part.questions.length) {
-                msg.innerText = "🎉 太神啦！抓蟲大師，全部改對了！";
-                msg.style.color = "#27ae60";
-                speakText("太棒了，全部答對！");
+                // 替換文字、變成綠色
+                typoSpan.innerText = q.answer;
+                typoSpan.classList.remove('found');
+                typoSpan.classList.add('fixed');
                 
-                document.getElementById('check-btn').style.display = 'none';
-                
-                if (currentPartIndex < quizData.length - 1) {
-                    document.getElementById('next-btn').style.display = 'block';
-                } else {
-                    document.getElementById('next-btn').style.display = 'block';
-                    document.getElementById('next-btn').innerText = "🏆 恭喜破關！回首頁";
-                    document.getElementById('next-btn').onclick = () => window.location.href = 'index.html';
-                }
+                solvedCount++;
+
+                // 延遲一下後收起選項
+                setTimeout(() => {
+                    document.getElementById(`options-group-${qIndex}`).style.display = 'none';
+                    checkAllSolved();
+                }, 800);
+
             } else {
-                msg.innerText = "💪 喔噢，有幾個字改錯了，請重新選擇紅色的部分！";
-                msg.style.color = "#c0392b";
+                // 選錯了
+                btnElement.classList.add('wrong');
+                setTimeout(() => btnElement.classList.remove('wrong'), 800);
+            }
+        }
+
+        // 檢查這一頁是否全部答對
+        function checkAllSolved() {
+            if (solvedCount === quizData[currentPartIndex].questions.length) {
+                document.getElementById('feedback-msg').innerText = "🎉 太神啦！抓蟲大師，這頁全部改對了！";
                 
-                // 將錯的選項清空，讓學生重選
-                part.questions.forEach((q, qIndex) => {
-                    if (userSelections[qIndex] !== q.answer) {
-                        userSelections[qIndex] = null;
-                        const group = document.getElementById(`options-group-${qIndex}`);
-                        setTimeout(() => {
-                            group.querySelectorAll('.wrong').forEach(b => b.classList.remove('wrong'));
-                        }, 1500); 
-                    }
-                });
+                const nextBtn = document.getElementById('next-btn');
+                nextBtn.style.display = 'block';
+                
+                if (currentPartIndex === quizData.length - 1) {
+                    nextBtn.innerText = "🏆 恭喜破關！回首頁";
+                    nextBtn.onclick = () => window.location.href = 'index.html';
+                }
             }
         }
 
@@ -407,14 +388,6 @@
                 renderPart(currentPartIndex);
                 document.querySelector('.content-area').scrollTop = 0; 
             }
-        }
-
-        function speakText(text) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'zh-TW';
-            utterance.rate = 0.85; // 稍微放慢，讓學生聽清楚句子
-            window.speechSynthesis.speak(utterance);
         }
 
         // 初始化
