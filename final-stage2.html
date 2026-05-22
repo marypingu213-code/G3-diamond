@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>第二關：字詞迷宮</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f4f6f7;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* 頂部導覽與進度 */
+        .header {
+            background: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        .back-btn {
+            padding: 12px 20px;
+            background: #e2e8f0;
+            color: #4a5568;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .progress-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #d35400;
+        }
+
+        /* 題目顯示區 */
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .question-card {
+            background: white;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .question-row {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            font-size: 28px;
+            line-height: 2;
+            flex-wrap: wrap;
+        }
+
+        /* 填空底線 */
+        .blank-slot {
+            display: inline-block;
+            min-width: 120px;
+            height: 50px;
+            border-bottom: 4px solid #718096;
+            margin: 0 15px;
+            text-align: center;
+            color: #2980b9;
+            font-weight: bold;
+            cursor: pointer;
+            vertical-align: middle;
+            background: #eaf2f8;
+            border-radius: 10px 10px 0 0;
+            line-height: 50px;
+            transition: 0.2s;
+        }
+        .blank-slot:empty:before {
+            content: "請點選";
+            color: #cbd5e0;
+            font-weight: normal;
+            font-size: 20px;
+        }
+        .blank-slot.wrong { border-bottom-color: #e74c3c; background: #fadbd8; color: #c0392b; }
+        .blank-slot.correct { border-bottom-color: #2ecc71; background: #d5f5e3; color: #27ae60; pointer-events: none; }
+
+        /* 文字庫 (操作區) */
+        .word-bank-area {
+            background: white;
+            padding: 25px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .word-btn {
+            padding: 15px 30px;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            background: #fff;
+            border: 3px solid #f39c12;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+            box-shadow: 0 4px 0 #d68910;
+        }
+        .word-btn:active { transform: translateY(4px); box-shadow: 0 0 0; }
+        .word-btn.used {
+            opacity: 0.3;
+            pointer-events: none;
+            background: #e0e0e0;
+            border-color: #bdc3c7;
+            box-shadow: 0 0 0;
+        }
+
+        /* 底部控制區 */
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .action-btn {
+            padding: 15px 40px;
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+            background: #27ae60;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #2ecc71;
+        }
+        .action-btn:active { transform: translateY(5px); box-shadow: 0 0 0; }
+        
+        #feedback-msg {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="back-btn">⬅ 返回首頁</a>
+        <div class="progress-title" id="stage-title">第二關：字詞迷宮</div>
+        <div style="width: 100px;"></div>
+    </div>
+
+    <div class="content-area">
+        <div class="question-card" id="question-container">
+            </div>
+        <div id="feedback-msg"></div>
+    </div>
+
+    <div class="word-bank-area">
+        <div style="text-align: center; margin-bottom: 10px; color: #e67e22; font-size: 20px; font-weight: bold;">
+            🔊 點擊選項，會唸給你聽喔！然後會自動填入空格中。
+        </div>
+        <div class="word-bank" id="word-bank">
+            </div>
+        <div class="controls">
+            <button class="action-btn" id="check-btn" onclick="checkAnswers()">對答案</button>
+            <button class="action-btn" id="next-btn" style="display:none; background:#8e44ad; box-shadow: 0 5px 0 #9b59b6;" onclick="nextPart()">下一關 ➡</button>
+        </div>
+    </div>
+
+    <script>
+        // 題庫資料 (第二關)
+        const quizData = [
+            {
+                title: "一、填入正確的用字",
+                options: ["每", "母", "乳", "島", "鳥", "船", "般", "商", "適"],
+                questions: [
+                    { text: "陳爺爺( )個星期五都會到菜市場買菜。大部分的國家，將五月的第二個星期日訂為( )親節。", answer: ["每", "母"] },
+                    { text: "妹妹喜歡把草莓沾上煉( )後，再一口吃掉。", answer: "乳" },
+                    { text: "這座在大海中央的小( )是許多海( )的棲息地。", answer: ["島", "鳥"] },
+                    { text: "這座外觀建造成( )形的美術館，預計下個月開放給一( )民眾參觀。", answer: ["船", "般"] },
+                    { text: "週末時，媽媽帶著我和妹妹到家中附近的( )店街購物。升上中年級之後，小楷花了一些時間( )應更繁重的課業。", answer: ["商", "適"] }
+                ]
+            },
+            {
+                title: "二、圈出正確的字音",
+                options: ["ㄐㄧㄤˋ", "ㄒㄧㄤˊ", "ㄌㄟˇ", "ㄌㄟˋ"],
+                questions: [
+                    { text: "因為糧食嚴重不足，這支軍隊的戰力大幅下( )，最後只好向敵人投( )。", answer: ["ㄐㄧㄤˋ", "ㄒㄧㄤˊ"] },
+                    { text: "看起來很瘦弱的丁丁，實際上是班上的短跑健( )。", answer: "ㄐㄧㄤˋ" },
+                    { text: "這幾個月以來累( )積的疲累( )，使得爸爸生了一場大病。", answer: ["ㄌㄟˇ", "ㄌㄟˋ"] }
+                ]
+            },
+            {
+                title: "三、填入正確的語詞或字",
+                options: ["不僅", "不是", "適合", "混合", "吞", "擋", "建", "淋", "砌"],
+                questions: [
+                    { text: "公園( )是人們休閒的場所，還為城市增添些許綠意。", answer: "不僅" },
+                    { text: "這件上衣十分( )表姐。", answer: "適合" },
+                    { text: "姐姐每次( )藥丸的時候，就會露出痛苦的表情。", answer: "吞" },
+                    { text: "這道牆( )住了寒冷的北風。", answer: "擋" },
+                    { text: "社區居民希望能利用這塊空地( )一座公園。", answer: "建" }
+                ]
+            },
+            {
+                title: "四、圈出適當的語詞",
+                options: ["告示", "展示", "告示間", "展示間", "實施", "施放"],
+                questions: [
+                    { text: "美術館貼出( )：「因為館舍漏水，所以( )即日起暫停開放一週」。", answer: ["告示", "展示間"] },
+                    { text: "今晚有一場煙火( )表演，因此附近( )交通管制，禁止車輛進入。", answer: ["施放", "實施"] }
+                ]
+            }
+        ];
+
+        // 注音發音轉換字典 (因為語音引擎可能無法正確唸出純注音，給予同音字提示)
+        const pronunciationMap = {
+            "ㄐㄧㄤˋ": "降",
+            "ㄒㄧㄤˊ": "祥",
+            "ㄌㄟˇ": "壘",
+            "ㄌㄟˋ": "淚",
+            "告示間": "告,事間", // 補微調發音停頓
+            "展示間": "展,事間"
+        };
+
+        let currentPartIndex = 0;
+        let blankCounter = 0;
+
+        function renderPart(index) {
+            const part = quizData[index];
+            document.getElementById('stage-title').innerText = part.title;
+            
+            const qContainer = document.getElementById('question-container');
+            const wContainer = document.getElementById('word-bank');
+            
+            qContainer.innerHTML = '';
+            wContainer.innerHTML = '';
+            document.getElementById('feedback-msg').innerText = '';
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('check-btn').style.display = 'block';
+            blankCounter = 0;
+
+            part.questions.forEach((q) => {
+                const row = document.createElement('div');
+                row.className = 'question-row';
+                
+                const parts = q.text.split('( )');
+                let ansIndex = 0;
+                
+                parts.forEach((textSegment, i) => {
+                    row.appendChild(document.createTextNode(textSegment));
+                    
+                    if (i < parts.length - 1) { 
+                        const blank = document.createElement('span');
+                        blank.className = 'blank-slot';
+                        blank.id = 'blank-' + blankCounter;
+                        
+                        const correctAns = Array.isArray(q.answer) ? q.answer[ansIndex] : q.answer;
+                        blank.dataset.answer = correctAns;
+                        blank.dataset.sourceBtnId = ""; 
+                        
+                        blank.onclick = () => returnWord(blank.id);
+                        row.appendChild(blank);
+                        
+                        blankCounter++;
+                        ansIndex++;
+                    }
+                });
+                qContainer.appendChild(row);
+            });
+
+            part.options.forEach((opt, i) => {
+                const btn = document.createElement('div');
+                btn.className = 'word-btn';
+                btn.innerText = opt;
+                btn.id = 'wordbtn-' + i;
+                btn.onclick = () => fillBlank(opt, btn.id);
+                wContainer.appendChild(btn);
+            });
+        }
+
+        // 點擊下方選項時：1. 唸出聲音 2. 填入空格
+        function fillBlank(word, btnId) {
+            // 語音報讀答案
+            let speakWord = pronunciationMap[word] || word;
+            speakText(speakWord);
+
+            const blanks = document.querySelectorAll('.blank-slot:not(.correct)');
+            for (let blank of blanks) {
+                if (blank.innerText === '') {
+                    blank.innerText = word;
+                    blank.dataset.sourceBtnId = btnId;
+                    blank.classList.remove('wrong');
+                    document.getElementById(btnId).classList.add('used');
+                    break;
+                }
+            }
+        }
+
+        // 退回選項
+        function returnWord(blankId) {
+            const blank = document.getElementById(blankId);
+            if (blank.innerText !== '' && !blank.classList.contains('correct')) {
+                const btnId = blank.dataset.sourceBtnId;
+                document.getElementById(btnId).classList.remove('used');
+                blank.innerText = '';
+                blank.dataset.sourceBtnId = '';
+                blank.classList.remove('wrong');
+            }
+        }
+
+        function checkAnswers() {
+            const blanks = document.querySelectorAll('.blank-slot');
+            let correctCount = 0;
+            let allFilled = true;
+
+            blanks.forEach(blank => {
+                if (blank.innerText === '') allFilled = false;
+            });
+
+            if (!allFilled) {
+                const msg = document.getElementById('feedback-msg');
+                msg.innerText = "⚠️ 還有空格沒有填完喔！";
+                msg.style.color = "#e67e22";
+                return;
+            }
+
+            blanks.forEach(blank => {
+                if (blank.innerText === blank.dataset.answer) {
+                    blank.classList.add('correct');
+                    blank.classList.remove('wrong');
+                    correctCount++;
+                } else {
+                    blank.classList.add('wrong');
+                    setTimeout(() => returnWord(blank.id), 800);
+                }
+            });
+
+            const msg = document.getElementById('feedback-msg');
+            if (correctCount === blanks.length) {
+                msg.innerText = "🎉 太棒了！全部答對！";
+                msg.style.color = "#27ae60";
+                
+                speakText("太棒了，全部答對！");
+                
+                document.getElementById('check-btn').style.display = 'none';
+                
+                if (currentPartIndex < quizData.length - 1) {
+                    document.getElementById('next-btn').style.display = 'block';
+                } else {
+                    document.getElementById('next-btn').style.display = 'block';
+                    document.getElementById('next-btn').innerText = "🏆 恭喜完成第二關！回首頁";
+                    document.getElementById('next-btn').onclick = () => window.location.href = 'index.html';
+                }
+            } else {
+                msg.innerText = "💪 喔噢，有幾個填錯了，我幫你退回去了，再試試看！";
+                msg.style.color = "#c0392b";
+            }
+        }
+
+        function nextPart() {
+            currentPartIndex++;
+            if (currentPartIndex < quizData.length) {
+                renderPart(currentPartIndex);
+            }
+        }
+
+        // Web Speech API
+        function speakText(text) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-TW';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 載入第一大題
+        renderPart(currentPartIndex);
+    </script>
+</body>
+</html>
