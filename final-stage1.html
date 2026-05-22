@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一關：詞語試煉</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 { color: #0056b3; text-align: center; }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: #e2e8f0;
+            color: #4a5568;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .back-btn:hover { background: #cbd5e0; }
+        
+        .part-title {
+            background: #ffe4b5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #8b4513;
+            margin-top: 30px;
+            font-size: 20px;
+        }
+        .question-row {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 18px;
+            line-height: 1.8;
+            flex-wrap: wrap;
+        }
+        .speak-btn {
+            background: #4cd137;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-right: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        .speak-btn:hover { transform: scale(1.1); }
+        
+        select {
+            font-size: 18px;
+            padding: 5px;
+            margin: 0 10px;
+            border-radius: 5px;
+            border: 2px solid #a4b0be;
+            font-family: inherit;
+        }
+        .correct { border-color: #4cd137; background-color: #f1f8e9; }
+        .wrong { border-color: #ff4757; background-color: #ffebee; }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background: #00a8ff;
+            border: none;
+            border-radius: 10px;
+            margin-top: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .submit-btn:hover { background: #0097e6; }
+        #result-msg { text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px; color: #e1b12c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">⬅ 返回首頁</a>
+        <h1>⚔️ 第一關：詞語試煉 ⚔️</h1>
+        <p style="text-align:center; color:#666;">點擊題目旁邊的 🔊 可以聽題目喔！從下拉選單選出正確的答案。</p>
+        
+        <div id="quiz-content"></div>
+
+        <button class="submit-btn" onclick="checkAnswers()">交卷對答案！</button>
+        <div id="result-msg"></div>
+    </div>
+
+    <script>
+        // 將圖片內容轉化為題庫資料
+        const quizData = [
+            {
+                title: "一、詞語分類配對",
+                options: ["交通工具", "標點符號", "彩繪用具", "自然風景"],
+                questions: [
+                    { text: "調色盤、水彩筆、顏料、畫布屬於 ( )", answer: "彩繪用具" },
+                    { text: "火車、飛機、輪船、腳踏車屬於 ( )", answer: "交通工具" },
+                    { text: "逗號、句號、刪節號、破折號屬於 ( )", answer: "標點符號" },
+                    { text: "彩霞、日出、草原、花海屬於 ( )", answer: "自然風景" }
+                ]
+            },
+            {
+                title: "二、情境選詞",
+                options: ["真舒服", "真是太美了", "太可愛了", "好溫暖"],
+                questions: [
+                    { text: "經過漫長的等待，終於親眼見到阿里山日出的瞬間，( )。", answer: "真是太美了" },
+                    { text: "小貓毛茸茸的模樣，( )！", answer: "太可愛了" },
+                    { text: "在午後騎著腳踏車，迎著微風，漫遊在翠綠的田間小路，( )。", answer: "真舒服" },
+                    { text: "今天天氣很冷，媽媽為我盛了一碗紅豆湯，捧在手裡，( )。", answer: "好溫暖" }
+                ]
+            },
+            {
+                title: "三、綜合填空",
+                options: ["安身之地", "突如其來", "遮風躲雨", "別具特色", "下降", "降下"],
+                questions: [
+                    { text: "小白兔終於在森林裡找到( )，安心的躲起來休息。", answer: "安身之地" },
+                    { text: "一聲( )的巨響，讓大家都嚇了一跳。", answer: "突如其來" },
+                    { text: "登山隊緊急搭建了可以( )的帳篷，以躲避越來越大的雨勢。", answer: "遮風躲雨" },
+                    { text: "這塊( )的染布是小郭親手製作的。", answer: "別具特色" },
+                    { text: "這間餐廳被發現使用過期食材，在網路上的評價快速( )。", answer: "下降" },
+                    { text: "皚皚白雪從空中緩緩( )，大地漸漸變成一片雪白。", answer: "降下" }
+                ]
+            },
+            {
+                title: "四、成語挑戰",
+                options: ["胡說八道", "大展身手", "一飛沖天", "頭頭是道", "四腳朝天", "一望無際"],
+                questions: [
+                    { text: "小兔子原本想( )，向大家展現牠的新發明——彈簧鞋，沒想到用力過猛，摔個( )。", answer: ["大展身手", "四腳朝天"] },
+                    { text: "當小鳥們克服心中恐懼，成功的( )，穿過雲層，( )的景色出現在眼前，牠們紛紛露出讚嘆的表情。", answer: ["一飛沖天", "一望無際"] },
+                    { text: "關於翅膀道具，動物們原本以為猴子只是在( )，但聽完牠( )的解說後，大家都躍躍欲試。", answer: ["胡說八道", "頭頭是道"] }
+                ]
+            }
+        ];
+
+        const container = document.getElementById('quiz-content');
+
+        // 生成畫面
+        quizData.forEach((part, partIndex) => {
+            const partDiv = document.createElement('div');
+            partDiv.innerHTML = `<h3 class="part-title">${part.title}</h3>`;
+            
+            part.questions.forEach((q, qIndex) => {
+                const row = document.createElement('div');
+                row.className = 'question-row';
+                
+                // 語音按鈕：把( )替換成「空格」來唸
+                const textToSpeak = q.text.replace(/\( \)/g, '空格');
+                const btn = document.createElement('button');
+                btn.className = 'speak-btn';
+                btn.innerText = '🔊';
+                btn.onclick = () => speakText(textToSpeak);
+                row.appendChild(btn);
+
+                // 處理題目文字與下拉選單
+                const parts = q.text.split('( )');
+                parts.forEach((textSegment, i) => {
+                    row.appendChild(document.createTextNode(textSegment));
+                    
+                    if (i < parts.length - 1) { // 插入下拉選單
+                        const select = document.createElement('select');
+                        select.innerHTML = `<option value="">請選擇...</option>` + 
+                            part.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                        
+                        // 儲存正確答案在元素 dataset 中
+                        const correctAns = Array.isArray(q.answer) ? q.answer[i] : q.answer;
+                        select.dataset.answer = correctAns;
+                        row.appendChild(select);
+                    }
+                });
+                
+                partDiv.appendChild(row);
+            });
+            container.appendChild(partDiv);
+        });
+
+        // Web Speech API 語音報讀
+        function speakText(text) {
+            window.speechSynthesis.cancel(); // 停止先前的語音
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-TW'; // 設定為台灣中文
+            utterance.rate = 0.9; // 稍微放慢速度適合三年級
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 對答案邏輯
+        function checkAnswers() {
+            let score = 0;
+            const selects = document.querySelectorAll('select');
+            
+            selects.forEach(select => {
+                const userAns = select.value;
+                const correctAns = select.dataset.answer;
+                
+                select.classList.remove('correct', 'wrong');
+                
+                if (userAns === correctAns) {
+                    select.classList.add('correct');
+                    score++;
+                } else {
+                    select.classList.add('wrong');
+                }
+            });
+
+            const resultMsg = document.getElementById('result-msg');
+            if (score === selects.length) {
+                resultMsg.innerText = "🎉 太棒了！全部答對，準備好前往下一關了嗎？";
+                resultMsg.style.color = "#4cd137";
+            } else {
+                resultMsg.innerText = `💪 答對了 ${score} / ${selects.length} 格，把紅色的地方再改一下喔！`;
+                resultMsg.style.color = "#ff4757";
+            }
+        }
+    </script>
+</body>
+</html>
