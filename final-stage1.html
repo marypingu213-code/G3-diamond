@@ -2,112 +2,199 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>第一關：詞語試煉</title>
     <style>
         body {
             font-family: "Microsoft JhengHei", sans-serif;
             background-color: #f0f8ff;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* 防止整個頁面滑動，專注於畫面內 */
+        }
+        
+        /* 頂部導覽與進度 */
+        .header {
+            background: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        .back-btn {
+            padding: 12px 20px;
+            background: #e2e8f0;
+            color: #4a5568;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .progress-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #0056b3;
+        }
+
+        /* 題目顯示區 */
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .container {
+        .question-card {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            max-width: 800px;
             width: 100%;
-        }
-        h1 { color: #0056b3; text-align: center; }
-        .back-btn {
-            display: inline-block;
+            max-width: 900px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             margin-bottom: 20px;
-            padding: 10px 15px;
-            background: #e2e8f0;
-            color: #4a5568;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-        .back-btn:hover { background: #cbd5e0; }
-        
-        .part-title {
-            background: #ffe4b5;
-            padding: 10px 15px;
-            border-radius: 8px;
-            color: #8b4513;
-            margin-top: 30px;
-            font-size: 20px;
         }
         .question-row {
             display: flex;
             align-items: center;
-            margin: 15px 0;
-            font-size: 18px;
-            line-height: 1.8;
+            margin: 25px 0;
+            font-size: 28px;
+            line-height: 2;
             flex-wrap: wrap;
         }
+        
+        /* 語音按鈕 */
         .speak-btn {
             background: #4cd137;
             border: none;
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            font-size: 18px;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
             cursor: pointer;
-            margin-right: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin-right: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .speak-btn:active { transform: scale(0.95); }
+
+        /* 填空底線 */
+        .blank-slot {
+            display: inline-block;
+            min-width: 120px;
+            height: 50px;
+            border-bottom: 4px solid #718096;
+            margin: 0 15px;
+            text-align: center;
+            color: #d35400;
+            font-weight: bold;
+            cursor: pointer;
+            vertical-align: middle;
+            background: #fdf6e3;
+            border-radius: 10px 10px 0 0;
+            line-height: 50px;
             transition: 0.2s;
         }
-        .speak-btn:hover { transform: scale(1.1); }
-        
-        select {
-            font-size: 18px;
-            padding: 5px;
-            margin: 0 10px;
-            border-radius: 5px;
-            border: 2px solid #a4b0be;
-            font-family: inherit;
+        .blank-slot:empty:before {
+            content: "請點選";
+            color: #cbd5e0;
+            font-weight: normal;
+            font-size: 20px;
         }
-        .correct { border-color: #4cd137; background-color: #f1f8e9; }
-        .wrong { border-color: #ff4757; background-color: #ffebee; }
+        .blank-slot.wrong { border-bottom-color: #e74c3c; background: #fadbd8; color: #c0392b; }
+        .blank-slot.correct { border-bottom-color: #2ecc71; background: #d5f5e3; color: #27ae60; pointer-events: none; }
 
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            font-size: 22px;
+        /* 文字庫 (操作區) */
+        .word-bank-area {
+            background: white;
+            padding: 25px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .word-btn {
+            padding: 15px 30px;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            background: #ecf0f1;
+            border: 3px solid #bdc3c7;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+        }
+        .word-btn:active { transform: scale(0.95); }
+        .word-btn.used {
+            opacity: 0.3;
+            pointer-events: none;
+            background: #e0e0e0;
+            border-color: #e0e0e0;
+        }
+
+        /* 底部控制區 */
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .action-btn {
+            padding: 15px 40px;
+            font-size: 26px;
             font-weight: bold;
             color: white;
-            background: #00a8ff;
+            background: #3498db;
             border: none;
-            border-radius: 10px;
-            margin-top: 30px;
+            border-radius: 15px;
             cursor: pointer;
-            transition: 0.3s;
+            box-shadow: 0 5px 0 #2980b9;
         }
-        .submit-btn:hover { background: #0097e6; }
-        #result-msg { text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px; color: #e1b12c; }
+        .action-btn:active { transform: translateY(5px); box-shadow: 0 0 0; }
+        .action-btn:disabled { background: #95a5a6; box-shadow: 0 5px 0 #7f8c8d; pointer-events: none; }
+        
+        #feedback-msg {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="header">
         <a href="index.html" class="back-btn">⬅ 返回首頁</a>
-        <h1>⚔️ 第一關：詞語試煉 ⚔️</h1>
-        <p style="text-align:center; color:#666;">點擊題目旁邊的 🔊 可以聽題目喔！從下拉選單選出正確的答案。</p>
-        
-        <div id="quiz-content"></div>
+        <div class="progress-title" id="stage-title">第一關：詞語試煉</div>
+        <div style="width: 100px;"></div> </div>
 
-        <button class="submit-btn" onclick="checkAnswers()">交卷對答案！</button>
-        <div id="result-msg"></div>
+    <div class="content-area">
+        <div class="question-card" id="question-container">
+            </div>
+        <div id="feedback-msg"></div>
+    </div>
+
+    <div class="word-bank-area">
+        <div style="text-align: center; margin-bottom: 10px; color: #7f8c8d; font-size: 20px;">👇 點擊下方的詞語來填空</div>
+        <div class="word-bank" id="word-bank">
+            </div>
+        <div class="controls">
+            <button class="action-btn" id="check-btn" onclick="checkAnswers()">對答案</button>
+            <button class="action-btn" id="next-btn" style="display:none; background:#f39c12; box-shadow: 0 5px 0 #d68910;" onclick="nextPart()">下一關 ➡</button>
+        </div>
     </div>
 
     <script>
-        // 將圖片內容轉化為題庫資料
         const quizData = [
             {
                 title: "一、詞語分類配對",
@@ -152,18 +239,29 @@
             }
         ];
 
-        const container = document.getElementById('quiz-content');
+        let currentPartIndex = 0;
+        let blankCounter = 0;
 
-        // 生成畫面
-        quizData.forEach((part, partIndex) => {
-            const partDiv = document.createElement('div');
-            partDiv.innerHTML = `<h3 class="part-title">${part.title}</h3>`;
+        function renderPart(index) {
+            const part = quizData[index];
+            document.getElementById('stage-title').innerText = part.title;
             
-            part.questions.forEach((q, qIndex) => {
+            const qContainer = document.getElementById('question-container');
+            const wContainer = document.getElementById('word-bank');
+            
+            qContainer.innerHTML = '';
+            wContainer.innerHTML = '';
+            document.getElementById('feedback-msg').innerText = '';
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('check-btn').style.display = 'block';
+            blankCounter = 0;
+
+            // 繪製題目與空格
+            part.questions.forEach((q) => {
                 const row = document.createElement('div');
                 row.className = 'question-row';
                 
-                // 語音按鈕：把( )替換成「空格」來唸
+                // 語音按鈕
                 const textToSpeak = q.text.replace(/\( \)/g, '空格');
                 const btn = document.createElement('button');
                 btn.className = 'speak-btn';
@@ -171,65 +269,137 @@
                 btn.onclick = () => speakText(textToSpeak);
                 row.appendChild(btn);
 
-                // 處理題目文字與下拉選單
+                // 文字與底線
                 const parts = q.text.split('( )');
+                let ansIndex = 0;
+                
                 parts.forEach((textSegment, i) => {
                     row.appendChild(document.createTextNode(textSegment));
                     
-                    if (i < parts.length - 1) { // 插入下拉選單
-                        const select = document.createElement('select');
-                        select.innerHTML = `<option value="">請選擇...</option>` + 
-                            part.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                    if (i < parts.length - 1) { 
+                        const blank = document.createElement('span');
+                        blank.className = 'blank-slot';
+                        blank.id = 'blank-' + blankCounter;
                         
-                        // 儲存正確答案在元素 dataset 中
-                        const correctAns = Array.isArray(q.answer) ? q.answer[i] : q.answer;
-                        select.dataset.answer = correctAns;
-                        row.appendChild(select);
+                        const correctAns = Array.isArray(q.answer) ? q.answer[ansIndex] : q.answer;
+                        blank.dataset.answer = correctAns;
+                        blank.dataset.sourceBtnId = ""; // 記錄這個詞是從哪個按鈕來的
+                        
+                        blank.onclick = () => returnWord(blank.id);
+                        row.appendChild(blank);
+                        
+                        blankCounter++;
+                        ansIndex++;
                     }
                 });
-                
-                partDiv.appendChild(row);
+                qContainer.appendChild(row);
             });
-            container.appendChild(partDiv);
-        });
 
-        // Web Speech API 語音報讀
-        function speakText(text) {
-            window.speechSynthesis.cancel(); // 停止先前的語音
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'zh-TW'; // 設定為台灣中文
-            utterance.rate = 0.9; // 稍微放慢速度適合三年級
-            window.speechSynthesis.speak(utterance);
+            // 繪製文字庫按鈕
+            part.options.forEach((opt, i) => {
+                const btn = document.createElement('div');
+                btn.className = 'word-btn';
+                btn.innerText = opt;
+                btn.id = 'wordbtn-' + i;
+                btn.onclick = () => fillBlank(opt, btn.id);
+                wContainer.appendChild(btn);
+            });
         }
 
-        // 對答案邏輯
+        // 點擊下方文字庫：填入第一個空白處
+        function fillBlank(word, btnId) {
+            const blanks = document.querySelectorAll('.blank-slot:not(.correct)');
+            for (let blank of blanks) {
+                if (blank.innerText === '') {
+                    blank.innerText = word;
+                    blank.dataset.sourceBtnId = btnId;
+                    blank.classList.remove('wrong');
+                    document.getElementById(btnId).classList.add('used');
+                    break;
+                }
+            }
+        }
+
+        // 點擊上方空格：將文字退回文字庫
+        function returnWord(blankId) {
+            const blank = document.getElementById(blankId);
+            if (blank.innerText !== '' && !blank.classList.contains('correct')) {
+                const btnId = blank.dataset.sourceBtnId;
+                document.getElementById(btnId).classList.remove('used');
+                blank.innerText = '';
+                blank.dataset.sourceBtnId = '';
+                blank.classList.remove('wrong');
+            }
+        }
+
         function checkAnswers() {
-            let score = 0;
-            const selects = document.querySelectorAll('select');
-            
-            selects.forEach(select => {
-                const userAns = select.value;
-                const correctAns = select.dataset.answer;
-                
-                select.classList.remove('correct', 'wrong');
-                
-                if (userAns === correctAns) {
-                    select.classList.add('correct');
-                    score++;
+            const blanks = document.querySelectorAll('.blank-slot');
+            let correctCount = 0;
+            let allFilled = true;
+
+            blanks.forEach(blank => {
+                if (blank.innerText === '') allFilled = false;
+            });
+
+            if (!allFilled) {
+                const msg = document.getElementById('feedback-msg');
+                msg.innerText = "⚠️ 還有空格沒有填完喔！";
+                msg.style.color = "#e67e22";
+                return;
+            }
+
+            blanks.forEach(blank => {
+                if (blank.innerText === blank.dataset.answer) {
+                    blank.classList.add('correct');
+                    blank.classList.remove('wrong');
+                    correctCount++;
                 } else {
-                    select.classList.add('wrong');
+                    blank.classList.add('wrong');
+                    // 答錯自動退回文字庫，讓孩子重選 (減少挫折感)
+                    setTimeout(() => returnWord(blank.id), 800);
                 }
             });
 
-            const resultMsg = document.getElementById('result-msg');
-            if (score === selects.length) {
-                resultMsg.innerText = "🎉 太棒了！全部答對，準備好前往下一關了嗎？";
-                resultMsg.style.color = "#4cd137";
+            const msg = document.getElementById('feedback-msg');
+            if (correctCount === blanks.length) {
+                msg.innerText = "🎉 太棒了！全部答對！";
+                msg.style.color = "#27ae60";
+                
+                // 播個鼓勵語音
+                speakText("太棒了，全部答對！");
+                
+                document.getElementById('check-btn').style.display = 'none';
+                
+                if (currentPartIndex < quizData.length - 1) {
+                    document.getElementById('next-btn').style.display = 'block';
+                } else {
+                    document.getElementById('next-btn').style.display = 'block';
+                    document.getElementById('next-btn').innerText = "🏆 恭喜完成所有挑戰！回首頁";
+                    document.getElementById('next-btn').onclick = () => window.location.href = 'index.html';
+                }
             } else {
-                resultMsg.innerText = `💪 答對了 ${score} / ${selects.length} 格，把紅色的地方再改一下喔！`;
-                resultMsg.style.color = "#ff4757";
+                msg.innerText = "💪 喔噢，有幾個填錯了，我幫你退回去了，再試試看！";
+                msg.style.color = "#c0392b";
             }
         }
+
+        function nextPart() {
+            currentPartIndex++;
+            if (currentPartIndex < quizData.length) {
+                renderPart(currentPartIndex);
+            }
+        }
+
+        function speakText(text) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-TW';
+            utterance.rate = 0.85; // 稍微放慢
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 初始化第一大題
+        renderPart(currentPartIndex);
     </script>
 </body>
 </html>
