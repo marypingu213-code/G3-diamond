@@ -44,7 +44,7 @@
         /* 題目顯示區 */
         .content-area {
             flex: 1;
-            padding: 30px 20px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -55,11 +55,15 @@
             font-size: 24px;
             color: #d35400;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: #fff3cd;
             padding: 10px 20px;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box;
         }
 
         /* 題目卡片樣式 */
@@ -68,13 +72,14 @@
             width: 100%;
             max-width: 800px;
             border-radius: 20px;
-            padding: 25px 30px;
+            padding: 20px 25px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
         }
         
         .sentence-container {
-            font-size: 32px;
+            font-size: 30px;
             line-height: 1.8;
             color: #2c3e50;
             font-weight: bold;
@@ -115,15 +120,15 @@
             background-color: transparent;
             transform: scale(1);
             box-shadow: none;
-            pointer-events: none; /* 改對了就不能再點 */
+            pointer-events: none;
         }
 
         /* 待選字按鈕 (預設隱藏) */
         .options-container {
-            display: none; /* 一開始隱藏 */
+            display: none;
             gap: 15px;
             justify-content: center;
-            margin-top: 15px;
+            margin-top: 10px;
             padding-top: 15px;
             border-top: 2px dashed #b2ebf2;
             animation: fadeIn 0.4s;
@@ -135,8 +140,8 @@
 
         .option-btn {
             flex: 1;
-            padding: 15px 0;
-            font-size: 32px;
+            padding: 12px 0;
+            font-size: 30px;
             font-weight: bold;
             color: #34495e;
             background: #f8f9fa;
@@ -150,36 +155,25 @@
         .option-btn.correct { background: #d5f5e3; border-color: #2ecc71; color: #27ae60; pointer-events: none;}
         .option-btn.wrong { background: #fadbd8; border-color: #e74c3c; color: #c0392b; pointer-events: none;}
 
-        /* 底部控制區 */
+        /* 底部控制區 - 改為單純顯示回饋文字，拿掉按鈕 */
         .controls-area {
             background: white;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             z-index: 10;
+            min-height: 60px;
         }
-        .action-btn {
-            padding: 15px 40px;
-            font-size: 26px;
-            font-weight: bold;
-            color: white;
-            background: #f39c12;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            box-shadow: 0 5px 0 #d68910;
-            transition: 0.2s;
-        }
-        .action-btn:active { transform: translateY(5px); box-shadow: 0 0 0; }
         
         #feedback-msg {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 15px;
             color: #27ae60;
+            margin: 0;
+            animation: fadeIn 0.5s;
         }
     </style>
 </head>
@@ -192,13 +186,12 @@
 
     <div class="content-area">
         <div class="instruction">💡 請先點擊句子裡的「錯字」，再選出正確的字！</div>
-        <div id="quiz-container">
+        <div id="quiz-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
             </div>
     </div>
 
     <div class="controls-area">
-        <div id="feedback-msg"></div>
-        <button class="action-btn" id="next-btn" style="display:none;" onclick="nextPart()">下一頁 ➡</button>
+        <div id="feedback-msg">加油！找出所有的錯字吧！</div>
     </div>
 
     <script>
@@ -247,7 +240,7 @@
         ];
 
         let currentPartIndex = 0;
-        let solvedCount = 0; // 記錄當頁解決了幾題
+        let solvedCount = 0; 
 
         function shuffleArray(array) {
             const shuffled = [...array];
@@ -264,24 +257,22 @@
             
             const container = document.getElementById('quiz-container');
             container.innerHTML = '';
-            document.getElementById('feedback-msg').innerText = '';
-            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('feedback-msg').innerText = "加油！找出所有的錯字吧！";
+            document.getElementById('feedback-msg').style.color = "#00838f";
+            
             solvedCount = 0;
 
             part.questions.forEach((q, qIndex) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
 
-                // 句子區塊
                 const sentenceDiv = document.createElement('div');
                 sentenceDiv.className = 'sentence-container';
                 
-                // 題號
                 const numSpan = document.createElement('span');
                 numSpan.innerText = `${qIndex + 1}. `;
                 sentenceDiv.appendChild(numSpan);
 
-                // 將句子的每一個字變成可以點擊的 span
                 const chars = q.text.split('');
                 chars.forEach(c => {
                     const span = document.createElement('span');
@@ -293,14 +284,12 @@
                         span.id = `typo-span-${qIndex}`; 
                     }
                     
-                    // 點擊事件：尋找錯字
                     span.onclick = () => handleCharClick(qIndex, span);
                     sentenceDiv.appendChild(span);
                 });
 
                 card.appendChild(sentenceDiv);
 
-                // 待選字區塊 (一開始隱藏)
                 const optionsContainer = document.createElement('div');
                 optionsContainer.className = 'options-container';
                 optionsContainer.id = `options-group-${qIndex}`;
@@ -311,7 +300,6 @@
                     btn.className = 'option-btn';
                     btn.innerText = opt;
                     
-                    // 點擊事件：選擇正確的字
                     btn.onclick = () => selectOption(qIndex, opt, btn);
                     optionsContainer.appendChild(btn);
                 });
@@ -321,72 +309,69 @@
             });
         }
 
-        // 處理學生點擊句子中的字
         function handleCharClick(qIndex, spanElement) {
-            // 如果已經改對了，就不能再點
             if (spanElement.classList.contains('fixed') || document.getElementById(`options-group-${qIndex}`).style.display === 'flex') return;
 
             if (spanElement.dataset.isTypo === "true") {
-                // 點對了錯字！
                 spanElement.classList.add('found');
                 document.getElementById(`options-group-${qIndex}`).style.display = 'flex';
+                document.getElementById('feedback-msg').innerText = "太棒了！抓到錯字了，現在選出正確的字吧！";
+                document.getElementById('feedback-msg').style.color = "#d35400";
             } else {
-                // 點錯了，給予震動提示
                 spanElement.classList.add('error-shake');
                 setTimeout(() => spanElement.classList.remove('error-shake'), 400);
             }
         }
 
-        // 處理學生選擇待選字
         function selectOption(qIndex, selectedValue, btnElement) {
             const part = quizData[currentPartIndex];
             const q = part.questions[qIndex];
 
             if (selectedValue === q.answer) {
-                // 選對了！
                 btnElement.classList.add('correct');
                 const typoSpan = document.getElementById(`typo-span-${qIndex}`);
                 
-                // 替換文字、變成綠色
                 typoSpan.innerText = q.answer;
                 typoSpan.classList.remove('found');
                 typoSpan.classList.add('fixed');
                 
                 solvedCount++;
+                document.getElementById('feedback-msg').innerText = "答對了！";
+                document.getElementById('feedback-msg').style.color = "#27ae60";
 
-                // 延遲一下後收起選項
                 setTimeout(() => {
                     document.getElementById(`options-group-${qIndex}`).style.display = 'none';
                     checkAllSolved();
                 }, 800);
 
             } else {
-                // 選錯了
                 btnElement.classList.add('wrong');
                 setTimeout(() => btnElement.classList.remove('wrong'), 800);
             }
         }
 
-        // 檢查這一頁是否全部答對
         function checkAllSolved() {
             if (solvedCount === quizData[currentPartIndex].questions.length) {
-                document.getElementById('feedback-msg').innerText = "🎉 太神啦！抓蟲大師，這頁全部改對了！";
-                
-                const nextBtn = document.getElementById('next-btn');
-                nextBtn.style.display = 'block';
-                
-                if (currentPartIndex === quizData.length - 1) {
-                    nextBtn.innerText = "🏆 恭喜破關！回首頁";
-                    nextBtn.onclick = () => window.location.href = 'index.html';
+                // 依據是否為最後一頁，給予不同的自動跳轉提示
+                if (currentPartIndex < quizData.length - 1) {
+                    document.getElementById('feedback-msg').innerText = "🎉 太神啦！這頁全部改對了！(即將進入下一頁...)";
+                    document.getElementById('feedback-msg').style.color = "#27ae60";
+                    
+                    // 停留 1.5 秒後自動進入下一頁
+                    setTimeout(() => {
+                        currentPartIndex++;
+                        renderPart(currentPartIndex);
+                        document.querySelector('.content-area').scrollTop = 0;
+                    }, 1500);
+                } else {
+                    document.getElementById('feedback-msg').innerText = "🏆 恭喜你！完成所有關卡了！(即將回到首頁...)";
+                    document.getElementById('feedback-msg').style.color = "#8e44ad";
+                    
+                    // 停留 2 秒後自動回到首頁
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
                 }
-            }
-        }
-
-        function nextPart() {
-            currentPartIndex++;
-            if (currentPartIndex < quizData.length) {
-                renderPart(currentPartIndex);
-                document.querySelector('.content-area').scrollTop = 0; 
             }
         }
 
