@@ -17,27 +17,62 @@
             padding: 40px 4%;
             box-sizing: border-box;
         }
-
         .header-area {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
-
         h1 {
             color: #4a5568;
             font-size: clamp(32px, 4vw, 50px);
             margin: 0;
             letter-spacing: 2px;
         }
-
-        .cards-container {
+        
+        /* 💡 新增：期末複習關卡區塊樣式 */
+        .stage-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 橫式一行 4 個 */
-            gap: 25px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 50px;
+        }
+        .stage-card {
+            background: #fff3cd;
+            border: 3px dashed #ffc107;
+            border-radius: 20px;
+            padding: 25px 15px;
+            text-align: center;
+            text-decoration: none;
+            color: #856404;
+            font-size: 22px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .stage-card:hover {
+            transform: scale(1.05);
+            background: #ffeeba;
+            border-style: solid;
+        }
+        .section-title {
+            color: #2d3748;
+            font-size: 24px;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #cbd5e0;
+            padding-bottom: 5px;
             width: 100%;
             max-width: 1400px;
         }
 
+        /* 原本的課文區塊樣式 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            width: 100%;
+            max-width: 1400px;
+        }
         .lesson-card {
             background: white;
             border-radius: 15px;
@@ -50,35 +85,21 @@
             text-decoration: none;
             transition: 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            user-select: none; /* 適合平板操作，防反白 */
+            user-select: none;
         }
-
         .lesson-card:hover, .lesson-card:active {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 10px 20px rgba(0,0,0,0.12);
         }
+        .lesson-num { font-size: clamp(24px, 2vw, 30px); font-weight: bold; color: #00897b; margin-bottom: 12px; }
+        .lesson-name { font-size: clamp(16px, 1.5vw, 20px); color: #718096; }
+        .lesson-card:nth-child(4n+1) { border-color: #fbc531; }
+        .lesson-card:nth-child(4n+2) { border-color: #4cd137; }
+        .lesson-card:nth-child(4n+3) { border-color: #00a8ff; }
+        .lesson-card:nth-child(4n+4) { border-color: #9c88ff; }
 
-        .lesson-num {
-            font-size: clamp(24px, 2vw, 30px);
-            font-weight: bold;
-            color: #00897b;
-            margin-bottom: 12px;
-        }
-
-        .lesson-name {
-            font-size: clamp(16px, 1.5vw, 20px);
-            color: #718096;
-        }
-
-        /* 還原您圖片中的四色直排邊框 */
-        .lesson-card:nth-child(4n+1) { border-color: #fbc531; } /* 橘黃 */
-        .lesson-card:nth-child(4n+2) { border-color: #4cd137; } /* 綠色 */
-        .lesson-card:nth-child(4n+3) { border-color: #00a8ff; } /* 藍色 */
-        .lesson-card:nth-child(4n+4) { border-color: #9c88ff; } /* 紫色 */
-
-        /* 針對小螢幕平板的響應式調整 */
-        @media (max-width: 1024px) { .cards-container { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 768px) { .cards-container { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1024px) { .cards-container, .stage-container { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .cards-container, .stage-container { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
@@ -86,6 +107,15 @@
         <h1>🎡 國語樂園 🎡</h1>
     </div>
 
+    <div class="section-title">🏆 期末複習大挑戰</div>
+    <div class="stage-container">
+        <a href="final-stage1.html" class="stage-card">⚔️ 第一關：詞語試煉</a>
+        <a href="final-stage2.html" class="stage-card">🛡️ 第二關：成語迷宮<br><span style="font-size:14px">(建置中)</span></a>
+        <a href="final-stage3.html" class="stage-card">🧙 第三關：句型魔法<br><span style="font-size:14px">(建置中)</span></a>
+        <a href="final-stage4.html" class="stage-card">👑 第四關：終極魔王<br><span style="font-size:14px">(建置中)</span></a>
+    </div>
+
+    <div class="section-title">📚 課文預習 / 複習</div>
     <div class="cards-container">
         <a href="lesson.html?id=1" class="lesson-card"><div class="lesson-num">第一課</div><div class="lesson-name">最美的模樣</div></a>
         <a href="lesson.html?id=2" class="lesson-card"><div class="lesson-num">第二課</div><div class="lesson-name">玩玩具</div></a>
