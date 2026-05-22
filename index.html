@@ -28,7 +28,6 @@
             letter-spacing: 2px;
         }
         
-        /* 💡 新增：期末複習關卡區塊樣式 */
         .stage-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -65,7 +64,6 @@
             max-width: 1400px;
         }
 
-        /* 原本的課文區塊樣式 */
         .cards-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -100,7 +98,77 @@
 
         @media (max-width: 1024px) { .cards-container, .stage-container { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .cards-container, .stage-container { grid-template-columns: repeat(2, 1fr); } }
+
+        /* 💡 新增：QR Code 懸浮按鈕與彈出視窗樣式 */
+        .qr-float-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #00897b;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .qr-float-btn:hover {
+            background-color: #00695c;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .qr-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px); /* 背景微微模糊效果 */
+        }
+        .qr-modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease-out;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 32px;
+            cursor: pointer;
+            color: #a0aec0;
+            background: none;
+            border: none;
+            transition: 0.2s;
+        }
+        .close-btn:hover { color: #e53e3e; transform: scale(1.1); }
+        #qrcode {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+        }
+        #qrcode img {
+            border-radius: 10px;
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <div class="header-area">
@@ -110,8 +178,8 @@
     <div class="section-title">🏆 期末複習大挑戰</div>
     <div class="stage-container">
         <a href="final-stage1.html" class="stage-card">⚔️ 第一關：詞語試煉</a>
-        <a href="final-stage2.html" class="stage-card">🛡️ 第二關：成語迷宮<br><span style="font-size:14px">(建置中)</span></a>
-        <a href="final-stage3.html" class="stage-card">🧙 第三關：句型魔法<br><span style="font-size:14px">(建置中)</span></a>
+        <a href="final-stage2.html" class="stage-card">🛡️ 第二關：字詞迷宮<br><span style="font-size:14px">(建置中)</span></a>
+        <a href="final-stage3.html" class="stage-card">🧙 第三關：選擇大挑戰<br><span style="font-size:14px">(建置中)</span></a>
         <a href="final-stage4.html" class="stage-card">👑 第四關：終極魔王<br><span style="font-size:14px">(建置中)</span></a>
     </div>
 
@@ -130,5 +198,48 @@
         <a href="lesson.html?id=11" class="lesson-card"><div class="lesson-num">第十一課</div><div class="lesson-name">枯木是大飯店</div></a>
         <a href="lesson.html?id=12" class="lesson-card"><div class="lesson-num">第十二課</div><div class="lesson-name">騎樓</div></a>
     </div>
+
+    <button class="qr-float-btn" onclick="openQrModal()">📱 掃描進入</button>
+
+    <div class="qr-modal" id="qrModal">
+        <div class="qr-modal-content">
+            <button class="close-btn" onclick="closeQrModal()">&times;</button>
+            <h2 style="margin-top: 0; color: #2d3748; font-size: 28px;">🎡 國語樂園</h2>
+            <div id="qrcode"></div>
+            <p style="color: #718096; margin-bottom: 0; margin-top: 15px; font-weight: bold;">請使用平板或手機掃描條碼</p>
+        </div>
+    </div>
+
+    <script>
+        let qrcode = null;
+
+        function openQrModal() {
+            document.getElementById('qrModal').style.display = 'flex';
+            
+            // 只有在第一次打開時才生成 QR Code，自動抓取當前網頁網址
+            if (!qrcode) {
+                qrcode = new QRCode(document.getElementById("qrcode"), {
+                    text: window.location.href, // 自動抓取目前的網址
+                    width: 250,
+                    height: 250,
+                    colorDark : "#2d3748",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            }
+        }
+
+        function closeQrModal() {
+            document.getElementById('qrModal').style.display = 'none';
+        }
+
+        // 點擊視窗外部也能自動關閉
+        window.onclick = function(event) {
+            const modal = document.getElementById('qrModal');
+            if (event.target === modal) {
+                closeQrModal();
+            }
+        }
+    </script>
 </body>
 </html>
