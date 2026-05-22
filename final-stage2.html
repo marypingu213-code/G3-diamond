@@ -174,33 +174,39 @@
 
     <div class="word-bank-area">
         <div style="text-align: center; margin-bottom: 10px; color: #e67e22; font-size: 20px; font-weight: bold;">
-            🔊 點擊選項，會唸給你聽喔！然後會自動填入空格中。
+            🔊 點擊選項，會唸給你聽喔！每次選項的順序都會打亂。
         </div>
         <div class="word-bank" id="word-bank">
             </div>
         <div class="controls">
             <button class="action-btn" id="check-btn" onclick="checkAnswers()">對答案</button>
-            <button class="action-btn" id="next-btn" style="display:none; background:#8e44ad; box-shadow: 0 5px 0 #9b59b6;" onclick="nextPart()">下一關 ➡</button>
+            <button class="action-btn" id="next-btn" style="display:none; background:#8e44ad; box-shadow: 0 5px 0 #9b59b6;" onclick="nextPart()">下一頁 ➡</button>
         </div>
     </div>
 
     <script>
-        // 題庫資料 (第二關)
+        // 💡 將題庫細分為每次最多 2~3 題，減輕學生負荷
         const quizData = [
             {
-                title: "一、填入正確的用字",
-                options: ["每", "母", "乳", "島", "鳥", "船", "般", "商", "適"],
+                title: "一、填入正確的用字 (上)",
+                options: ["每", "母", "乳", "島", "鳥"],
                 questions: [
                     { text: "陳爺爺( )個星期五都會到菜市場買菜。大部分的國家，將五月的第二個星期日訂為( )親節。", answer: ["每", "母"] },
                     { text: "妹妹喜歡把草莓沾上煉( )後，再一口吃掉。", answer: "乳" },
-                    { text: "這座在大海中央的小( )是許多海( )的棲息地。", answer: ["島", "鳥"] },
+                    { text: "這座在大海中央的小( )是許多海( )的棲息地。", answer: ["島", "鳥"] }
+                ]
+            },
+            {
+                title: "一、填入正確的用字 (下)",
+                options: ["船", "般", "商", "適"],
+                questions: [
                     { text: "這座外觀建造成( )形的美術館，預計下個月開放給一( )民眾參觀。", answer: ["船", "般"] },
                     { text: "週末時，媽媽帶著我和妹妹到家中附近的( )店街購物。升上中年級之後，小楷花了一些時間( )應更繁重的課業。", answer: ["商", "適"] }
                 ]
             },
             {
                 title: "二、圈出正確的字音",
-                options: ["ㄐㄧㄤˋ", "ㄒㄧㄤˊ", "ㄌㄟˇ", "ㄌㄟˋ"],
+                options: ["ㄐㄧㄤˋ", "ㄒㄧㄤˊ", "ㄐㄧㄤˋ", "ㄌㄟˇ", "ㄌㄟˋ"], // 修正：提供兩個ㄐㄧㄤˋ按鈕
                 questions: [
                     { text: "因為糧食嚴重不足，這支軍隊的戰力大幅下( )，最後只好向敵人投( )。", answer: ["ㄐㄧㄤˋ", "ㄒㄧㄤˊ"] },
                     { text: "看起來很瘦弱的丁丁，實際上是班上的短跑健( )。", answer: "ㄐㄧㄤˋ" },
@@ -208,11 +214,17 @@
                 ]
             },
             {
-                title: "三、填入正確的語詞或字",
-                options: ["不僅", "不是", "適合", "混合", "吞", "擋", "建", "淋", "砌"],
+                title: "三、填入正確的語詞或字 (上)",
+                options: ["不僅", "不是", "適合", "混合"],
                 questions: [
                     { text: "公園( )是人們休閒的場所，還為城市增添些許綠意。", answer: "不僅" },
-                    { text: "這件上衣十分( )表姐。", answer: "適合" },
+                    { text: "這件上衣十分( )表姐。", answer: "適合" }
+                ]
+            },
+            {
+                title: "三、填入正確的語詞或字 (下)",
+                options: ["吞", "擋", "建", "淋", "砌"],
+                questions: [
                     { text: "姐姐每次( )藥丸的時候，就會露出痛苦的表情。", answer: "吞" },
                     { text: "這道牆( )住了寒冷的北風。", answer: "擋" },
                     { text: "社區居民希望能利用這塊空地( )一座公園。", answer: "建" }
@@ -228,18 +240,28 @@
             }
         ];
 
-        // 注音發音轉換字典 (因為語音引擎可能無法正確唸出純注音，給予同音字提示)
+        // 注音發音轉換字典
         const pronunciationMap = {
             "ㄐㄧㄤˋ": "降",
             "ㄒㄧㄤˊ": "祥",
             "ㄌㄟˇ": "壘",
             "ㄌㄟˋ": "淚",
-            "告示間": "告,事間", // 補微調發音停頓
+            "告示間": "告,事間",
             "展示間": "展,事間"
         };
 
         let currentPartIndex = 0;
         let blankCounter = 0;
+
+        // 💡 核心功能：打亂陣列順序
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
 
         function renderPart(index) {
             const part = quizData[index];
@@ -284,19 +306,20 @@
                 qContainer.appendChild(row);
             });
 
-            part.options.forEach((opt, i) => {
+            // 💡 渲染選項前，先將選項陣列洗牌打亂
+            const shuffledOptions = shuffleArray(part.options);
+            
+            shuffledOptions.forEach((opt, i) => {
                 const btn = document.createElement('div');
                 btn.className = 'word-btn';
                 btn.innerText = opt;
-                btn.id = 'wordbtn-' + i;
+                btn.id = 'wordbtn-' + i; // 使用獨立的 ID
                 btn.onclick = () => fillBlank(opt, btn.id);
                 wContainer.appendChild(btn);
             });
         }
 
-        // 點擊下方選項時：1. 唸出聲音 2. 填入空格
         function fillBlank(word, btnId) {
-            // 語音報讀答案
             let speakWord = pronunciationMap[word] || word;
             speakText(speakWord);
 
@@ -312,7 +335,6 @@
             }
         }
 
-        // 退回選項
         function returnWord(blankId) {
             const blank = document.getElementById(blankId);
             if (blank.innerText !== '' && !blank.classList.contains('correct')) {
@@ -380,7 +402,6 @@
             }
         }
 
-        // Web Speech API
         function speakText(text) {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
@@ -389,7 +410,7 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        // 載入第一大題
+        // 載入第一部分
         renderPart(currentPartIndex);
     </script>
 </body>
