@@ -9,39 +9,32 @@
             font-family: "Microsoft JhengHei", sans-serif;
             background-color: #fdf5e6;
             margin: 0;
-            padding: 40px 4%;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            height: 100vh; /* 充滿整個螢幕高度 */
             box-sizing: border-box;
+            overflow: hidden; /* 防止滾動，保持單頁簡報感 */
         }
-        .header-area {
-            text-align: center;
-            margin-bottom: 40px;
-            position: relative;
-            width: 100%;
-            max-width: 1000px;
+        
+        /* 頂部導航與進度條 */
+        .top-bar {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-        }
-        h1 {
-            color: #4a5568;
-            font-size: clamp(32px, 4vw, 45px);
-            margin: 0;
-            letter-spacing: 2px;
+            padding: 20px 4%;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            z-index: 10;
         }
         .back-btn {
-            position: absolute;
-            left: 0;
             text-decoration: none;
             background-color: #00897b;
             color: white;
             padding: 15px 30px;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 22px;
+            font-size: 24px;
             transition: 0.3s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
@@ -50,187 +43,219 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.2);
         }
+        .progress-text {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4a5568;
+            background: #e2e8f0;
+            padding: 10px 30px;
+            border-radius: 50px;
+        }
+
+        /* 題目顯示區域 (充滿畫面核心) */
+        .slide-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
         
-        .section-title {
+        .question-slide {
+            display: none; /* 預設隱藏所有題目 */
+            width: 100%;
+            max-width: 1400px;
+            height: 100%;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-left: 15px solid #fbc531;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 60px;
+            box-sizing: border-box;
+            animation: fadeIn 0.4s ease-in-out;
+            text-align: center;
+        }
+        .question-slide.active {
+            display: flex; /* 只顯示有 active class 的題目 */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .section-badge {
             background-color: #4a5568;
             color: white;
             padding: 15px 40px;
             border-radius: 50px;
-            font-size: 28px;
-            margin: 40px 0 20px 0;
-            width: 100%;
-            max-width: 1000px;
-            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 50px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .quiz-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            width: 100%;
-            max-width: 1000px;
-            margin-bottom: 60px;
-        }
-        
-        .question-card {
-            background: white;
-            border-radius: 25px;
-            padding: 35px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-            transition: 0.3s;
-            border-left: 10px solid #fbc531;
-        }
-        
         /* 閱讀題的樣式 */
-        .question-num {
-            font-size: 26px;
-            font-weight: bold;
-            color: #2d3748;
-            margin-bottom: 25px;
-            border-bottom: 3px dashed #e2e8f0;
-            padding-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .question-num::before { content: "✏️"; }
         .sentence-text {
-            font-size: 38px; /* 超大字體，適合大螢幕與平板 */
+            font-size: clamp(40px, 5vw, 65px); /* 超巨大字體 */
             color: #1a202c;
-            line-height: 1.6;
-            letter-spacing: 3px;
-            text-align: center;
+            line-height: 1.8;
+            letter-spacing: 5px;
             font-weight: bold;
         }
-        u { text-decoration-color: #e53e3e; text-decoration-thickness: 4px; text-underline-offset: 8px; }
+        u { text-decoration-color: #e53e3e; text-decoration-thickness: 6px; text-underline-offset: 12px; }
 
         /* 互動選擇題的樣式 */
         .compare-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 30px;
+            margin-bottom: 50px;
+            width: 100%;
         }
         .compare-item {
-            font-size: 34px;
+            font-size: clamp(35px, 4vw, 55px);
             font-weight: bold;
             color: #2b6cb0;
             background-color: #ebf8ff;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            letter-spacing: 2px;
+            padding: 30px;
+            border-radius: 25px;
+            letter-spacing: 3px;
         }
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 40px;
         }
         .ox-btn {
             font-family: inherit;
-            font-size: 32px;
+            font-size: 45px;
             font-weight: bold;
-            padding: 20px 50px;
-            border-radius: 20px;
+            padding: 30px 80px;
+            border-radius: 30px;
             cursor: pointer;
-            border: 4px solid #cbd5e0;
+            border: 6px solid #cbd5e0;
             background: white;
             color: #4a5568;
             transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
         .ox-btn:hover:not(:disabled) {
             transform: scale(1.05);
             border-color: #a0aec0;
+            background: #f7fafc;
         }
         .ox-btn:active:not(:disabled) {
             transform: scale(0.95);
         }
         .feedback-text {
-            font-size: 28px;
+            font-size: 40px;
             font-weight: bold;
-            text-align: center;
-            margin-top: 25px;
-            display: none;
-            animation: popIn 0.3s ease-out;
+            margin-top: 40px;
+            height: 50px; /* 固定高度避免版面跳動 */
+            opacity: 0;
+            transition: 0.3s;
         }
 
-        @keyframes popIn {
-            from { transform: translateY(-10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        /* 底部上一題/下一題導航 */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px 5%;
+            background: #fff;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+        .nav-btn {
+            font-family: inherit;
+            font-size: 32px;
+            font-weight: bold;
+            padding: 20px 50px;
+            border-radius: 20px;
+            border: none;
+            background-color: #4299e1;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 6px 12px rgba(66, 153, 225, 0.3);
+        }
+        .nav-btn:hover:not(:disabled) {
+            background-color: #3182ce;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(66, 153, 225, 0.4);
+        }
+        .nav-btn:disabled {
+            background-color: #cbd5e0;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        .nav-btn.finish-btn {
+            background-color: #4cd137;
+            box-shadow: 0 6px 12px rgba(76, 209, 55, 0.3);
+        }
+        .nav-btn.finish-btn:hover {
+            background-color: #44bd32;
+            box-shadow: 0 10px 20px rgba(76, 209, 55, 0.4);
         }
 
-        @media (max-width: 768px) {
-            .header-area { flex-direction: column; gap: 20px; }
-            .back-btn { position: static; }
-            .sentence-text, .compare-item { font-size: 28px; }
-            .ox-btn { font-size: 24px; padding: 15px 30px; }
-        }
     </style>
 </head>
 <body>
 
-    <div class="header-area">
-        <a href="index.html" class="back-btn">⬅️ 回首頁</a>
-        <h1>📝 複習一：綜合練習</h1>
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">⬅️ 回大廳</a>
+        <div class="progress-text" id="progressIndicator">第 1 / 15 題</div>
     </div>
 
-    <!-- ================= 第一部分：閱讀與找錯字 ================= -->
-    <div class="section-title">✨ 第一部分：讀一讀、找一找</div>
-    <div class="quiz-container">
+    <div class="slide-container" id="slideContainer">
         
-        <div class="question-card">
-            <div class="question-num">第 1 題</div>
+        <div class="question-slide active">
+            <div class="section-badge">✨ 讀一讀、找一找 (挑出售字)</div>
             <div class="sentence-text">那裡有一間用紅磚堆砌而成的小屋。</div>
         </div>
 
-        <div class="question-card">
-            <div class="question-num">第 2 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 讀一讀、找一找</div>
             <div class="sentence-text">請問你有空可以陪我下奇嗎？</div>
         </div>
 
-        <div class="question-card">
-            <div class="question-num">第 3 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 讀一讀、找一找</div>
             <div class="sentence-text"><u>曉華</u>是一名舉世聞名的雕刻家。</div>
         </div>
 
-        <div class="question-card">
-            <div class="question-num">第 4 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 讀一讀、找一找</div>
             <div class="sentence-text">美麗的珊瑚是海洋的珍寶，需要我們好好去愛護。</div>
         </div>
 
-        <div class="question-card">
-            <div class="question-num">第 5 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 讀一讀、找一找</div>
             <div class="sentence-text">屋簷底下經常會有燕子飛來築巢。</div>
         </div>
 
-        <div class="question-card">
-            <div class="question-num">第 6 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 讀一讀、找一找</div>
             <div class="sentence-text">最近，我迷上了前水這項水上運動。</div>
         </div>
 
-        <div class="question-card">
-            <div class="question-num">第 7 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 讀一讀、找一找</div>
             <div class="sentence-text">這裡的遊樂設失相當新奇有趣。</div>
         </div>
 
-        <div class="question-card">
-            <div class="question-num">第 8 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 讀一讀、找一找</div>
             <div class="sentence-text">這道數學題好難，你能給我一些提示嗎？</div>
         </div>
-    </div>
 
-    <!-- ================= 第二部分：互動是非題 ================= -->
-    <div class="section-title">✨ 第二部分：相似的畫◯，不同的打╳</div>
-    <div class="quiz-container">
-
-        <!-- 第 9 題 (答案: X) -->
-        <div class="question-card interactive-card">
-            <div class="question-num">第 9 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 相似的畫◯，不同的打╳</div>
             <div class="compare-container">
                 <div class="compare-item">游向那一群小魚</div>
                 <div class="compare-item">游離那一群小魚</div>
@@ -242,9 +267,8 @@
             <div class="feedback-text"></div>
         </div>
 
-        <!-- 第 10 題 (答案: O) -->
-        <div class="question-card interactive-card">
-            <div class="question-num">第 10 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 相似的畫◯，不同的打╳</div>
             <div class="compare-container">
                 <div class="compare-item">我們高聲歡呼</div>
                 <div class="compare-item">我們大聲歡呼</div>
@@ -256,9 +280,8 @@
             <div class="feedback-text"></div>
         </div>
 
-        <!-- 第 11 題 (答案: O) -->
-        <div class="question-card interactive-card">
-            <div class="question-num">第 11 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 相似的畫◯，不同的打╳</div>
             <div class="compare-container">
                 <div class="compare-item">店面不寬</div>
                 <div class="compare-item">店面窄小</div>
@@ -270,9 +293,8 @@
             <div class="feedback-text"></div>
         </div>
 
-        <!-- 第 12 題 (答案: X) -->
-        <div class="question-card interactive-card">
-            <div class="question-num">第 12 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 相似的畫◯，不同的打╳</div>
             <div class="compare-container">
                 <div class="compare-item">前面是展示間，後面是教室</div>
                 <div class="compare-item">後面有展示間，前面有教室</div>
@@ -284,9 +306,8 @@
             <div class="feedback-text"></div>
         </div>
 
-        <!-- 第 13 題 (答案: O) -->
-        <div class="question-card interactive-card">
-            <div class="question-num">第 13 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 相似的畫◯，不同的打╳</div>
             <div class="compare-container">
                 <div class="compare-item">到現在都還沒有乾</div>
                 <div class="compare-item">到現在都還未乾</div>
@@ -298,9 +319,8 @@
             <div class="feedback-text"></div>
         </div>
 
-        <!-- 第 14 題 (答案: X) -->
-        <div class="question-card interactive-card">
-            <div class="question-num">第 14 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 相似的畫◯，不同的打╳</div>
             <div class="compare-container">
                 <div class="compare-item">枯木是森林裡的大飯店</div>
                 <div class="compare-item">飯店是用枯木建造出來的</div>
@@ -312,9 +332,8 @@
             <div class="feedback-text"></div>
         </div>
 
-        <!-- 第 15 題 (答案: O) -->
-        <div class="question-card interactive-card">
-            <div class="question-num">第 15 題</div>
+        <div class="question-slide">
+            <div class="section-badge">✨ 相似的畫◯，不同的打╳</div>
             <div class="compare-container">
                 <div class="compare-item">這是一件「容易」的事。</div>
                 <div class="compare-item">我覺得這件事很「簡單」。</div>
@@ -328,23 +347,67 @@
 
     </div>
 
-    <!-- 互動答題的 JavaScript 邏輯 -->
+    <div class="bottom-nav">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>◀ 上一題</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">下一題 ▶</button>
+    </div>
+
     <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.question-slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressIndicator = document.getElementById('progressIndicator');
+
+        function updateUI() {
+            // 切換 active class
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+
+            // 更新進度文字
+            progressIndicator.innerText = `第 ${currentSlide + 1} / ${slides.length} 題`;
+
+            // 控制按鈕狀態
+            prevBtn.disabled = currentSlide === 0;
+            
+            if (currentSlide === slides.length - 1) {
+                nextBtn.innerText = "🎉 恭喜完成！回大廳";
+                nextBtn.classList.add('finish-btn');
+            } else {
+                nextBtn.innerText = "下一題 ▶";
+                nextBtn.classList.remove('finish-btn');
+            }
+        }
+
+        function changeSlide(direction) {
+            // 如果是在最後一題按「完成」
+            if (direction === 1 && currentSlide === slides.length - 1) {
+                window.location.href = 'index.html'; // 導回首頁
+                return;
+            }
+
+            currentSlide += direction;
+            updateUI();
+        }
+
+        // 檢查 O/X 答案的邏輯
         function checkAnswer(btn, isCorrect) {
-            const card = btn.closest('.interactive-card');
+            const card = btn.closest('.question-slide');
             const btns = card.querySelectorAll('.ox-btn');
             const feedback = card.querySelector('.feedback-text');
 
-            // 點擊後停用該題的所有按鈕，避免重複作答
+            // 鎖定按鈕
             btns.forEach(b => {
                 b.disabled = true;
                 b.style.opacity = '0.5';
-                b.style.cursor = 'not-allowed';
             });
-            // 讓被點擊的按鈕保持清楚
             btn.style.opacity = '1';
 
-            // 判斷對錯並給予畫面回饋
+            // 給予回饋
             if (isCorrect) {
                 card.style.borderColor = '#4cd137';
                 card.style.backgroundColor = '#f0fdf4';
@@ -356,7 +419,7 @@
                 feedback.innerHTML = '💪 哎呀，再仔細想想看喔！';
                 feedback.style.color = '#c0392b';
             }
-            feedback.style.display = 'block';
+            feedback.style.opacity = '1';
         }
     </script>
 </body>
