@@ -169,15 +169,15 @@ const allLessonsData = {
             { text: "在這個通訊發達的時代，街道旁的舊________依然守候著文字的溫度。", answer: "郵筒" }
         ], 
         level4: [
-            { word: "潛水", image: "G3-diamond/pic/L8/1.jpg" },
-            { word: "珊瑚", image: "G3-diamond/pic/L8/2.jpg" },
-            { word: "航行", image: "G3-diamond/pic/L8/3.jpg" },
-            { word: "探險", image: "G3-diamond/pic/L8/4.jpg" },
-            { word: "水母", image: "G3-diamond/pic/L8/5.jpg" },
-            { word: "小丑", image: "G3-diamond/pic/L8/6.jpg" },
-            { word: "寬闊", image: "G3-diamond/pic/L8/7.jpg" },
-            { word: "郵筒", image: "G3-diamond/pic/L8/8.jpg" },
-            { word: "虎牙", image: "G3-diamond/pic/L8/9.jpg" }
+          { word: "潛水", image: "./pic/L8/1.jpg" },
+            { word: "珊瑚", image: "./pic/L8/2.jpg" },
+            { word: "航行", image: "./pic/L8/3.jpg" },
+            { word: "探險", image: "./pic/L8/4.jpg" },
+            { word: "水母", image: "./pic/L8/5.jpg" },
+            { word: "小丑", image: "./pic/L8/6.jpg" },
+            { word: "寬闊", image: "./pic/L8/7.jpg" },
+            { word: "郵筒", image: "./pic/L8/8.jpg" },
+            { word: "虎牙", image: "./pic/L8/9.jpg" }
         ] 
     },
 
@@ -207,15 +207,15 @@ const allLessonsData = {
             { text: "聽完老師說的冷笑話，阿白一邊搖頭一邊獨自________，看起來心情很好。", answer: "傻笑" }
         ], 
         level4: [
-            { word: "藍染", image: "G3-diamond/pic/L9/1.jpg" },
-            { word: "隧道", image: "G3-diamond/pic/L9/2.jpg" },
-            { word: "拱廊", image: "G3-diamond/pic/L9/3.jpg" },
-            { word: "騎樓", image: "G3-diamond/pic/L9/4.jpg" },
-            { word: "燈籠", image: "G3-diamond/pic/L9/5.jpg" },
-            { word: "展示", image: "G3-diamond/pic/L9/6.jpg" },
-            { word: "施展", image: "G3-diamond/pic/L9/7.jpg" },
-            { word: "開獎", image: "G3-diamond/pic/L9/8.jpg" },
-            { word: "傻笑", image: "G3-diamond/pic/L9/9.jpg" }
+            { word: "藍染", image: "./pic/L9/1.jpg" },
+            { word: "隧道", image: "./pic/L9/2.jpg" },
+            { word: "拱廊", image: "./pic/L9/3.jpg" },
+            { word: "騎樓", image: "./pic/L9/4.jpg" },
+            { word: "燈籠", image: "./pic/L9/5.jpg" },
+            { word: "展示", image: "./pic/L9/6.jpg" },
+            { word: "施展", image: "./pic/L9/7.jpg" },
+            { word: "開獎", image: "./pic/L9/8.jpg" },
+            { word: "傻笑", image: "./pic/L9/9.jpg" }
         ] 
     },
 
@@ -245,15 +245,15 @@ const allLessonsData = {
             { text: "當運動員在領獎台上看著會旗升起時，紛紛流下感動且激動的________。", answer: "眼淚" }
         ], 
         level4: [
-            { word: "河川", image: "G3-diamond/pic/L10/1.jpg" },
-            { word: "蒸發", image: "G3-diamond/pic/L10/2.jpg" },
-            { word: "凝結", image: "G3-diamond/pic/L10/3.jpg" },
-            { word: "沖刷", image: "G3-diamond/pic/L10/4.jpg" },
-            { word: "雜質", image: "G3-diamond/pic/L10/5.jpg" },
-            { word: "累積", image: "G3-diamond/pic/L10/6.jpg" },
-            { word: "岩石", image: "G3-diamond/pic/L10/7.jpg" },
-            { word: "鹹甜", image: "G3-diamond/pic/L10/8.jpg" },
-            { word: "眼淚", image: "G3-diamond/pic/L10/9.jpg" }
+           { word: "河川", image: "./pic/L10/1.jpg" },
+            { word: "蒸發", image: "./pic/L10/2.jpg" },
+            { word: "凝結", image: "./pic/L10/3.jpg" },
+            { word: "沖刷", image: "./pic/L10/4.jpg" },
+            { word: "雜質", image: "./pic/L10/5.jpg" },
+            { word: "累積", image: "./pic/L10/6.jpg" },
+            { word: "岩石", image: "./pic/L10/7.jpg" },
+            { word: "鹹甜", image: "./pic/L10/8.jpg" },
+            { word: "眼淚", image: "./pic/L10/9.jpg" }
         ] 
     },
 
@@ -284,14 +284,14 @@ const allLessonsData = {
             { text: "專業的職涯規劃，能幫助年輕人找到最________自己發揮長才的舞台。", answer: "適合" }
         ], 
         level4: [
-            { word: "乾枯", image: "G3-diamond/pic/L11/1.jpg" },
-            { word: "意義", image: "G3-diamond/pic/L11/2.jpg" },
-            { word: "火柴", image: "G3-diamond/pic/L11/3.jpg" },
-            { word: "適合", image: "G3-diamond/pic/L11/4.jpg" },
-            { word: "築巢", image: "G3-diamond/pic/L11/5.jpg" },
-            { word: "香菇", image: "G3-diamond/pic/L11/6.jpg" },
-            { word: "腐敗", image: "G3-diamond/pic/L11/7.jpg" },
-            { word: "復原", image: "G3-diamond/pic/L11/8.jpg" }
+            { word: "乾枯", image: "./pic/L11/1.jpg" },
+            { word: "意義", image: "./pic/L11/2.jpg" },
+            { word: "火柴", image: "./pic/L11/3.jpg" },
+            { word: "適合", image: "./pic/L11/4.jpg" },
+            { word: "築巢", image: "./pic/L11/5.jpg" },
+            { word: "香菇", image: "./pic/L11/6.jpg" },
+            { word: "腐敗", image: "./pic/L11/7.jpg" },
+            { word: "復原", image: "./pic/L11/8.jpg" }
         ] 
     },
 
@@ -321,15 +321,15 @@ const allLessonsData = {
             { text: "街道上的文創________琳瑯滿目，每一間都擁有獨特的風格與故事。", answer: "商店" }
         ], 
         level4: [
-            { word: "淋雨", image: "G3-diamond/pic/L12/1.jpg" },
-            { word: "容易", image: "G3-diamond/pic/L12/2.jpg" },
-            { word: "側面", image: "G3-diamond/pic/L12/3.jpg" },
-            { word: "堆砌", image: "G3-diamond/pic/L12/4.jpg" },
-            { word: "建築", image: "G3-diamond/pic/L12/5.jpg" },
-            { word: "社區", image: "G3-diamond/pic/L12/6.jpg" },
-            { word: "遮擋", image: "G3-diamond/pic/L12/7.jpg" },
-            { word: "商店", image: "G3-diamond/pic/L12/8.jpg" },
-            { word: "難忘", image: "G3-diamond/pic/L12/9.jpg" }
+           { word: "淋雨", image: "./pic/L12/1.jpg" },
+            { word: "容易", image: "./pic/L12/2.jpg" },
+            { word: "側面", image: "./pic/L12/3.jpg" },
+            { word: "堆砌", image: "./pic/L12/4.jpg" },
+            { word: "建築", image: "./pic/L12/5.jpg" },
+            { word: "社區", image: "./pic/L12/6.jpg" },
+            { word: "遮擋", image: "./pic/L12/7.jpg" },
+            { word: "商店", image: "./pic/L12/8.jpg" },
+            { word: "難忘", image: "./pic/L12/9.jpg" }
         ] 
     }
 };
