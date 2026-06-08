@@ -12,9 +12,9 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* 充滿整個螢幕高度 */
+            height: 100vh;
             box-sizing: border-box;
-            overflow: hidden; /* 防止滾動，保持單頁簡報感 */
+            overflow: hidden;
         }
         
         /* 頂部導航與進度條 */
@@ -52,7 +52,7 @@
             border-radius: 50px;
         }
 
-        /* 題目顯示區域 (充滿畫面核心) */
+        /* 題目顯示區域 */
         .slide-container {
             flex-grow: 1;
             display: flex;
@@ -63,7 +63,7 @@
         }
         
         .question-slide {
-            display: none; /* 預設隱藏所有題目 */
+            display: none;
             width: 100%;
             max-width: 1400px;
             height: 100%;
@@ -78,9 +78,10 @@
             box-sizing: border-box;
             animation: fadeIn 0.4s ease-in-out;
             text-align: center;
+            transition: 0.3s;
         }
         .question-slide.active {
-            display: flex; /* 只顯示有 active class 的題目 */
+            display: flex;
         }
 
         @keyframes fadeIn {
@@ -99,17 +100,69 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* 閱讀題的樣式 */
+        /* ================= 點擊改錯字互動樣式 ================= */
         .sentence-text {
-            font-size: clamp(40px, 5vw, 65px); /* 超巨大字體 */
+            font-size: clamp(40px, 5vw, 65px);
             color: #1a202c;
             line-height: 1.8;
-            letter-spacing: 5px;
             font-weight: bold;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-radius: 20px;
+            padding: 20px;
+            transition: 0.3s;
         }
-        u { text-decoration-color: #e53e3e; text-decoration-thickness: 6px; text-underline-offset: 12px; }
+        u { 
+            text-decoration-color: #e53e3e; 
+            text-decoration-thickness: 6px; 
+            text-underline-offset: 12px; 
+        }
 
-        /* 底部上一題/下一題導航 */
+        /* 可點擊的字元按鈕 */
+        .char-btn {
+            cursor: pointer;
+            padding: 0 8px;
+            border-radius: 12px;
+            transition: 0.2s;
+            display: inline-block;
+        }
+        .char-btn:hover {
+            background-color: #e2e8f0;
+            transform: scale(1.1);
+        }
+        /* 點錯時的紅底發抖動畫 */
+        .char-btn.wrong {
+            background-color: #fed7d7;
+            color: #e53e3e;
+            animation: shake 0.4s;
+        }
+        /* 點對時的綠底放大動畫 */
+        .char-btn.correct {
+            background-color: #c6f6d5;
+            color: #2f855a;
+            font-weight: bold;
+            transform: scale(1.15);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-6px); }
+        }
+
+        .feedback-text {
+            font-size: 40px;
+            font-weight: bold;
+            margin-top: 40px;
+            height: 50px;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        /* 底部導航 */
         .bottom-nav {
             display: flex;
             justify-content: space-between;
@@ -150,7 +203,6 @@
             background-color: #44bd32;
             box-shadow: 0 10px 20px rgba(76, 209, 55, 0.4);
         }
-
     </style>
 </head>
 <body>
@@ -163,43 +215,51 @@
     <div class="slide-container" id="slideContainer">
         
         <div class="question-slide active">
-            <div class="section-badge">✨ 讀一讀、找一找 (挑出錯字)</div>
-            <div class="sentence-text"><u>巴黎鐵搭</u>是<u>法國</u>知名的觀光景點。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="<u>巴黎鐵搭</u>是<u>法國</u>知名的觀光景點。" data-wrong="搭" data-right="塔"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找 (挑出錯字)</div>
-            <div class="sentence-text">我想去看看<u>臺南</u>有名的<u>鹽水蜂炮</u>。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="我想去看看<u>臺南</u>有名的<u>鹽水蜂炮</u>。" data-wrong="蜂" data-right="烽"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text">美麗的珊瑚是海洋的珍寶，需要我們好好去愛護。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="美麗的山瑚是海洋的珍寶，需要我們好好去愛護。" data-wrong="山" data-right="珊"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text">屋簷底下經常會有燕子飛來築巢。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="屋簷抵下經常會有燕子飛來築巢。" data-wrong="抵" data-right="底"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找 (挑出錯字)</div>
-            <div class="sentence-text">各式各樣的風箏飄福在空中的場面，真是壯觀啊！</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="各式各樣的風箏飄福在空中的場面，真是壯觀啊！" data-wrong="福" data-right="浮"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找 (挑出錯字)</div>
-            <div class="sentence-text">這間抗空公司正在招募有經驗的機師。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="這間抗空公司正在招募有經驗的機師。" data-wrong="抗" data-right="航"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找 (挑出錯字)</div>
-            <div class="sentence-text">出海的傳隻總有返鄉靠岸的一天。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="出海的傳隻總有返鄉靠岸的一天。" data-wrong="傳" data-right="船"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找 (挑出錯字)</div>
-            <div class="sentence-text">時間對媽媽師展魔法，讓她多了許多白髮。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="時間對媽媽師展魔法，讓她多了許多白髮。" data-wrong="師" data-right="施"></div>
+            <div class="feedback-text"></div>
         </div>
 
     </div>
@@ -210,6 +270,73 @@
     </div>
 
     <script>
+        // ================= 自動生成可點擊句子的腳本 =================
+        document.querySelectorAll('.auto-typo').forEach(el => {
+            const rawText = el.getAttribute('data-sentence');
+            const wrongChar = el.getAttribute('data-wrong');
+            const rightChar = el.getAttribute('data-right');
+
+            let resultHTML = '';
+            let inTag = false;
+
+            for(let i = 0; i < rawText.length; i++) {
+                let char = rawText[i];
+                
+                // 處理 <u> 等 HTML 標籤
+                if (char === '<') inTag = true;
+                if (inTag) {
+                    resultHTML += char;
+                    if (char === '>') inTag = false;
+                } else {
+                    // 過濾標點符號，不讓它們變成可點擊按鈕
+                    if (/[，。！？、]/.test(char)) {
+                        resultHTML += `<span style="margin: 0 8px;">${char}</span>`;
+                    } else if (char === wrongChar) {
+                        // 這是真正的錯字
+                        resultHTML += `<span class="char-btn" onclick="checkTypo(this, true, '${rightChar}')">${char}</span>`;
+                    } else {
+                        // 其他干擾字
+                        resultHTML += `<span class="char-btn" onclick="checkTypo(this, false, '')">${char}</span>`;
+                    }
+                }
+            }
+            el.innerHTML = resultHTML;
+        });
+
+        // ================= 檢查點擊是否為錯字的腳本 =================
+        function checkTypo(element, isCorrect, rightChar) {
+            const container = element.closest('.question-slide');
+            
+            // 如果這題已經答對過了，就鎖定不再反應
+            if (container.classList.contains('solved')) return;
+
+            const feedback = container.querySelector('.feedback-text');
+
+            if (isCorrect) {
+                // 點對了！
+                element.classList.add('correct');
+                element.innerText = rightChar; // 瞬間把錯字改成正確的字
+                container.classList.add('solved');
+                
+                // 畫面變綠給予回饋
+                container.style.borderColor = '#4cd137';
+                container.querySelector('.sentence-text').style.backgroundColor = '#f0fdf4';
+                feedback.innerHTML = '✨ 答對了！成功揪出錯字！';
+                feedback.style.color = '#27ae60';
+                feedback.style.opacity = '1';
+            } else {
+                // 點錯了！
+                element.classList.add('wrong');
+                // 移除 class 以便下次點擊還能再發抖
+                setTimeout(() => element.classList.remove('wrong'), 400); 
+                
+                feedback.innerHTML = '💪 哎呀，這個字沒錯喔，再找找看！';
+                feedback.style.color = '#c0392b';
+                feedback.style.opacity = '1';
+            }
+        }
+
+        // ================= 投影片切換邏輯 =================
         let currentSlide = 0;
         const slides = document.querySelectorAll('.question-slide');
         const prevBtn = document.getElementById('prevBtn');
@@ -217,7 +344,6 @@
         const progressIndicator = document.getElementById('progressIndicator');
 
         function updateUI() {
-            // 切換 active class
             slides.forEach((slide, index) => {
                 slide.classList.remove('active');
                 if (index === currentSlide) {
@@ -225,10 +351,8 @@
                 }
             });
 
-            // 更新進度文字
             progressIndicator.innerText = `第 ${currentSlide + 1} / ${slides.length} 題`;
 
-            // 控制按鈕狀態
             prevBtn.disabled = currentSlide === 0;
             
             if (currentSlide === slides.length - 1) {
@@ -241,12 +365,10 @@
         }
 
         function changeSlide(direction) {
-            // 如果是在最後一題按「完成」
             if (direction === 1 && currentSlide === slides.length - 1) {
                 window.location.href = 'index.html'; // 導回首頁
                 return;
             }
-
             currentSlide += direction;
             updateUI();
         }
