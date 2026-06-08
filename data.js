@@ -149,7 +149,6 @@ const allLessonsData = {
         level1: [], 
         level2: [], 
         level3: [
-            // 簡單版
             { text: "海底有五顏六色的________，長得像漂亮的小樹。", answer: "珊瑚" },
             { text: "阿白笑起來的時候，會露出兩顆尖尖的小________。", answer: "虎牙" },
             { text: "帆船在藍藍的大海上________，要去很遠的地方。", answer: "航行" },
@@ -159,7 +158,6 @@ const allLessonsData = {
             { text: "馬戲團裡的________穿著彩色衣服，表演丟球。", answer: "小丑" },
             { text: "操場很________，大家可以在上面跑跑跳跳。", answer: "寬闊" },
             { text: "我把寫好的卡片，投進路邊的綠色________裡。", answer: "郵筒" },
-            // 進階版
             { text: "墾丁的海底擁有壯觀的________礁生態，吸引了許多觀光客。", answer: "珊瑚" },
             { text: "阿白那對明顯的________，讓他笑起來充滿了鄰家大男孩的陽光氣息。", answer: "虎牙" },
             { text: "經過數個月的________，這艘探測船終於跨越了大西洋。", answer: "航行" },
@@ -189,7 +187,6 @@ const allLessonsData = {
         level1: [], 
         level2: [], 
         level3: [
-            // 簡單版
             { text: "元宵節的時候，提著漂亮的________去散步，真開心。", answer: "燈籠" },
             { text: "看到電視上好笑的節目，兔兔忍不住對著螢幕________。", answer: "傻笑" },
             { text: "火車開進了長長的________，窗外突然變得黑漆漆的。", answer: "隧道" },
@@ -199,7 +196,6 @@ const allLessonsData = {
             { text: "魔術師在台上________神奇的法術，把白兔變不見了。", answer: "施展" },
             { text: "奶奶拿著統一發票，認真的看著電視等待________。", answer: "開獎" },
             { text: "這排房子的走廊是彎彎的________形狀，看起來很有特色。", answer: "拱廊" },
-            // 進階版
             { text: "這種結合自然植物染料的________技術，是台灣重要的傳統工藝。", answer: "藍染" },
             { text: "為了縮短城鄉之間的往來時間，政府開鑿了穿過山脈的長形________。", answer: "隧道" },
             { text: "走在充滿異國風情的商圈，兩側華麗的________吸引了眾多遊客駐足。", answer: "拱廊" },
@@ -211,10 +207,15 @@ const allLessonsData = {
             { text: "聽完老師說的冷笑話，阿白一邊搖頭一邊獨自________，看起來心情很好。", answer: "傻笑" }
         ], 
         level4: [
-            { word: "詢問", emoji: "🙋" },
-            { word: "了解", emoji: "💡" },
-            { word: "堅決", emoji: "✊" },
-            { word: "故意", emoji: "😏" }
+            { word: "藍染", image: "G3-diamond/pic/L9/1.jpg" },
+            { word: "隧道", image: "G3-diamond/pic/L9/2.jpg" },
+            { word: "拱廊", image: "G3-diamond/pic/L9/3.jpg" },
+            { word: "騎樓", image: "G3-diamond/pic/L9/4.jpg" },
+            { word: "燈籠", image: "G3-diamond/pic/L9/5.jpg" },
+            { word: "展示", image: "G3-diamond/pic/L9/6.jpg" },
+            { word: "施展", image: "G3-diamond/pic/L9/7.jpg" },
+            { word: "開獎", image: "G3-diamond/pic/L9/8.jpg" },
+            { word: "傻笑", image: "G3-diamond/pic/L9/9.jpg" }
         ] 
     },
 
@@ -224,7 +225,6 @@ const allLessonsData = {
         level1: [], 
         level2: [], 
         level3: [
-            // 簡單版
             { text: "台灣有很多美麗的________，是魚類和蝦子居住的家。", answer: "河川" },
             { text: "太陽出來後，地上的積水會慢慢________，最後消失不見。", answer: "蒸發" },
             { text: "冰涼的水瓶外面會________出許多透明的小水滴。", answer: "凝結" },
@@ -234,7 +234,6 @@ const allLessonsData = {
             { text: "海邊有很多堅硬的巨大________，我們可以坐在上面看海。", answer: "岩石" },
             { text: "這種小餅乾吃起來________的，味道非常特別。", answer: "鹹甜" },
             { text: "兔兔找不到心愛的娃娃，傷心得流下________。", answer: "眼淚" },
-            // 進階版
             { text: "水利局長期監測這條________的含氧量，以確保當地的生態平衡。", answer: "河川" },
             { text: "地表水分因受熱而________，進入大氣層中開啟了永不停歇的水循環。", answer: "蒸發" },
             { text: "清晨時分，空氣中的水蒸氣遇冷________，形成草葉上晶瑩剔透的露珠。", answer: "凝結" },
@@ -246,10 +245,15 @@ const allLessonsData = {
             { text: "當運動員在領獎台上看著會旗升起時，紛紛流下感動且激動的________。", answer: "眼淚" }
         ], 
         level4: [
-            { word: "傑作", emoji: "🏆" },
-            { word: "廣闊", emoji: "🌄" },
-            { word: "聰明", emoji: "🧠" },
-            { word: "根據", emoji: "📄" }
+            { word: "河川", image: "G3-diamond/pic/L10/1.jpg" },
+            { word: "蒸發", image: "G3-diamond/pic/L10/2.jpg" },
+            { word: "凝結", image: "G3-diamond/pic/L10/3.jpg" },
+            { word: "沖刷", image: "G3-diamond/pic/L10/4.jpg" },
+            { word: "雜質", image: "G3-diamond/pic/L10/5.jpg" },
+            { word: "累積", image: "G3-diamond/pic/L10/6.jpg" },
+            { word: "岩石", image: "G3-diamond/pic/L10/7.jpg" },
+            { word: "鹹甜", image: "G3-diamond/pic/L10/8.jpg" },
+            { word: "眼淚", image: "G3-diamond/pic/L10/9.jpg" }
         ] 
     },
 
@@ -259,7 +263,6 @@ const allLessonsData = {
         level1: [], 
         level2: [], 
         level3: [
-            // 簡單版
             { text: "很久沒有下雨了，小草都變得________黃黃的。", answer: "乾枯" },
             { text: "媽媽在煮雞湯時，會放入香噴噴的________。", answer: "香菇" },
             { text: "春天到了，小鳥忙著在樹上________準備生小寶寶。", answer: "築巢" },
@@ -269,7 +272,6 @@ const allLessonsData = {
             { text: "以前的人沒有打火機，通常會用________來點火。", answer: "火柴" },
             { text: "垃圾桶裡的廚餘如果沒有倒，很快就會變質________。", answer: "腐敗" },
             { text: "生病時要多休息、多喝水，身體才能趕快________。", answer: "復原" },
-            // 進階版
             { text: "由於長期乾旱，原本寬闊的河床如今只剩下________的河底與裂縫。", answer: "乾枯" },
             { text: "老師告訴我們，閱讀的________不在於讀了多少書，而是在於思考了多少。", answer: "意義" },
             { text: "雖然現在生活便利，但這盒老________卻勾起了爺爺童年的許多回憶。", answer: "火柴" },
@@ -282,11 +284,14 @@ const allLessonsData = {
             { text: "專業的職涯規劃，能幫助年輕人找到最________自己發揮長才的舞台。", answer: "適合" }
         ], 
         level4: [
-            { word: "埋葬", emoji: "🪦" },
-            { word: "包含", emoji: "📦" },
-            { word: "雄偉", emoji: "🏰" },
-            { word: "蘊含", emoji: "🎁" },
-            { word: "推測", emoji: "🤔" }
+            { word: "乾枯", image: "G3-diamond/pic/L11/1.jpg" },
+            { word: "意義", image: "G3-diamond/pic/L11/2.jpg" },
+            { word: "火柴", image: "G3-diamond/pic/L11/3.jpg" },
+            { word: "適合", image: "G3-diamond/pic/L11/4.jpg" },
+            { word: "築巢", image: "G3-diamond/pic/L11/5.jpg" },
+            { word: "香菇", image: "G3-diamond/pic/L11/6.jpg" },
+            { word: "腐敗", image: "G3-diamond/pic/L11/7.jpg" },
+            { word: "復原", image: "G3-diamond/pic/L11/8.jpg" }
         ] 
     },
 
@@ -296,7 +301,6 @@ const allLessonsData = {
         level1: [], 
         level2: [], 
         level3: [
-            // 簡單版
             { text: "下雨沒帶傘，阿白全身都________濕透了。", answer: "淋雨" },
             { text: "假日的街道很熱鬧，路邊開了許多________。", answer: "商店" },
             { text: "我家門口的大樹，幫我們________了刺眼的陽光。", answer: "遮擋" },
@@ -306,7 +310,6 @@ const allLessonsData = {
             { text: "從________看過去，這架紙飛機的形狀很像老鷹。", answer: "側面" },
             { text: "學校是一棟很漂亮的藍色________。", answer: "建築" },
             { text: "兔兔用彩色積木，________成一座可愛的城堡。", answer: "堆砌" },
-            // 進階版
             { text: "這一區的舊式步道因缺乏修繕，每逢大雨後路面________積水，讓行人感到不便。", answer: "容易" },
             { text: "藝術家運用大量的回收材料，________出一件充滿環保意識的裝置藝術作品。", answer: "堆砌" },
             { text: "為了維護________的居住品質，住戶們約定在深夜後要保持安靜。", answer: "社區" },
@@ -318,11 +321,15 @@ const allLessonsData = {
             { text: "街道上的文創________琳瑯滿目，每一間都擁有獨特的風格與故事。", answer: "商店" }
         ], 
         level4: [
-            { word: "沙漠", emoji: "🏜️" },
-            { word: "氣流", emoji: "🌬️" },
-            { word: "乾燥", emoji: "🍂" },
-            { word: "絢麗", emoji: "🌈" },
-            { word: "價值", emoji: "💎" }
+            { word: "淋雨", image: "G3-diamond/pic/L12/1.jpg" },
+            { word: "容易", image: "G3-diamond/pic/L12/2.jpg" },
+            { word: "側面", image: "G3-diamond/pic/L12/3.jpg" },
+            { word: "堆砌", image: "G3-diamond/pic/L12/4.jpg" },
+            { word: "建築", image: "G3-diamond/pic/L12/5.jpg" },
+            { word: "社區", image: "G3-diamond/pic/L12/6.jpg" },
+            { word: "遮擋", image: "G3-diamond/pic/L12/7.jpg" },
+            { word: "商店", image: "G3-diamond/pic/L12/8.jpg" },
+            { word: "難忘", image: "G3-diamond/pic/L12/9.jpg" }
         ] 
     }
 };
