@@ -12,9 +12,9 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* 充滿整個螢幕高度 */
+            height: 100vh;
             box-sizing: border-box;
-            overflow: hidden; /* 防止滾動，保持單頁簡報感 */
+            overflow: hidden;
         }
         
         /* 頂部導航與進度條 */
@@ -52,7 +52,7 @@
             border-radius: 50px;
         }
 
-        /* 題目顯示區域 (充滿畫面核心) */
+        /* 題目顯示區域 */
         .slide-container {
             flex-grow: 1;
             display: flex;
@@ -63,7 +63,7 @@
         }
         
         .question-slide {
-            display: none; /* 預設隱藏所有題目 */
+            display: none;
             width: 100%;
             max-width: 1400px;
             height: 100%;
@@ -78,9 +78,10 @@
             box-sizing: border-box;
             animation: fadeIn 0.4s ease-in-out;
             text-align: center;
+            transition: 0.3s;
         }
         .question-slide.active {
-            display: flex; /* 只顯示有 active class 的題目 */
+            display: flex;
         }
 
         @keyframes fadeIn {
@@ -99,17 +100,53 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* 閱讀題的樣式 */
+        /* ================= 改錯字互動樣式 ================= */
         .sentence-text {
-            font-size: clamp(40px, 5vw, 65px); /* 超巨大字體 */
+            font-size: clamp(40px, 5vw, 65px);
             color: #1a202c;
             line-height: 1.8;
-            letter-spacing: 5px;
             font-weight: bold;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-radius: 20px;
+            padding: 20px;
+            transition: 0.3s;
         }
         u { text-decoration-color: #e53e3e; text-decoration-thickness: 6px; text-underline-offset: 12px; }
 
-        /* 互動選擇題的樣式 */
+        .char-btn {
+            cursor: pointer;
+            padding: 0 8px;
+            border-radius: 12px;
+            transition: 0.2s;
+            display: inline-block;
+        }
+        .char-btn:hover {
+            background-color: #e2e8f0;
+            transform: scale(1.1);
+        }
+        .char-btn.wrong {
+            background-color: #fed7d7;
+            color: #e53e3e;
+            animation: shake 0.4s;
+        }
+        .char-btn.correct {
+            background-color: #c6f6d5;
+            color: #2f855a;
+            font-weight: bold;
+            transform: scale(1.15);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-6px); }
+        }
+
+        /* ================= 選擇題互動樣式 ================= */
         .compare-container {
             display: flex;
             flex-direction: column;
@@ -152,16 +189,17 @@
         .ox-btn:active:not(:disabled) {
             transform: scale(0.95);
         }
+
         .feedback-text {
             font-size: 40px;
             font-weight: bold;
             margin-top: 40px;
-            height: 50px; /* 固定高度避免版面跳動 */
+            height: 50px;
             opacity: 0;
             transition: 0.3s;
         }
 
-        /* 底部上一題/下一題導航 */
+        /* 底部導航 */
         .bottom-nav {
             display: flex;
             justify-content: space-between;
@@ -202,7 +240,6 @@
             background-color: #44bd32;
             box-shadow: 0 10px 20px rgba(76, 209, 55, 0.4);
         }
-
     </style>
 </head>
 <body>
@@ -215,43 +252,51 @@
     <div class="slide-container" id="slideContainer">
         
         <div class="question-slide active">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text">那裡有一間用紅磚堆砌而成的小屋。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="那裡有一間用紅專堆砌而成的小屋。" data-wrong="專" data-right="磚"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text">請問你有空可以陪我下奇嗎？</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="請問你有空可以陪我下奇嗎？" data-wrong="奇" data-right="棋"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text"><u>曉華</u>是一名舉世聞名的雕刻家。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="<u>曉華</u>是一名舉世聞名的鯛刻家。" data-wrong="鯛" data-right="雕"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text">美麗的珊瑚是海洋的珍寶，需要我們好好去愛護。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="美麗的山瑚是海洋的珍寶，需要我們好好去愛護。" data-wrong="山" data-right="珊"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text">屋簷底下經常會有燕子飛來築巢。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="屋簷抵下經常會有燕子飛來築巢。" data-wrong="抵" data-right="底"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text">最近，我迷上了前水這項水上運動。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="最近，我迷上了前水這項水上運動。" data-wrong="前" data-right="潛"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text">這裡的遊樂設失相當新奇有趣。</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="這裡的遊樂設失相當新奇有趣。" data-wrong="失" data-right="施"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 讀一讀、找一找</div>
-            <div class="sentence-text">這道數學題好難，你能給我一些提示嗎？</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字來修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="這道數學題好難，你能給我一些提士嗎？" data-wrong="士" data-right="示"></div>
+            <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
@@ -353,61 +398,76 @@
     </div>
 
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.question-slide');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const progressIndicator = document.getElementById('progressIndicator');
+        // ================= 自動生成可點擊句子的腳本 =================
+        document.querySelectorAll('.auto-typo').forEach(el => {
+            const rawText = el.getAttribute('data-sentence');
+            const wrongChar = el.getAttribute('data-wrong');
+            const rightChar = el.getAttribute('data-right');
 
-        function updateUI() {
-            // 切換 active class
-            slides.forEach((slide, index) => {
-                slide.classList.remove('active');
-                if (index === currentSlide) {
-                    slide.classList.add('active');
+            let resultHTML = '';
+            let inTag = false;
+
+            for(let i = 0; i < rawText.length; i++) {
+                let char = rawText[i];
+                
+                // 處理 <u> 等 HTML 標籤
+                if (char === '<') inTag = true;
+                if (inTag) {
+                    resultHTML += char;
+                    if (char === '>') inTag = false;
+                } else {
+                    // 過濾標點符號，不讓它們變成可點擊按鈕
+                    if (/[，。！？、「」]/.test(char)) {
+                        resultHTML += `<span style="margin: 0 8px;">${char}</span>`;
+                    } else if (char === wrongChar) {
+                        resultHTML += `<span class="char-btn" onclick="checkTypo(this, true, '${rightChar}')">${char}</span>`;
+                    } else {
+                        resultHTML += `<span class="char-btn" onclick="checkTypo(this, false, '')">${char}</span>`;
+                    }
                 }
-            });
+            }
+            el.innerHTML = resultHTML;
+        });
 
-            // 更新進度文字
-            progressIndicator.innerText = `第 ${currentSlide + 1} / ${slides.length} 題`;
+        // ================= 檢查點擊改錯字的腳本 =================
+        function checkTypo(element, isCorrect, rightChar) {
+            const container = element.closest('.question-slide');
+            if (container.classList.contains('solved')) return;
 
-            // 控制按鈕狀態
-            prevBtn.disabled = currentSlide === 0;
-            
-            if (currentSlide === slides.length - 1) {
-                nextBtn.innerText = "🎉 恭喜完成！回大廳";
-                nextBtn.classList.add('finish-btn');
+            const feedback = container.querySelector('.feedback-text');
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.innerText = rightChar; 
+                container.classList.add('solved');
+                
+                container.style.borderColor = '#4cd137';
+                container.querySelector('.sentence-text').style.backgroundColor = '#f0fdf4';
+                feedback.innerHTML = '✨ 答對了！成功揪出錯字！';
+                feedback.style.color = '#27ae60';
+                feedback.style.opacity = '1';
             } else {
-                nextBtn.innerText = "下一題 ▶";
-                nextBtn.classList.remove('finish-btn');
+                element.classList.add('wrong');
+                setTimeout(() => element.classList.remove('wrong'), 400); 
+                
+                feedback.innerHTML = '💪 哎呀，這個字沒錯喔，再找找看！';
+                feedback.style.color = '#c0392b';
+                feedback.style.opacity = '1';
             }
         }
 
-        function changeSlide(direction) {
-            // 如果是在最後一題按「完成」
-            if (direction === 1 && currentSlide === slides.length - 1) {
-                window.location.href = 'index.html'; // 導回首頁
-                return;
-            }
-
-            currentSlide += direction;
-            updateUI();
-        }
-
-        // 檢查 O/X 答案的邏輯
+        // ================= 檢查 O/X 答案的腳本 =================
         function checkAnswer(btn, isCorrect) {
             const card = btn.closest('.question-slide');
             const btns = card.querySelectorAll('.ox-btn');
             const feedback = card.querySelector('.feedback-text');
 
-            // 鎖定按鈕
             btns.forEach(b => {
                 b.disabled = true;
                 b.style.opacity = '0.5';
             });
             btn.style.opacity = '1';
 
-            // 給予回饋
             if (isCorrect) {
                 card.style.borderColor = '#4cd137';
                 card.style.backgroundColor = '#f0fdf4';
@@ -420,6 +480,43 @@
                 feedback.style.color = '#c0392b';
             }
             feedback.style.opacity = '1';
+        }
+
+        // ================= 投影片切換邏輯 =================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.question-slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressIndicator = document.getElementById('progressIndicator');
+
+        function updateUI() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+
+            progressIndicator.innerText = `第 ${currentSlide + 1} / ${slides.length} 題`;
+
+            prevBtn.disabled = currentSlide === 0;
+            
+            if (currentSlide === slides.length - 1) {
+                nextBtn.innerText = "🎉 恭喜完成！回大廳";
+                nextBtn.classList.add('finish-btn');
+            } else {
+                nextBtn.innerText = "下一題 ▶";
+                nextBtn.classList.remove('finish-btn');
+            }
+        }
+
+        function changeSlide(direction) {
+            if (direction === 1 && currentSlide === slides.length - 1) {
+                window.location.href = 'index.html'; // 導回首頁
+                return;
+            }
+            currentSlide += direction;
+            updateUI();
         }
     </script>
 </body>
