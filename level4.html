@@ -201,8 +201,9 @@
 
             let deck = [];
             baseData.forEach(item => {
-                deck.push({ content: item.text, type: 'text', match: item.text });
-                deck.push({ content: item.img, type: 'img', match: item.text });
+                // 修正重點：把 item.text 和 item.img 改成 item.word 和 item.image
+                deck.push({ content: item.word, type: 'text', match: item.word });
+                deck.push({ content: item.image, type: 'img', match: item.word });
             });
 
             deck.sort(() => Math.random() - 0.5);
@@ -245,6 +246,7 @@
                 secondCard.classList.add('matched');
                 resetBoard();
                 matchesFound++;
+                // 修正重點：因為配對是兩張卡片一組，所以總配對數是 baseData.length
                 if (matchesFound === baseData.length) {
                     clearInterval(timer);
                     setTimeout(() => { alert(`🎉 太棒了！花了 ${seconds} 秒完成！`); }, 300);
