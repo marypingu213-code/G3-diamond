@@ -171,11 +171,15 @@ const allLessonsData = {
             { text: "在這個通訊發達的時代，街道旁的舊________依然守候著文字的溫度。", answer: "郵筒" }
         ], 
         level4: [
-            { word: "離開", emoji: "🚪" },
-            { word: "發現", emoji: "🔍" },
-            { word: "冰釋", emoji: "🤝" },
-            { word: "解釋", emoji: "💬" },
-            { word: "相信", emoji: "✨" }
+            { word: "潛水", image: "G3-diamond/pic/L8/1.jpg" },
+            { word: "珊瑚", image: "G3-diamond/pic/L8/2.jpg" },
+            { word: "航行", image: "G3-diamond/pic/L8/3.jpg" },
+            { word: "探險", image: "G3-diamond/pic/L8/4.jpg" },
+            { word: "水母", image: "G3-diamond/pic/L8/5.jpg" },
+            { word: "小丑", image: "G3-diamond/pic/L8/6.jpg" },
+            { word: "寬闊", image: "G3-diamond/pic/L8/7.jpg" },
+            { word: "郵筒", image: "G3-diamond/pic/L8/8.jpg" },
+            { word: "虎牙", image: "G3-diamond/pic/L8/9.jpg" }
         ] 
     },
 
