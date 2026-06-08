@@ -26,7 +26,6 @@
             overflow: hidden; 
         }
 
-        /* 標題區：移除 1200px 限制，改用百分比讓大螢幕也寬廣 */
         .header-area {
             width: 95%;
             max-width: 2500px; 
@@ -42,7 +41,7 @@
             background-color: #fff;
             color: #558b2f;
             text-decoration: none;
-            font-size: clamp(18px, 1.5vw, 28px); /* 隨螢幕變大的字體 */
+            font-size: clamp(18px, 1.5vw, 28px);
             font-weight: bold;
             padding: 10px 25px;
             border-radius: 50px;
@@ -65,16 +64,14 @@
             font-weight: bold;
         }
 
-        /* 🚀 大螢幕滿版遊戲網格 🚀 */
         .game-screen {
-            width: 95%; /* 撐開寬度 */
+            width: 95%; 
             max-width: 2500px; 
             flex-grow: 1;
             background: white;
             border-radius: 30px;
             padding: 20px;
             display: grid;
-            /* 強制一行 6 個，適應大螢幕 */
             grid-template-columns: repeat(6, 1fr);
             grid-template-rows: repeat(3, 1fr);
             gap: 20px;
@@ -111,12 +108,13 @@
             border-radius: 25px;
             border: 5px solid #cddc39;
             box-sizing: border-box;
+            overflow: hidden;
         }
 
         .card-front {
             background-color: var(--card-bg);
             color: white;
-            font-size: clamp(60px, 8vw, 150px); /* 大螢幕下的問號會很大 */
+            font-size: clamp(60px, 8vw, 150px); 
             background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
         }
 
@@ -127,7 +125,7 @@
         }
 
         .card-back.text-node {
-            font-size: clamp(32px, 3.5vw, 80px); /* 讓語詞在大螢幕上超級清晰 */
+            font-size: clamp(32px, 3.5vw, 80px); 
             color: #1b5e20;
             font-weight: 900;
             text-align: center;
@@ -135,9 +133,11 @@
         }
 
         .card-back img {
-            max-width: 92%;
-            max-height: 92%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         .card.matched { 
@@ -147,7 +147,6 @@
             transition: all 0.5s;
         }
 
-        /* 針對小螢幕與手機的降級處理 */
         @media (max-width: 800px) {
             .game-screen { gap: 10px; padding: 10px; }
             .card-front, .card-back { border-width: 3px; }
@@ -178,9 +177,13 @@
         document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
         
         let baseData = [];
+        // 為了確保資料有抓到，我們在控制台印出來看看
+        console.log("當前讀取的課文 ID:", lessonId);
+        
         if (typeof allLessonsData !== 'undefined' && allLessonsData[lessonId]) {
             document.getElementById('lesson-title').innerText = "第四關：" + allLessonsData[lessonId].title;
             baseData = allLessonsData[lessonId].level4 || [];
+            console.log("讀取到的 level4 資料:", baseData);
         }
 
         let firstCard = null, secondCard = null;
@@ -195,15 +198,18 @@
             startTimer();
 
             if (baseData.length === 0) {
-                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center;">資料庫 level4 尚未填寫喔！</h2>';
+                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center; color: #d32f2f;">資料庫 level4 尚未填寫或是抓不到 data.js 的資料喔！請按 Ctrl+F5 強制重新整理看看。</h2>';
                 return;
             }
 
             let deck = [];
             baseData.forEach(item => {
-                // 修正重點：把 item.text 和 item.img 改成 item.word 和 item.image
-                deck.push({ content: item.word, type: 'text', match: item.word });
-                deck.push({ content: item.image, type: 'img', match: item.word });
+                // 防呆處理：不管是用 word/text 還是 image/img，都自動抓取
+                let cardWord = item.word || item.text || "文字遺失";
+                let cardImg = item.image || item.img || "";
+
+                deck.push({ content: cardWord, type: 'text', match: cardWord });
+                deck.push({ content: cardImg, type: 'img', match: cardWord });
             });
 
             deck.sort(() => Math.random() - 0.5);
@@ -212,14 +218,21 @@
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.dataset.match = data.match;
+                
+                // 取消原本隱藏破圖的設定，如果圖片路徑錯誤，會顯示 alt 提示文字
+                let backContent = data.type === 'text' 
+                    ? data.content 
+                    : `<img src="${data.content}" alt="圖片找不到路徑: ${data.content}">`;
+
                 card.innerHTML = `
                     <div class="card-inner">
                         <div class="card-front">?</div>
                         <div class="card-back ${data.type === 'text' ? 'text-node' : ''}">
-                            ${data.type === 'text' ? data.content : `<img src="${data.content}" onerror="this.style.visibility='hidden';">`}
+                            ${backContent}
                         </div>
                     </div>
                 `;
+                // 為了平板友善，依然維持點擊翻牌的設計
                 card.addEventListener('click', flipCard);
                 board.appendChild(card);
             });
@@ -228,6 +241,8 @@
         function flipCard() {
             if (lockBoard || this === firstCard) return;
             this.classList.add('flipped');
+            
+            // 翻牌時朗讀
             speak(this.dataset.match); 
 
             if (!firstCard) { firstCard = this; return; }
@@ -246,7 +261,6 @@
                 secondCard.classList.add('matched');
                 resetBoard();
                 matchesFound++;
-                // 修正重點：因為配對是兩張卡片一組，所以總配對數是 baseData.length
                 if (matchesFound === baseData.length) {
                     clearInterval(timer);
                     setTimeout(() => { alert(`🎉 太棒了！花了 ${seconds} 秒完成！`); }, 300);
