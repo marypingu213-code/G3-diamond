@@ -32,8 +32,8 @@
         /* 標題區：固定高度 */
         .header-area {
             width: 100%;
-            height: 8vh; 
-            min-height: 60px;
+            height: 9vh; 
+            min-height: 65px;
             padding: 0 20px;
             box-sizing: border-box;
             display: flex;
@@ -44,7 +44,7 @@
             z-index: 10;
         }
 
-        .header-btns { display: flex; gap: 15px; }
+        .header-btns { display: flex; gap: 15px; align-items: center; }
 
         .nav-btn {
             background-color: #fff;
@@ -58,9 +58,38 @@
             user-select: none;
         }
 
+        /* 難度切換按鈕區 */
+        .mode-btns {
+            display: flex;
+            gap: 10px;
+            background: rgba(255,255,255,0.6);
+            padding: 4px;
+            border-radius: 50px;
+            border: 2px solid #cddc39;
+        }
+
+        .mode-btn {
+            font-size: clamp(16px, 1.4vw, 24px);
+            font-weight: bold;
+            padding: 6px 20px;
+            border: none;
+            background: transparent;
+            color: #558b2f;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .mode-btn.active {
+            background: #689f38;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
         .title-box { text-align: center; color: #558b2f; user-select: none; display: flex; align-items: center; gap: 20px;}
-        .title-box h1 { margin: 0; font-size: clamp(24px, 2.5vw, 40px); }
-        .title-box p { margin: 0; font-size: clamp(18px, 1.8vw, 28px); font-weight: bold; }
+        .title-box h1 { margin: 0; font-size: clamp(22px, 2.2vw, 36px); }
+        .title-box p { margin: 0; font-size: clamp(18px, 1.6vw, 28px); font-weight: bold; }
 
         #btn-restart {
             padding: 8px 20px;
@@ -77,7 +106,7 @@
         /* 遊戲主畫面：分為上下兩塊 */
         .game-screen {
             width: 100vw; 
-            height: 92vh; 
+            height: 91vh; 
             padding: 1.5vw; 
             box-sizing: border-box;
             display: flex;
@@ -91,7 +120,7 @@
         /* 上方：語詞銀行區 */
         .word-bank-container {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             box-sizing: border-box;
             background: #f9fbe7;
             border-radius: 20px;
@@ -100,13 +129,13 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 15px;
-            flex-shrink: 0; /* 高度隨內容自適應，不壓縮 */
+            gap: 12px;
+            flex-shrink: 0; 
         }
 
         .word-btn {
-            font-size: clamp(24px, 2.5vw, 40px); 
-            padding: 10px 20px;
+            font-size: clamp(22px, 2.4vw, 38px); 
+            padding: 8px 18px;
             cursor: pointer;
             border: 4px solid #cddc39;
             border-radius: 15px;
@@ -119,16 +148,14 @@
             -webkit-user-drag: none;
         }
 
-        /* 被選取的語詞 */
         .word-btn.selected {
             background-color: var(--active-color);
             color: white;
             border-color: #e65100;
-            transform: scale(1.1);
+            transform: scale(1.08);
             box-shadow: 0 6px 12px rgba(230, 81, 0, 0.3);
         }
 
-        /* 已經正確填入的語詞（消失或變灰） */
         .word-btn.used {
             opacity: 0;
             pointer-events: none;
@@ -137,20 +164,20 @@
         /* 下方：題目網格區 */
         .questions-container {
             width: 100%;
-            flex-grow: 1; /* 填滿剩餘高度 */
+            flex-grow: 1; 
             display: grid;
-            /* 雙欄排列，確保 9~10 題不用滑動也能塞滿螢幕 */
+            /* 雙欄排列，確保 9 題不用滑動也能完美收納 */
             grid-template-columns: repeat(2, 1fr);
             gap: 10px 30px;
-            align-content: space-evenly; /* 均分上下高度 */
+            align-content: space-evenly; 
             overflow: hidden;
         }
 
         .question-item {
-            font-size: clamp(20px, 2.8vh, 45px); /* 高度響應式字體，防撐破 */
+            font-size: clamp(18px, 2.6vh, 40px); 
             color: #1b5e20;
             font-weight: bold;
-            line-height: 1.5;
+            line-height: 1.4;
             user-select: none;
             background: #f1f8e9;
             padding: 10px 20px;
@@ -159,7 +186,6 @@
             align-items: center;
         }
 
-        /* 題號 */
         .q-num {
             color: #689f38;
             margin-right: 10px;
@@ -183,13 +209,11 @@
             vertical-align: middle;
         }
 
-        /* 可點擊狀態的提示 */
         .blank-space.clickable:hover {
             background-color: #fff9c4;
             border-color: #fbc02d;
         }
 
-        /* 答對填入後的樣式 */
         .blank-space.filled {
             border: 3px solid var(--correct-color);
             background-color: #e8f5e9;
@@ -197,7 +221,6 @@
             cursor: default;
         }
 
-        /* 答錯的抖動效果 */
         .shake {
             animation: shake 0.4s ease-in-out;
             border-color: var(--wrong-color) !important;
@@ -210,7 +233,6 @@
             40%, 80% { transform: translateX(10px); }
         }
 
-        /* 若螢幕太窄(直式平板)，改為單欄以確保清晰 */
         @media (max-width: 900px) {
             .questions-container {
                 grid-template-columns: 1fr;
@@ -229,6 +251,10 @@
         <div class="header-btns">
             <a href="index.html" class="nav-btn">🏠 回大廳</a>
             <a href="#" id="back-btn" class="nav-btn">🔙 回選單</a>
+            <div class="mode-btns" id="mode-selector">
+                <button id="btn-basic" class="mode-btn active" onclick="switchMode('basic')">🟩 基礎版</button>
+                <button id="btn-advanced" class="mode-btn" onclick="switchMode('advanced')">🚀 進階版</button>
+            </div>
         </div>
         
         <div class="title-box">
@@ -250,9 +276,11 @@
         const lessonId = urlParams.get('id') || "1"; 
         document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
         
-        let questions = [];
-        let wordBank = [];
-        let selectedWordBtn = null; // 目前選中的語詞按鈕
+        let allRawQuestions = []; // 原始全部題目
+        let questions = [];       // 當前篩選後的題目 (最多 9-10 題)
+        let wordBank = [];        // 當前關卡的語詞
+        let currentMode = 'basic'; // 預設基礎版
+        let selectedWordBtn = null; 
         let filledCount = 0;
         let seconds = 0;
         let timer;
@@ -260,14 +288,22 @@
         const timerLabel = document.getElementById('timer');
         const wordBankDiv = document.getElementById('word-bank');
         const questionsGrid = document.getElementById('questions-grid');
+        const modeSelector = document.getElementById('mode-selector');
 
         if (typeof allLessonsData !== 'undefined' && allLessonsData[lessonId]) {
             document.getElementById('lesson-title').innerText = "第三關：" + allLessonsData[lessonId].title;
-            questions = allLessonsData[lessonId].level3 || [];
+            allRawQuestions = allLessonsData[lessonId].level3 || [];
+        }
+
+        function switchMode(mode) {
+            if (currentMode === mode) return;
+            currentMode = mode;
             
-            // 萃取答案生成語詞銀行
-            let allAnswers = questions.map(q => q.answer);
-            wordBank = [...new Set(allAnswers)]; 
+            // 切換按鈕高亮
+            document.getElementById('btn-basic').classList.toggle('active', mode === 'basic');
+            document.getElementById('btn-advanced').classList.toggle('active', mode === 'advanced');
+            
+            initGame();
         }
 
         function initGame() {
@@ -281,42 +317,53 @@
             wordBankDiv.innerHTML = '';
             questionsGrid.innerHTML = '';
 
-            if (questions.length === 0) {
+            if (allRawQuestions.length === 0) {
                 questionsGrid.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center; color: #d32f2f;">資料庫 level3 尚未填寫喔！</h2>';
+                modeSelector.style.display = 'none';
                 return;
             }
 
-            // 1. 渲染語詞銀行 (打亂順序)
-            wordBank.sort(() => Math.random() - 0.5).forEach(word => {
+            // 根據題數決定是否需要切換鈕 (小於等於 9 題的舊關卡直接全開並隱藏按鈕)
+            if (allRawQuestions.length <= 9) {
+                questions = [...allRawQuestions];
+                modeSelector.style.display = 'none';
+            } else {
+                modeSelector.style.display = 'flex';
+                // 前 9 題為基礎版，第 10 題之後為進階版
+                if (currentMode === 'basic') {
+                    questions = allRawQuestions.slice(0, 9);
+                } else {
+                    questions = allRawQuestions.slice(9);
+                }
+            }
+
+            // 萃取「當前關卡」的答案生成語詞銀行，避免混雜另一關的語詞
+            let allAnswers = questions.map(q => q.answer);
+            wordBank = [...new Set(allAnswers)]; 
+
+            // 1. 渲染語詞銀行 (隨機打亂順序)
+            [...wordBank].sort(() => Math.random() - 0.5).forEach(word => {
                 const btn = document.createElement('div');
                 btn.className = 'word-btn';
                 btn.textContent = word;
                 
                 btn.onclick = () => {
                     if (btn.classList.contains('used')) return;
+                    if (selectedWordBtn) selectedWordBtn.classList.remove('selected');
                     
-                    // 解除其他選取狀態
-                    if (selectedWordBtn) {
-                        selectedWordBtn.classList.remove('selected');
-                    }
-                    
-                    // 設定目前選取
                     selectedWordBtn = btn;
                     btn.classList.add('selected');
-                    speak(word); // 朗讀選取的語詞
+                    speak(word); 
                 };
-                
                 wordBankDiv.appendChild(btn);
             });
 
-            // 2. 渲染題目區 (打亂題目順序)
+            // 2. 渲染題目區 (隨機打亂題目順序)
             let shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
-            
             shuffledQuestions.forEach((q, index) => {
                 const qDiv = document.createElement('div');
                 qDiv.className = 'question-item';
                 
-                // 替換 ________ 為可點擊的空格
                 let sentenceHTML = q.text.replace(
                     "________", 
                     `<span class="blank-space clickable" data-answer="${q.answer}">  </span>`
@@ -324,7 +371,6 @@
 
                 qDiv.innerHTML = `<span class="q-num">${index + 1}.</span> <span>${sentenceHTML}</span>`;
                 
-                // 綁定空格點擊事件
                 const blankSpan = qDiv.querySelector('.blank-space');
                 blankSpan.onclick = () => handleBlankClick(blankSpan, q.text, q.answer);
 
@@ -333,18 +379,16 @@
         }
 
         function handleBlankClick(blankSpan, fullText, correctAnswer) {
-            // 如果已經填過，或還沒選擇語詞，就不做反應
             if (blankSpan.classList.contains('filled') || !selectedWordBtn) return;
 
             const selectedWord = selectedWordBtn.textContent;
 
             if (selectedWord === correctAnswer) {
-                // 答對了！
+                // 答對反饋
                 blankSpan.textContent = selectedWord;
                 blankSpan.classList.remove('clickable');
                 blankSpan.classList.add('filled');
                 
-                // 隱藏上方語詞庫的按鈕，並清空選取狀態
                 selectedWordBtn.classList.remove('selected');
                 selectedWordBtn.classList.add('used');
                 selectedWordBtn = null;
@@ -355,18 +399,14 @@
                 const completeSentence = fullText.replace("________", selectedWord);
                 speak(completeSentence);
 
-                // 檢查是否全部完成
                 if (filledCount === questions.length) {
                     clearInterval(timer);
-                    setTimeout(() => { alert(`🎉 太棒了！花了 ${seconds} 秒完成填空挑戰！`); }, 800);
+                    setTimeout(() => { alert(`🎉 太棒了！花了 ${seconds} 秒完成挑戰！`); }, 800);
                 }
-
             } else {
-                // 答錯了！加上抖動效果
+                // 答錯抖動
                 blankSpan.classList.add('shake');
-                setTimeout(() => {
-                    blankSpan.classList.remove('shake');
-                }, 400);
+                setTimeout(() => { blankSpan.classList.remove('shake'); }, 400);
             }
         }
 
@@ -379,7 +419,7 @@
                 window.speechSynthesis.cancel(); 
                 const utter = new SpeechSynthesisUtterance(text);
                 utter.lang = 'zh-TW';
-                utter.rate = 0.9; 
+                utter.rate = 0.88; // 稍微放慢語速，利於特教學習環境
                 window.speechSynthesis.speak(utter);
             }
         }
