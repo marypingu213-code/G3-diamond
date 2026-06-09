@@ -1,294 +1,366 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>第四關：語詞配對大挑戰</title>
-    <script src="data.js"></script>
-    <style>
-        :root {
-            --font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
-            --primary-color: #2196F3;
-            --match-color: #4CAF50;
-            --card-bg: #8bc34a;
-        }
+const allLessonsData = {
+    // ================= 第一課 =================
+    "1": { 
+        title: "第一課：穿越時空的味道", 
+        level1: [
+            { word: "廳", parts: ["images-5/L1/筆順-廳-部件-1.png", "images-5/L1/筆順-廳-部件-2.png", "images-5/L1/筆順-廳-部件-3.png", "images-5/L1/筆順-廳-部件-4.png", "images-5/L1/筆順-廳-部件-5.png", "images-5/L1/筆順-廳-部件-6.png", "images-5/L1/筆順-廳-部件-7.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}, {x: 250, y: 180}, {x: 290, y: 180}] },
+            { word: "盞", parts: ["images-5/L1/筆順-盞-部件-1.png", "images-5/L1/筆順-盞-部件-2.png", "images-5/L1/筆順-盞-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "灑", parts: ["images-5/L1/筆順-灑-部件-1.png", "images-5/L1/筆順-灑-部件-2.png", "images-5/L1/筆順-灑-部件-3.png", "images-5/L1/筆順-灑-部件-4.png", "images-5/L1/筆順-灑-部件-5.png", "images-5/L1/筆順-灑-部件-6.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}, {x: 250, y: 180}] },
+            { word: "壺", parts: ["images-5/L1/筆順-壺-部件-1.png", "images-5/L1/筆順-壺-部件-2.png", "images-5/L1/筆順-壺-部件-3.png", "images-5/L1/筆順-壺-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "菊", parts: ["images-5/L1/筆順-菊-部件-1.png", "images-5/L1/筆順-菊-部件-2.png", "images-5/L1/筆順-菊-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "閱", parts: ["images-5/L1/筆順-閱-部件-1.png", "images-5/L1/筆順-閱-部件-2.png", "images-5/L1/筆順-閱-部件-3.png", "images-5/L1/筆順-閱-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "附", parts: ["images-5/L1/筆順-附-部件-1.png", "images-5/L1/筆順-附-部件-2.png", "images-5/L1/筆順-附-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "眸", parts: ["images-5/L1/筆順-眸-部件-1.png", "images-5/L1/筆順-眸-部件-2.png", "images-5/L1/筆順-眸-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "戀", parts: ["images-5/L1/筆順-戀-部件-1.png", "images-5/L1/筆順-戀-部件-2.png", "images-5/L1/筆順-戀-部件-3.png", "images-5/L1/筆順-戀-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "飲", parts: ["images-5/L1/筆順-飲-部件-1.png", "images-5/L1/筆順-飲-部件-2.png", "images-5/L1/筆順-飲-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "氛", parts: ["images-5/L1/筆順-氛-部件-1.png", "images-5/L1/筆順-氛-部件-2.png", "images-5/L1/筆順-氛-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "闔", parts: ["images-5/L1/筆順-闔-部件-1.png", "images-5/L1/筆順-闔-部件-2.png", "images-5/L1/筆順-闔-部件-3.png", "images-5/L1/筆順-闔-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "籤", parts: ["images-5/L1/筆順-籤-部件-1.png", "images-5/L1/筆順-籤-部件-2.png", "images-5/L1/筆順-籤-部件-3.png", "images-5/L1/筆順-籤-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "溶", parts: ["images-5/L1/筆順-溶-部件-1.png", "images-5/L1/筆順-溶-部件-2.png", "images-5/L1/筆順-溶-部件-3.png", "images-5/L1/筆順-溶-部件-4.png", "images-5/L1/筆順-溶-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "咖", parts: ["images-5/L1/筆順-咖-部件-1.png", "images-5/L1/筆順-咖-部件-2.png", "images-5/L1/筆順-咖-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "啡", parts: ["images-5/L1/筆順-啡-部件-1.png", "images-5/L1/筆順-啡-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "券", parts: ["images-5/L1/筆順-券-部件-1.png", "images-5/L1/筆順-券-部件-2.png", "images-5/L1/筆順-券-部件-3.png", "images-5/L1/筆順-券-部件-4.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}, {x: 250, y: 180}, {x: 290, y: 180}] },
+            { word: "粹", parts: ["images-5/L1/筆順-粹-部件-1.png", "images-5/L1/筆順-粹-部件-2.png", "images-5/L1/筆順-粹-部件-3.png", "images-5/L1/筆順-粹-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] }
+        ], 
+        level2: [], level3: [], level4: [] 
+    },
 
-        /* 滿版核心設定：鎖定螢幕寬高，取消所有預設邊距 */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #f0f4c3;
-            font-family: var(--font-family);
-            overflow: hidden; 
-            touch-action: none; 
-            display: flex;
-            flex-direction: column;
-        }
+    // ================= 第二課 =================
+    "2": {
+        title: "第二課：在黑暗中乘著音樂飛翔",
+        level1: [
+            { word: "席", parts: ["images-5/L2/筆順-席-部件-1.png", "images-5/L2/筆順-席-部件-2.png", "images-5/L2/筆順-席-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180, scale: 0.7}] },
+            { word: "徐", parts: ["images-5/L2/筆順-徐-部件-1.png", "images-5/L2/筆順-徐-部件-2.png", "images-5/L2/筆順-徐-部件-3.png", "images-5/L2/筆順-徐-部件-4.png"], pos: [{x: 90, y: 130, scale: 1.3}, {x: 150, y: 130}, {x: 90, y: 180, scale: 0.7}, {x: 150, y: 180, scale: 0.7}] },
+            { word: "掌", parts: ["images-5/L2/筆順-掌-部件-1.png", "images-5/L2/筆順-掌-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "映", parts: ["images-5/L2/筆順-映-部件-1.png", "images-5/L2/筆順-映-部件-2.png"], pos: [{x: 100, y: 180, scale: 0.7}, {x: 170, y: 180}] },
+            { word: "冠", parts: ["images-5/L2/筆順-冠-部件-1.png", "images-5/L2/筆順-冠-部件-2.png", "images-5/L2/筆順-冠-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180, scale: 0.7}] },
+            { word: "軍", parts: ["images-5/L2/筆順-軍-部件-1.png", "images-5/L2/筆順-軍-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "逆", parts: ["images-5/L2/筆順-逆-部件-1.png", "images-5/L2/筆順-逆-部件-2.png", "images-5/L2/筆順-逆-部件-3.png"], pos: [{x: 70, y: 180, scale: 0.6}, {x: 120, y: 180, scale: 0.6}, {x: 170, y: 180, scale: 1.6}] },
+            { word: "盲", parts: ["images-5/L2/筆順-盲-部件-1.png", "images-5/L2/筆順-盲-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180, scale: 0.7}] },
+            { word: "扇", parts: ["images-5/L2/筆順-扇-部件-1.png", "images-5/L2/筆順-扇-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "遭", parts: ["images-5/L2/筆順-遭-部件-1.png", "images-5/L2/筆順-遭-部件-2.png", "images-5/L2/筆順-遭-部件-3.png", "images-5/L2/筆順-遭-部件-4.png", "images-5/L2/筆順-遭-部件-5.png"], pos: [{x: 50, y: 180, scale: 0.6}, {x: 90, y: 180, scale: 0.6}, {x: 130, y: 180, scale: 0.6}, {x: 170, y: 180, scale: 0.6}, {x: 210, y: 180, scale: 1.6}] },
+            { word: "盆", parts: ["images-5/L2/筆順-盆-部件-1.png", "images-5/L2/筆順-盆-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "階", parts: ["images-5/L2/筆順-階-部件-1.png", "images-5/L2/筆順-階-部件-2.png", "images-5/L2/筆順-階-部件-3.png"], pos: [{x: 70, y: 180, scale: 1.4}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "鑽", parts: ["images-5/L2/筆順-鑽-部件-1.png", "images-5/L2/筆順-鑽-部件-2.png", "images-5/L2/筆順-鑽-部件-3.png", "images-5/L2/筆順-鑽-部件-4.png"], pos: [{x: 90, y: 130, scale: 1.4}, {x: 150, y: 130, scale: 0.6}, {x: 90, y: 180, scale: 0.6}, {x: 150, y: 180}] },
+            { word: "轟", parts: ["images-5/L2/筆順-轟-部件-1.png", "images-5/L2/筆順-轟-部件-2.png", "images-5/L2/筆順-轟-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "隆", parts: ["images-5/L2/筆順-隆-部件-1.png", "images-5/L2/筆順-隆-部件-2.png", "images-5/L2/筆順-隆-部件-3.png", "images-5/L2/筆順-隆-部件-4.png"], pos: [{x: 90, y: 130, scale: 1.4}, {x: 150, y: 130}, {x: 90, y: 180, scale: 0.6}, {x: 150, y: 180, scale: 0.7}] },
+            { word: "途", parts: ["images-5/L2/筆順-途-部件-1.png", "images-5/L2/筆順-途-部件-2.png", "images-5/L2/筆順-途-部件-3.png", "images-5/L2/筆順-途-部件-4.png"], pos: [{x: 70, y: 180, scale: 0.6}, {x: 120, y: 180, scale: 0.6}, {x: 170, y: 180, scale: 0.6}, {x: 220, y: 180, scale: 1.6}] },
+            { word: "鑑", parts: ["images-5/L2/筆順-鑑-部件-1.png", "images-5/L2/筆順-鑑-部件-2.png", "images-5/L2/筆順-鑑-部件-3.png", "images-5/L2/筆順-鑑-部件-4.png", "images-5/L2/筆順-鑑-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180, scale: 0.7}, {x: 130, y: 180, scale: 0.6}, {x: 170, y: 180, scale: 0.7}, {x: 210, y: 180}] },
+            { word: "繽", parts: ["images-5/L2/筆順-繽-部件-1.png", "images-5/L2/筆順-繽-部件-2.png", "images-5/L2/筆順-繽-部件-3.png", "images-5/L2/筆順-繽-部件-4.png", "images-5/L2/筆順-繽-部件-5.png"], pos: [{x: 50, y: 180, scale: 1.4}, {x: 90, y: 180}, {x: 130, y: 180, scale: 0.6}, {x: 170, y: 180, scale: 0.7}, {x: 210, y: 180, scale: 0.7}] }
+        ],
+        level2: [], level3: [], level4: []
+    },
 
-        /* 標題區：固定高度，不壓縮 */
-        .header-area {
-            width: 100%;
-            height: 10vh; /* 佔據螢幕 10% 高度 */
-            min-height: 70px;
-            padding: 0 30px;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #e6ee9c; /* 讓頂部有獨立的區塊感 */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            z-index: 10;
-        }
+    // ================= 第三課 =================
+    "3": { 
+        title: "第三課：色香味的陽光", 
+        level1: [
+            { word: "霧", parts: ["images-5/L3/筆順-霧-部件-1.png", "images-5/L3/筆順-霧-部件-2.png", "images-5/L3/筆順-霧-部件-3.png", "images-5/L3/筆順-霧-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130, scale: 0.6}, {x: 90, y: 180, scale: 0.6}, {x: 150, y: 180, scale: 0.6}] },
+            { word: "吻", parts: ["images-5/L3/筆順-吻-部件-1.png", "images-5/L3/筆順-吻-部件-2.png"], pos: [{x: 100, y: 180, scale: 0.7}, {x: 170, y: 180}] },
+            { word: "株", parts: ["images-5/L3/筆順-株-部件-1.png", "images-5/L3/筆順-株-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "芭", parts: ["images-5/L3/筆順-芭-部件-1.png", "images-5/L3/筆順-芭-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "紫", parts: ["images-5/L3/筆順-紫-部件-1.png", "images-5/L3/筆順-紫-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "橘", parts: ["images-5/L3/筆順-橘-部件-1.png", "images-5/L3/筆順-橘-部件-2.png", "images-5/L3/筆順-橘-部件-3.png", "images-5/L3/筆順-橘-部件-4.png", "images-5/L3/筆順-橘-部件-5.png"], pos: [{x: 50, y: 180, scale: 1.3}, {x: 90, y: 180, scale: 0.7}, {x: 130, y: 180, scale: 0.7}, {x: 170, y: 180, scale: 0.5}, {x: 210, y: 180, scale: 0.5}] },
+            { word: "趴", parts: ["images-5/L3/筆順-趴-部件-1.png", "images-5/L3/筆順-趴-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "駐", parts: ["images-5/L3/筆順-駐-部件-1.png", "images-5/L3/筆順-駐-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "巡", parts: ["images-5/L3/筆順-巡-部件-1.png", "images-5/L3/筆順-巡-部件-2.png"], pos: [{x: 100, y: 180, scale: 0.6}, {x: 170, y: 180}] },
+            { word: "闖", parts: ["images-5/L3/筆順-闖-部件-1.png", "images-5/L3/筆順-闖-部件-2.png"], pos: [{x: 100, y: 180, scale: 1.3}, {x: 170, y: 180, scale: 0.6}] },
+            { word: "嚴", parts: ["images-5/L3/筆順-嚴-部件-1.png", "images-5/L3/筆順-嚴-部件-2.png", "images-5/L3/筆順-嚴-部件-3.png", "images-5/L3/筆順-嚴-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180, scale: 0.6}, {x: 150, y: 180, scale: 0.6}] },
+            { word: "庫", parts: ["images-5/L3/筆順-庫-部件-1.png", "images-5/L3/筆順-庫-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "澀", parts: ["images-5/L3/筆順-澀-部件-1.png", "images-5/L3/筆順-澀-部件-2.png", "images-5/L3/筆順-澀-部件-3.png", "images-5/L3/筆順-澀-部件-4.png", "images-5/L3/筆順-澀-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180, scale: 0.6}, {x: 130, y: 180, scale: 0.6}, {x: 170, y: 180, scale: 0.6}, {x: 210, y: 180, scale: 0.6}] },
+            { word: "餘", parts: ["images-5/L3/筆順-餘-部件-1.png", "images-5/L3/筆順-餘-部件-2.png", "images-5/L3/筆順-餘-部件-3.png", "images-5/L3/筆順-餘-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130, scale: 0.6}, {x: 90, y: 180, scale: 0.6}, {x: 150, y: 180, scale: 0.6}] },
+            { word: "瞥", parts: ["images-5/L3/筆順-瞥-部件-1.png", "images-5/L3/筆順-瞥-部件-2.png", "images-5/L3/筆順-瞥-部件-3.png", "images-5/L3/筆順-瞥-部件-4.png", "images-5/L3/筆順-瞥-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "狂", parts: ["images-5/L3/筆順-狂-部件-1.png", "images-5/L3/筆順-狂-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "罩", parts: ["images-5/L3/筆順-罩-部件-1.png", "images-5/L3/筆順-罩-部件-2.png", "images-5/L3/筆順-罩-部件-3.png", "images-5/L3/筆順-罩-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130, scale: 0.7}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "歉", parts: ["images-5/L3/筆順-歉-部件-1.png", "images-5/L3/筆順-歉-部件-2.png", "images-5/L3/筆順-歉-部件-3.png", "images-5/L3/筆順-歉-部件-4.png", "images-5/L3/筆順-歉-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180, scale: 1.3}, {x: 130, y: 180, scale: 1.3}, {x: 170, y: 180}, {x: 210, y: 180}] }
+        ], 
+        level2: [], 
+        level3: [ 
+            { text: "太陽好大，天氣很________。", answer: "炎熱" },
+            { text: "我喜歡吃冰冰涼涼的________。", answer: "愛玉" },
+            { text: "蛋糕是甜甜的________。", answer: "甜品" },
+            { text: "衣服洗好了，拿去太陽下________。", answer: "曬乾" },
+            { text: "小狗的身上有黑色的________。", answer: "斑點" },
+            { text: "我們在水裡用力________愛玉子。", answer: "搓洗" },
+            { text: "爸爸把水倒進透明的________。", answer: "容器" },
+            { text: "把種子裝進白色的小________。", answer: "棉袋" },
+            { text: "冰水裡加一點________，甜甜的好好喝。", answer: "糖水" }
+        ], 
+        level4: [] 
+    },
 
-        .header-btns { display: flex; gap: 20px; }
+    // ================= 第四課 =================
+    "4": { 
+        title: "第四課：縣官審石頭", 
+        level1: [
+            { word: "闆", parts: ["images-5/L4/筆順-闆-部件-1.png", "images-5/L4/筆順-闆-部件-2.png", "images-5/L4/筆順-闆-部件-3.png", "images-5/L4/筆順-闆-部件-4.png", "images-5/L4/筆順-闆-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "販", parts: ["images-5/L4/筆順-販-部件-1.png", "images-5/L4/筆順-販-部件-2.png", "images-5/L4/筆順-販-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "攤", parts: ["images-5/L4/筆順-攤-部件-1.png", "images-5/L4/筆順-攤-部件-2.png", "images-5/L4/筆順-攤-部件-3.png", "images-5/L4/筆順-攤-部件-4.png", "images-5/L4/筆順-攤-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "賊", parts: ["images-5/L4/筆順-賊-部件-1.png", "images-5/L4/筆順-賊-部件-2.png", "images-5/L4/筆順-賊-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "冤", parts: ["images-5/L4/筆順-冤-部件-1.png", "images-5/L4/筆順-冤-部件-2.png", "images-5/L4/筆順-冤-部件-3.png", "images-5/L4/筆順-冤-部件-4.png", "images-5/L4/筆順-冤-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "枉", parts: ["images-5/L4/筆順-枉-部件-1.png", "images-5/L4/筆順-枉-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "辨", parts: ["images-5/L4/筆順-辨-部件-1.png", "images-5/L4/筆順-辨-部件-2.png", "images-5/L4/筆順-辨-部件-3.png", "images-5/L4/筆順-辨-部件-4.png", "images-5/L4/筆順-辨-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "惡", parts: ["images-5/L4/筆順-惡-部件-1.png", "images-5/L4/筆順-惡-部件-2.png", "images-5/L4/筆順-惡-部件-3.png", "images-5/L4/筆順-惡-部件-4.png", "images-5/L4/筆順-惡-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "武", parts: ["images-5/L4/筆順-武-部件-1.png", "images-5/L4/筆順-武-部件-2.png", "images-5/L4/筆順-武-部件-3.png", "images-5/L4/筆順-武-部件-4.png"], pos: [{x: 90, y: 130}, {x: 150, y: 130}, {x: 90, y: 180}, {x: 150, y: 180}] },
+            { word: "嫌", parts: ["images-5/L4/筆順-嫌-部件-1.png", "images-5/L4/筆順-嫌-部件-2.png", "images-5/L4/筆順-嫌-部件-3.png", "images-5/L4/筆順-嫌-部件-4.png", "images-5/L4/筆順-嫌-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "疑", parts: ["images-5/L4/筆順-疑-部件-1.png", "images-5/L4/筆順-疑-部件-2.png", "images-5/L4/筆順-疑-部件-3.png", "images-5/L4/筆順-疑-部件-4.png", "images-5/L4/筆順-疑-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "押", parts: ["images-5/L4/筆順-押-部件-1.png", "images-5/L4/筆順-押-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "審", parts: ["images-5/L4/筆順-審-部件-1.png", "images-5/L4/筆順-審-部件-2.png", "images-5/L4/筆順-審-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "罰", parts: ["images-5/L4/筆順-罰-部件-1.png", "images-5/L4/筆順-罰-部件-2.png", "images-5/L4/筆順-罰-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "沾", parts: ["images-5/L4/筆順-沾-部件-1.png", "images-5/L4/筆順-沾-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "貪", parts: ["images-5/L4/筆順-貪-部件-1.png", "images-5/L4/筆順-貪-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "饒", parts: ["images-5/L4/筆順-饒-部件-1.png", "images-5/L4/筆順-饒-部件-2.png", "images-5/L4/筆順-饒-部件-3.png", "images-5/L4/筆順-饒-部件-4.png", "images-5/L4/筆順-饒-部件-5.png"], pos: [{x: 50, y: 180}, {x: 90, y: 180}, {x: 130, y: 180}, {x: 170, y: 180}, {x: 210, y: 180}] },
+            { word: "謀", parts: ["images-5/L4/筆順-謀-部件-1.png", "images-5/L4/筆順-謀-部件-2.png", "images-5/L4/筆順-謀-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] }
+        ], 
+        level2: [], level3: [], level4: [] 
+    },
 
-        .nav-btn {
-            background-color: #fff;
-            color: #558b2f;
-            text-decoration: none;
-            font-size: clamp(20px, 2vw, 32px);
-            font-weight: bold;
-            padding: 10px 30px;
-            border-radius: 50px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border: 2px solid #cddc39;
-            user-select: none;
-        }
+    // ================= 第五課 =================
+    "5": { title: "第五課：高明說話術", level1: [], level2: [], level3: [], level4: [] },
 
-        .title-box { text-align: center; color: #558b2f; user-select: none; display: flex; align-items: center; gap: 30px;}
-        .title-box h1 { margin: 0; font-size: clamp(30px, 3.5vw, 60px); }
-        .title-box p { margin: 0; font-size: clamp(24px, 2.5vw, 40px); font-weight: bold; }
+    // ================= 第六課 =================
+    "6": { title: "第六課：讀書報告-佐賀的超級阿嬤", level1: [], level2: [], level3: [], level4: [] },
 
-        #btn-restart {
-            padding: 10px 30px;
-            font-size: clamp(20px, 2vw, 32px);
-            background: #689f38;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            user-select: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+    // ================= 第七課 =================
+    "7": { 
+        title: "第七課：魔術師爸爸", 
+        level1: [
+            { word: "徑", parts: ["images-5/L7/筆順-徑-部件-1.png", "images-5/L7/筆順-徑-部件-2.png", "images-5/L7/筆順-徑-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "渾", parts: ["images-5/L7/筆順-渾-部件-1.png", "images-5/L7/筆順-渾-部件-2.png", "images-5/L7/筆順-渾-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "痱", parts: ["images-5/L7/筆順-痱-部件-1.png", "images-5/L7/筆順-痱-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "魁", parts: ["images-5/L7/筆順-魁-部件-1.png", "images-5/L7/筆順-魁-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "梧", parts: ["images-5/L7/筆順-梧-部件-1.png", "images-5/L7/筆順-梧-部件-2.png", "images-5/L7/筆順-梧-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "眠", parts: ["images-5/L7/筆順-眠-部件-1.png", "images-5/L7/筆順-眠-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "枚", parts: ["images-5/L7/筆順-枚-部件-1.png", "images-5/L7/筆順-枚-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "絢", parts: ["images-5/L7/筆順-絢-部件-1.png", "images-5/L7/筆順-絢-部件-2.png", "images-5/L7/筆順-絢-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "湊", parts: ["images-5/L7/筆順-湊-部件-1.png", "images-5/L7/筆順-湊-部件-2.png", "images-5/L7/筆順-湊-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "癢", parts: ["images-5/L7/筆順-癢-部件-1.png", "images-5/L7/筆順-癢-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "任", parts: ["images-5/L7/筆順-任-部件-1.png", "images-5/L7/筆順-任-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "何", parts: ["images-5/L7/筆順-何-部件-1.png", "images-5/L7/筆順-何-部件-2.png"], pos: [{x: 100, y: 180}, {x: 170, y: 180}] },
+            { word: "概", parts: ["images-5/L7/筆順-概-部件-1.png", "images-5/L7/筆順-概-部件-2.png", "images-5/L7/筆順-概-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
+            { word: "爾", parts: ["images-5/L7/筆順-爾-部件-1.png", "images-5/L7/筆順-爾-部件-2.png", "images-5/L7/筆順-爾-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] }
+        ], 
+        level2: [], 
+        level3: [
+            { text: "太陽公公露出________的笑容，天氣真好。", answer: "燦爛" },
+            { text: "假日的動物園裡________了參觀的人潮。", answer: "擠滿" },
+            { text: "傍晚的天空出現紅紅紫紫的________，非常漂亮。", answer: "彩霞" },
+            { text: "兔兔用湯匙輕輕________杯子裡的牛奶。", answer: "攪動" },
+            { text: "農夫拿著________，把地上的落葉掃在一起。", answer: "耙子" },
+            { text: "這雙鞋子上面鑲著閃亮的小________，亮晶晶的。", answer: "水晶" },
+            { text: "阿白在美勞課學習用肥皂________出可愛的小動物。", answer: "雕刻" },
+            { text: "兔兔喜歡喝苦苦香香的________拿鐵。", answer: "抹茶" },
+            { text: "假日的時候，爺爺會去漂亮的________參加聚會。", answer: "教堂" },
+            { text: "跨年煙火在夜空中瞬間綻放，顯得格外耀眼與________。", answer: "燦爛" },
+            { text: "百貨公司週年慶一開門，門口立刻________了等待搶購的顧客。", answer: "擠滿" },
+            { text: "太陽下山後，西方的天際留下一抹如詩如畫的________。", answer: "彩霞" },
+            { text: "阿白運用精湛的手法，將原本平凡的木頭________成栩栩如生的老鷹。", answer: "雕刻" },
+            { text: "船隻駛過原本平靜的湖面，掀起陣陣漣漪，________了水底的泥沙。", answer: "攪動" },
+            { text: "這座歷史悠久的________，彩繪玻璃在陽光照射下散發出神聖的光芒。", answer: "教堂" },
+            { text: "兔兔熟練地揮動________，將草坪上的枯枝清理乾淨。", answer: "耙子" },
+            { text: "這盞華麗的________吊燈懸掛在大廳中央，看起來非常氣派。", answer: "水晶" },
+            { text: "這種來自日本的傳統________，以其獨特的清香與微苦風味受到大眾歡迎。", answer: "抹茶" }
+        ], 
+        level4: [
+            { word: "擠滿", image: "./pic/L7/1.jpg" },
+            { word: "燦爛", image: "./pic/L7/2.jpg" },
+            { word: "攪動", image: "./pic/L7/3.jpg" },
+            { word: "耙子", image: "./pic/L7/4.jpg" },
+            { word: "抹茶", image: "./pic/L7/5.jpg" },
+            { word: "水晶", image: "./pic/L7/6.jpg" },
+            { word: "教堂", image: "./pic/L7/7.jpg" },
+            { word: "雕刻", image: "./pic/L7/8.jpg" },
+            { word: "彩霞", image: "./pic/L7/9.jpg" }
+        ] 
+    },
 
-        /* 遊戲網格區：絕對填滿剩下 90% 的高度 */
-        .game-screen {
-            width: 100vw; 
-            height: 90vh; /* 佔據螢幕剩下高度 */
-            padding: 2vw; /* 依據螢幕寬度給予適當邊距 */
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 1.5vw; /* 間距自動隨螢幕縮放 */
-            box-sizing: border-box;
-            background: transparent;
-        }
+    // ================= 第八課 =================
+    "8": { 
+        title: "第八課：八歲，一個人去旅行", 
+        level1: [], 
+        level2: [], 
+        level3: [
+            { text: "海底有五顏六色的________，長得像漂亮的小樹。", answer: "珊瑚" },
+            { text: "阿白笑起來的時候，會露出兩顆尖尖的小________。", answer: "虎牙" },
+            { text: "帆船在藍藍的大海上________，要去很遠的地方。", answer: "航行" },
+            { text: "我想去神祕的森林裡________，看看有什麼寶物。", answer: "探險" },
+            { text: "海底有很多透明的________，游泳的樣子像雨傘。", answer: "水母" },
+            { text: "爸爸穿上潛水衣，跳進海裡體驗________。", answer: "潛水" },
+            { text: "馬戲團裡的________穿著彩色衣服，表演丟球。", answer: "小丑" },
+            { text: "操場很________，大家可以在上面跑跑跳跳。", answer: "寬闊" },
+            { text: "我把寫好的卡片，投進路邊的綠色________裡。", answer: "郵筒" },
+            { text: "墾丁的海底擁有壯觀的________礁生態，吸引了許多觀光客。", answer: "珊瑚" },
+            { text: "阿白那對明顯的________，讓他笑起來充滿了鄰家大男孩的陽光氣息。", answer: "虎牙" },
+            { text: "經過數個月的________，這艘探測船終於跨越了大西洋。", answer: "航行" },
+            { text: "為了揭開金字塔的祕密，________隊員們克服了重重難關。", answer: "探險" },
+            { text: "________在水中優雅地擺動觸手，看起來既夢幻卻又帶點危險。", answer: "水母" },
+            { text: "在專業教練的引導下，我們潛入深海，享受一場奇妙的________之旅。", answer: "潛水" },
+            { text: "舞台上的________雖然逗得觀眾哈哈大笑，私底下卻是非常認真練習。", answer: "小丑" },
+            { text: "登上頂樓往下看，馬路變得像膠帶一樣細，但視野卻變得很________。", answer: "寬闊" },
+            { text: "在這個通訊發達的時代，街道旁的舊________依然守候著文字的溫度。", answer: "郵筒" }
+        ], 
+        level4: [
+            { word: "潛水", image: "./pic/L8/1.jpg" },
+            { word: "珊瑚", image: "./pic/L8/2.jpg" },
+            { word: "航行", image: "./pic/L8/3.jpg" },
+            { word: "探險", image: "./pic/L8/4.jpg" },
+            { word: "水母", image: "./pic/L8/5.jpg" },
+            { word: "小丑", image: "./pic/L8/6.jpg" },
+            { word: "寬闊", image: "./pic/L8/7.jpg" },
+            { word: "郵筒", image: "./pic/L8/8.jpg" },
+            { word: "虎牙", image: "./pic/L8/9.jpg" }
+        ] 
+    },
 
-        .card { 
-            perspective: 1500px; 
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-            user-select: none; 
-            -webkit-user-drag: none; 
-        }
+    // ================= 第九課 =================
+    "9": { 
+        title: "第九課：紅鼻子醫生", 
+        level1: [], 
+        level2: [], 
+        level3: [
+            { text: "元宵節的時候，提著漂亮的________去散步，真開心。", answer: "燈籠" },
+            { text: "看到電視上好笑的節目，兔兔忍不住對著螢幕________。", answer: "傻笑" },
+            { text: "火車開進了長長的________，窗外突然變得黑漆漆的。", answer: "隧道" },
+            { text: "突然下起大雨，我們趕快躲進路邊房子的________下避雨。", answer: "騎樓" },
+            { text: "教室的布告欄上，________著大家畫得最漂亮的圖畫。", answer: "展示" },
+            { text: "我在美勞課練習做________，把白布染成了美麗的藍色。", answer: "藍染" },
+            { text: "魔術師在台上________神奇的法術，把白兔變不見了。", answer: "施展" },
+            { text: "奶奶拿著統一發票，認定的看著電視等待________。", answer: "開獎" },
+            { text: "這排房子的走廊是彎彎的________形狀，看起來很有特色。", answer: "拱廊" },
+            { text: "這種結合自然植物染料的________技術，是台灣重要的傳統工藝。", answer: "藍染" },
+            { text: "為了縮短城鄉之間的往來時間，政府開鑿了穿過山脈的長形________。", answer: "隧道" },
+            { text: "走在充滿異國風情的商圈，兩側華麗的________吸引了眾多遊客駐足。", answer: "拱廊" },
+            { text: "台灣街道特有的________結構，不僅方便行人行走，也成為了重要的文化地景。", answer: "騎樓" },
+            { text: "古老的街道兩旁懸掛著紅彤彤的________，為寧靜的夜晚增添了幾分喜氣。", answer: "燈籠" },
+            { text: "百貨公司的櫥窗內________著最新一季的流行服飾，非常引人注目。", answer: "展示" },
+            { text: "阿白在運動會場上盡情________自己的實力，最終為班級奪得冠軍。", answer: "施展" },
+            { text: "隨著大樂透彩球不斷轉動，現場氣氛在正式________那一刻達到了最高潮。", answer: "開獎" },
+            { text: "聽完老師說的冷笑話，阿白一邊搖頭一邊獨自________，看起來心情很好。", answer: "傻笑" }
+        ], 
+        level4: [
+            { word: "藍染", image: "./pic/L9/1.jpg" },
+            { word: "隧道", image: "./pic/L9/2.jpg" },
+            { word: "拱廊", image: "./pic/L9/3.jpg" },
+            { word: "騎樓", image: "./pic/L9/4.jpg" },
+            { word: "燈籠", image: "./pic/L9/5.jpg" },
+            { word: "展示", image: "./pic/L9/6.jpg" },
+            { word: "施展", image: "./pic/L9/7.jpg" },
+            { word: "開獎", image: "./pic/L9/8.jpg" },
+            { word: "傻笑", image: "./pic/L9/9.jpg" }
+        ] 
+    },
 
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1); /* 讓翻牌動畫更流暢 */
-            transform-style: preserve-3d;
-            border-radius: 20px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        }
+    // ================= 第十課 =================
+    "10": { 
+        title: "第十課：沉默動物園", 
+        level1: [], 
+        level2: [], 
+        level3: [
+            { text: "台灣有很多美麗的________，是魚類和蝦子居住的家。", answer: "河川" },
+            { text: "太陽出來後，地上的積水會慢慢________，最後消失不見。", answer: "蒸發" },
+            { text: "冰涼的水瓶外面會________出許多透明的小水滴。", answer: "凝結" },
+            { text: "洪水威力很大，會________河岸兩邊的泥土，讓河床變深。", answer: "沖刷" },
+            { text: "喝水之前，要先用濾水器濾掉水中的灰塵和________。", answer: "雜質" },
+            { text: "每天存一點零用錢，長久________下來也會變成一筆大錢。", answer: "累積" },
+            { text: "海邊有很多堅硬的巨大________，我們可以坐在上面看海。", answer: "岩石" },
+            { text: "這種小餅乾吃起來________的，味道非常特別。", answer: "鹹甜" },
+            { text: "兔兔找不到心愛的娃娃，傷心得流下________。", answer: "眼淚" },
+            { text: "水利局長期監測這條________的含氧量，以確保當地的生態平衡。", answer: "河川" },
+            { text: "地表水分因受熱而________，進入大氣層中開啟了永不停歇的水循環。", answer: "蒸發" },
+            { text: "清晨時分，空氣中的水蒸氣遇冷________，形成草葉上晶瑩剔透的露珠。", answer: "凝結" },
+            { text: "山區強大的水流作用不僅會________河床，長期下來還會改變地質地貌。", answer: "沖刷" },
+            { text: "為了提高科學實驗的精確度，所有的試劑都必須純淨，不能含有任何________。", answer: "雜質" },
+            { text: "成就的取得並非偶然，而是經過無數次努力與經驗的________。", answer: "累積" },
+            { text: "地質學家透過觀察________的紋理與成分，來推測數百萬年前的地殼變動。", answer: "岩石" },
+            { text: "這道特色料理結合了海鹽與焦糖，層次豐富的________口感廣受饕客歡迎。", answer: "鹹甜" },
+            { text: "當運動員在領獎台上看著會旗升起時，紛紛流下感動且激動的________。", answer: "眼淚" }
+        ], 
+        level4: [
+            { word: "河川", image: "./pic/L10/1.jpg" },
+            { word: "蒸發", image: "./pic/L10/2.jpg" },
+            { word: "凝結", image: "./pic/L10/3.jpg" },
+            { word: "沖刷", image: "./pic/L10/4.jpg" },
+            { word: "雜質", image: "./pic/L10/5.jpg" },
+            { word: "累積", image: "./pic/L10/6.jpg" },
+            { word: "岩石", image: "./pic/L10/7.jpg" },
+            { word: "鹹甜", image: "./pic/L10/8.jpg" },
+            { word: "眼淚", image: "./pic/L10/9.jpg" }
+        ] 
+    },
 
-        .card.flipped .card-inner { transform: rotateY(180deg); }
+    // ================= 第十一課 =================
+    "11": { 
+        title: "第十一課：地下護衛軍", 
+        level1: [], 
+        level2: [], 
+        level3: [
+            { text: "很久沒有下雨了，小草都變得________黃黃的。", answer: "乾枯" },
+            { text: "媽媽在煮雞湯時，會放入香噴噴的________。", answer: "香菇" },
+            { text: "春天到了，小鳥忙著在樹上________準備生小寶寶。", answer: "築巢" },
+            { text: "助人為快樂之本，這是一件很有________的事。", answer: "意義" },
+            { text: "天氣變冷了，這件厚外套很________現在穿。", answer: "適合" },
+            { text: "阿白很聰明，他________會唱歌，還會跳舞呢！", answer: "不僅" },
+            { text: "以前的人沒有打火機，通常會用________來點火。", answer: "火柴" },
+            { text: "垃圾桶裡的廚餘如果沒有倒，很快就會變質________。", answer: "腐敗" },
+            { text: "生病時要多休息、多喝水，身體才能趕快________。", answer: "復原" },
+            { text: "由於長期乾旱，原本寬闊的河床如今只剩下________的河底與裂縫。", answer: "乾枯" },
+            { text: "老師告訴我們，閱讀的________不在於讀了多少書，而是在於思考了多少。", answer: "意義" },
+            { text: "雖然現在生活便利，但這盒老________卻勾起了爺爺童年的許多回憶。", answer: "火柴" },
+            { text: "經過心理諮商師的引導，兔兔受傷的心靈才終於慢慢走向________之路。", answer: "復原" },
+            { text: "濕潤且陰暗的倒木環境，最________讓各類真菌與香菇生長。", answer: "適合" },
+            { text: "濕潤且陰暗的倒木環境，最適合讓各類真菌與________生長。", answer: "香菇" },
+            { text: "這個社會制度若缺乏監督，權力就很容易導致________與濫用。", answer: "腐敗" },
+            { text: "燕子具有很強的認路能力，每年春天都會回到同一個地方重新________。", answer: "築巢" },
+            { text: "這次的戶外教學活動，________讓我們增廣見聞，更凝聚了班級的向心力。", answer: "不僅" },
+            { text: "專業的職涯規劃，能幫助年輕人找到最________自己發揮長才的舞台。", answer: "適合" }
+        ], 
+        level4: [
+            { word: "乾枯", image: "./pic/L11/1.jpg" },
+            { word: "意義", image: "./pic/L11/2.jpg" },
+            { word: "火柴", image: "./pic/L11/3.jpg" },
+            { word: "適合", image: "./pic/L11/4.jpg" },
+            { word: "築巢", image: "./pic/L11/5.jpg" },
+            { word: "香菇", image: "./pic/L11/6.jpg" },
+            { word: "腐敗", image: "./pic/L11/7.jpg" },
+            { word: "復原", image: "./pic/L11/8.jpg" }
+        ] 
+    },
 
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 20px;
-            border: 6px solid #cddc39;
-            box-sizing: border-box;
-            overflow: hidden;
-        }
-
-        .card-front {
-            background-color: var(--card-bg);
-            color: white;
-            font-size: clamp(60px, 8vw, 150px); 
-            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
-        }
-
-        .card-back {
-            background-color: white;
-            transform: rotateY(180deg);
-            border-color: var(--primary-color);
-        }
-
-        .card-back.text-node {
-            font-size: clamp(36px, 4vw, 80px); /* 字體放大，滿版才清楚 */
-            color: #1b5e20;
-            font-weight: 900;
-            text-align: center;
-            padding: 10px;
-            word-break: break-word; 
-        }
-
-        .card-back img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 15px; /* 給圖片一點呼吸空間 */
-            box-sizing: border-box;
-            pointer-events: none; 
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-
-        .card.matched { 
-            opacity: 0; /* 配對成功後完全隱藏，讓畫面更乾淨 */
-            pointer-events: none; 
-            transition: opacity 0.5s ease-out 0.3s; /* 延遲一下再消失 */
-        }
-    </style>
-</head>
-<body>
-
-    <div class="header-area">
-        <div class="header-btns">
-            <a href="index.html" class="nav-btn">🏠 回大廳</a>
-            <a href="#" id="back-btn" class="nav-btn">🔙 回選單</a>
-        </div>
-        
-        <div class="title-box">
-            <h1 id="lesson-title">載入中...</h1>
-            <p>⏱️ <span id="timer">0</span> 秒</p>
-        </div>
-
-        <button id="btn-restart" onclick="initGame()">🔄 重新開始</button>
-    </div>
-
-    <div class="game-screen" id="board"></div>
-
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const lessonId = urlParams.get('id') || "1"; 
-        document.getElementById('back-btn').href = `lesson.html?id=${lessonId}`;
-        
-        let baseData = [];
-        
-        if (typeof allLessonsData !== 'undefined' && allLessonsData[lessonId]) {
-            document.getElementById('lesson-title').innerText = "第四關：" + allLessonsData[lessonId].title;
-            baseData = allLessonsData[lessonId].level4 || [];
-        }
-
-        let firstCard = null, secondCard = null;
-        let lockBoard = false, matchesFound = 0, seconds = 0, timer;
-        const board = document.getElementById('board');
-        const timerLabel = document.getElementById('timer');
-
-        function initGame() {
-            board.innerHTML = '';
-            matchesFound = 0; seconds = 0; timerLabel.textContent = '0';
-            clearInterval(timer);
-            startTimer();
-
-            if (baseData.length === 0) {
-                board.innerHTML = '<h2 style="grid-column: 1/-1; text-align: center; color: #d32f2f; font-size: 40px;">資料庫 level4 尚未填寫喔！</h2>';
-                return;
-            }
-
-            let deck = [];
-            baseData.forEach(item => {
-                let cardWord = item.word || item.text || "文字遺失";
-                let cardImg = item.image || item.img || "";
-
-                deck.push({ content: cardWord, type: 'text', match: cardWord });
-                deck.push({ content: cardImg, type: 'img', match: cardWord });
-            });
-
-            deck.sort(() => Math.random() - 0.5);
-
-            deck.forEach(data => {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                card.dataset.match = data.match;
-                
-                let backContent = data.type === 'text' 
-                    ? data.content 
-                    : `<img src="${data.content}" alt="找不到圖片" draggable="false">`;
-
-                card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front">?</div>
-                        <div class="card-back ${data.type === 'text' ? 'text-node' : ''}">
-                            ${backContent}
-                        </div>
-                    </div>
-                `;
-                
-                card.addEventListener('click', flipCard);
-                board.appendChild(card);
-            });
-        }
-
-        function flipCard() {
-            if (lockBoard || this === firstCard) return;
-            this.classList.add('flipped');
-            
-            speak(this.dataset.match); 
-
-            if (!firstCard) { firstCard = this; return; }
-            secondCard = this;
-            checkMatch();
-        }
-
-        function checkMatch() {
-            let isMatch = firstCard.dataset.match === secondCard.dataset.match;
-            isMatch ? disableCards() : unflipCards();
-        }
-
-        function disableCards() {
-            setTimeout(() => {
-                firstCard.classList.add('matched');
-                secondCard.classList.add('matched');
-                resetBoard();
-                matchesFound++;
-                if (matchesFound === baseData.length) {
-                    clearInterval(timer);
-                    setTimeout(() => { alert(`🎉 太棒了！花了 ${seconds} 秒完成！`); }, 300);
-                }
-            }, 600); // 稍微增加一點延遲，讓學生看清楚配對的牌
-        }
-
-        function unflipCards() {
-            lockBoard = true;
-            setTimeout(() => {
-                firstCard.classList.remove('flipped');
-                secondCard.classList.remove('flipped');
-                resetBoard();
-            }, 1000); // 給學生多一點時間記憶翻錯的牌
-        }
-
-        function resetBoard() { [firstCard, secondCard, lockBoard] = [null, null, false]; }
-        function startTimer() { timer = setInterval(() => { seconds++; timerLabel.textContent = seconds; }, 1000); }
-        function speak(text) {
-            const synth = window.speechSynthesis;
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'zh-TW';
-            synth.speak(utter);
-        }
-        window.onload = initGame;
-    </script>
-</body>
-</html>
+    // ================= 第十二課 =================
+    "12": { 
+        title: "第十二課：金字塔之謎", 
+        level1: [], 
+        level2: [], 
+        level3: [
+            { text: "下雨沒帶傘，阿白全身都________濕透了。", answer: "淋雨" },
+            { text: "假日的街道很熱鬧，路邊開了許多________。", answer: "商店" },
+            { text: "我家門口的大樹，幫我們________了刺眼的陽光。", answer: "遮擋" },
+            { text: "這次的校外教學很有趣，讓我感到非常________。", answer: "難忘" },
+            { text: "我們住的________裡，有公園可以散步。", answer: "社區" },
+            { text: "這題數學很簡單，對我來說很________。", answer: "容易" },
+            { text: "從________看過去，這架紙飛機的形狀很像老鷹。", answer: "側面" },
+            { text: "學校是一棟很漂亮的藍色________。", answer: "建築" },
+            { text: "兔兔用彩色積木，________成一座可愛的城堡。", answer: "堆砌" },
+            { text: "這一區的舊式步道因缺乏修繕，每逢大雨後路面________積水，讓行人感到不便。", answer: "容易" },
+            { text: "藝術家運用大量的回收材料，________出一件充滿環保意識的裝置藝術作品。", answer: "堆砌" },
+            { text: "為了維護________的居住品質，住戶們約定在深夜後要保持安靜。", answer: "社區" },
+            { text: "這座古老的教堂，從________觀察可以看見精緻的浮雕與彩繪玻璃。", answer: "側面" },
+            { text: "即使在路邊________，阿白依然全神貫注地保護著懷中那疊珍貴的講義。", answer: "淋雨" },
+            { text: "街道兩旁高聳的招牌相互________，讓午後的陽光難以灑進窄小的巷弄。", answer: "遮擋" },
+            { text: "台南有許多充滿歷史感的藝術________，吸引了世界各地的遊客來朝聖。", answer: "建築" },
+            { text: "這家百年老店賣的不只是商品，更有一種讓人流連忘返、難以________的人情味。", answer: "難忘" },
+            { text: "街道上的文創________琳瑯滿目，每一間都擁有獨特的風格與故事。", answer: "商店" }
+        ], 
+        level4: [
+            { word: "淋雨", image: "./pic/L12/1.jpg" },
+            { word: "容易", image: "./pic/L12/2.jpg" },
+            { word: "側面", image: "./pic/L12/3.jpg" },
+            { word: "堆砌", image: "./pic/L12/4.jpg" },
+            { word: "建築", image: "./pic/L12/5.jpg" },
+            { word: "社區", image: "./pic/L12/6.jpg" },
+            { word: "遮擋", image: "./pic/L12/7.jpg" },
+            { word: "商店", image: "./pic/L12/8.jpg" },
+            { word: "難忘", image: "./pic/L12/9.jpg" }
+        ] 
+    }
+};
