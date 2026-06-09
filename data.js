@@ -140,7 +140,38 @@ const allLessonsData = {
             { word: "概", parts: ["images-5/L7/筆順-概-部件-1.png", "images-5/L7/筆順-概-部件-2.png", "images-5/L7/筆順-概-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] },
             { word: "爾", parts: ["images-5/L7/筆順-爾-部件-1.png", "images-5/L7/筆順-爾-部件-2.png", "images-5/L7/筆順-爾-部件-3.png"], pos: [{x: 70, y: 180}, {x: 120, y: 180}, {x: 170, y: 180}] }
         ], 
-        level2: [], level3: [], level4: [] 
+        level2: [], 
+        level3: [
+            { text: "太陽公公露出________的笑容，天氣真好。", answer: "燦爛" },
+            { text: "假日的動物園裡________了參觀的人潮。", answer: "擠滿" },
+            { text: "傍晚的天空出現紅紅紫紫的________，非常漂亮。", answer: "彩霞" },
+            { text: "兔兔用湯匙輕輕________杯子裡的牛奶。", answer: "攪動" },
+            { text: "農夫拿著________，把地上的落葉掃在一起。", answer: "耙子" },
+            { text: "這雙鞋子上面鑲著閃亮的小________，亮晶晶的。", answer: "水晶" },
+            { text: "阿白在美勞課學習用肥皂________出可愛的小動物。", answer: "雕刻" },
+            { text: "兔兔喜歡喝苦苦香香的________拿鐵。", answer: "抹茶" },
+            { text: "假日的時候，爺爺會去漂亮的________參加聚會。", answer: "教堂" },
+            { text: "跨年煙火在夜空中瞬間綻放，顯得格外耀眼與________。", answer: "燦爛" },
+            { text: "百貨公司週年慶一開門，門口立刻________了等待搶購的顧客。", answer: "擠滿" },
+            { text: "太陽下山後，西方的天際留下一抹如詩如畫的________。", answer: "彩霞" },
+            { text: "阿白運用精湛的手法，將原本平凡的木頭________成栩栩如生的老鷹。", answer: "雕刻" },
+            { text: "船隻駛過原本平靜的湖面，掀起陣陣漣漪，________了水底的泥沙。", answer: "攪動" },
+            { text: "這座歷史悠久的________，彩繪玻璃在陽光照射下散發出神聖的光芒。", answer: "教堂" },
+            { text: "兔兔熟練地揮動________，將草坪上的枯枝清理乾淨。", answer: "耙子" },
+            { text: "這盞華麗的________吊燈懸掛在大廳中央，看起來非常氣派。", answer: "水晶" },
+            { text: "這種來自日本的傳統________，以其獨特的清香與微苦風味受到大眾歡迎。", answer: "抹茶" }
+        ], 
+        level4: [
+            { word: "擠滿", image: "./pic/L7/1.jpg" },
+            { word: "燦爛", image: "./pic/L7/2.jpg" },
+            { word: "攪動", image: "./pic/L7/3.jpg" },
+            { word: "耙子", image: "./pic/L7/4.jpg" },
+            { word: "抹茶", image: "./pic/L7/5.jpg" },
+            { word: "水晶", image: "./pic/L7/6.jpg" },
+            { word: "教堂", image: "./pic/L7/7.jpg" },
+            { word: "雕刻", image: "./pic/L7/8.jpg" },
+            { word: "彩霞", image: "./pic/L7/9.jpg" }
+        ] 
     },
 
     // ================= 第八課 =================
@@ -169,7 +200,7 @@ const allLessonsData = {
             { text: "在這個通訊發達的時代，街道旁的舊________依然守候著文字的溫度。", answer: "郵筒" }
         ], 
         level4: [
-          { word: "潛水", image: "./pic/L8/1.jpg" },
+            { word: "潛水", image: "./pic/L8/1.jpg" },
             { word: "珊瑚", image: "./pic/L8/2.jpg" },
             { word: "航行", image: "./pic/L8/3.jpg" },
             { word: "探險", image: "./pic/L8/4.jpg" },
@@ -194,7 +225,7 @@ const allLessonsData = {
             { text: "教室的布告欄上，________著大家畫得最漂亮的圖畫。", answer: "展示" },
             { text: "我在美勞課練習做________，把白布染成了美麗的藍色。", answer: "藍染" },
             { text: "魔術師在台上________神奇的法術，把白兔變不見了。", answer: "施展" },
-            { text: "奶奶拿著統一發票，認真的看著電視等待________。", answer: "開獎" },
+            { text: "奶奶拿著統一發票，認定的看著電視等待________。", answer: "開獎" },
             { text: "這排房子的走廊是彎彎的________形狀，看起來很有特色。", answer: "拱廊" },
             { text: "這種結合自然植物染料的________技術，是台灣重要的傳統工藝。", answer: "藍染" },
             { text: "為了縮短城鄉之間的往來時間，政府開鑿了穿過山脈的長形________。", answer: "隧道" },
@@ -245,7 +276,7 @@ const allLessonsData = {
             { text: "當運動員在領獎台上看著會旗升起時，紛紛流下感動且激動的________。", answer: "眼淚" }
         ], 
         level4: [
-           { word: "河川", image: "./pic/L10/1.jpg" },
+            { word: "河川", image: "./pic/L10/1.jpg" },
             { word: "蒸發", image: "./pic/L10/2.jpg" },
             { word: "凝結", image: "./pic/L10/3.jpg" },
             { word: "沖刷", image: "./pic/L10/4.jpg" },
@@ -321,7 +352,7 @@ const allLessonsData = {
             { text: "街道上的文創________琳瑯滿目，每一間都擁有獨特的風格與故事。", answer: "商店" }
         ], 
         level4: [
-           { word: "淋雨", image: "./pic/L12/1.jpg" },
+            { word: "淋雨", image: "./pic/L12/1.jpg" },
             { word: "容易", image: "./pic/L12/2.jpg" },
             { word: "側面", image: "./pic/L12/3.jpg" },
             { word: "堆砌", image: "./pic/L12/4.jpg" },
