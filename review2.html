@@ -6,44 +6,24 @@
     <title>複習二：綜合練習 - 國語樂園</title>
     <style>
         body {
-            font-family: "Microsoft JhengHei", sans-serif;
-            background-color: #fdf5e6;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            box-sizing: border-box;
-            overflow: hidden;
+            font-family: "Microsoft JhengHei", sans-serif; background-color: #fdf5e6;
+            margin: 0; padding: 0; display: flex; flex-direction: column;
+            height: 100vh; box-sizing: border-box; overflow: hidden;
         }
         
         .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 4%;
-            background-color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            z-index: 10;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 4%; background-color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10;
         }
         .back-btn {
-            text-decoration: none;
-            background-color: #00897b;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 24px;
-            transition: 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-decoration: none; background-color: #00897b; color: white;
+            padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 24px;
+            transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .back-btn:hover { background-color: #00695c; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
         .progress-text { font-size: 28px; font-weight: bold; color: #4a5568; background: #e2e8f0; padding: 10px 30px; border-radius: 50px; }
 
-        .slide-container {
-            flex-grow: 1; display: flex; justify-content: center; align-items: center;
-            padding: 40px; position: relative;
-        }
+        .slide-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 40px; position: relative; }
         
         .question-slide {
             display: none; width: 100%; max-width: 1400px; height: 100%;
@@ -54,81 +34,38 @@
         }
         .question-slide.active { display: flex; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        .section-badge {
-            background-color: #4a5568; color: white; padding: 15px 40px;
-            border-radius: 50px; font-size: 32px; font-weight: bold;
-            margin-bottom: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        .section-badge { background-color: #4a5568; color: white; padding: 15px 40px; border-radius: 50px; font-size: 32px; font-weight: bold; margin-bottom: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* 句子與點擊按鈕 */
-        .sentence-text {
-            font-size: clamp(40px, 5vw, 65px); color: #1a202c; line-height: 1.8;
-            font-weight: bold; display: flex; flex-wrap: wrap; justify-content: center;
-            border-radius: 20px; padding: 20px; transition: 0.3s;
-        }
+        .sentence-text { font-size: clamp(40px, 5vw, 65px); color: #1a202c; line-height: 1.8; font-weight: bold; display: flex; flex-wrap: wrap; justify-content: center; border-radius: 20px; padding: 20px; transition: 0.3s; }
         u { text-decoration-color: #e53e3e; text-decoration-thickness: 6px; text-underline-offset: 12px; }
 
-        .char-btn { cursor: pointer; padding: 0 8px; border-radius: 12px; transition: 0.2s; display: inline-block; }
+        .char-btn { cursor: pointer; padding: 0 8px; border-radius: 12px; transition: 0.2s; display: inline-block; user-select: none; -webkit-user-select: none; }
         .char-btn:hover { background-color: #e2e8f0; transform: scale(1.1); }
         .char-btn.wrong { background-color: #fed7d7; color: #e53e3e; animation: shake 0.4s; }
         .char-btn.correct { background-color: #c6f6d5; color: #2f855a; font-weight: bold; transform: scale(1.15); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-6px); }
-            50% { transform: translateX(6px); }
-            75% { transform: translateX(-6px); }
-        }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } }
 
         .feedback-text { font-size: 40px; font-weight: bold; margin-top: 40px; height: 50px; opacity: 0; transition: 0.3s; }
 
-        .bottom-nav {
-            display: flex; justify-content: space-between; padding: 30px 5%;
-            background: #fff; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 10;
-        }
-        .nav-btn {
-            font-family: inherit; font-size: 32px; font-weight: bold; padding: 20px 50px;
-            border-radius: 20px; border: none; background-color: #4299e1; color: white;
-            cursor: pointer; transition: 0.3s; box-shadow: 0 6px 12px rgba(66, 153, 225, 0.3);
-        }
+        .bottom-nav { display: flex; justify-content: space-between; padding: 30px 5%; background: #fff; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 10; }
+        .nav-btn { font-family: inherit; font-size: 32px; font-weight: bold; padding: 20px 50px; border-radius: 20px; border: none; background-color: #4299e1; color: white; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 12px rgba(66, 153, 225, 0.3); user-select: none; -webkit-user-select: none; }
         .nav-btn:hover:not(:disabled) { background-color: #3182ce; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(66, 153, 225, 0.4); }
         .nav-btn:disabled { background-color: #cbd5e0; cursor: not-allowed; box-shadow: none; transform: none; }
         .nav-btn.finish-btn { background-color: #4cd137; box-shadow: 0 6px 12px rgba(76, 209, 55, 0.3); }
         .nav-btn.finish-btn:hover { background-color: #44bd32; box-shadow: 0 10px 20px rgba(76, 209, 55, 0.4); }
 
-        /* ================= 選擇待選字的彈出視窗 ================= */
-        .choice-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .choice-content {
-            background: white; padding: 50px; border-radius: 30px; text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: popIn 0.3s ease-out;
-            position: relative;
-        }
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
+        .choice-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .choice-content { background: white; padding: 50px; border-radius: 30px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: popIn 0.3s ease-out; position: relative; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .choice-title { font-size: 36px; color: #2d3748; margin-bottom: 30px; font-weight: bold; }
-        .close-btn {
-            position: absolute; top: 15px; right: 25px; font-size: 35px; color: #a0aec0;
-            background: none; border: none; cursor: pointer; transition: 0.2s;
-        }
+        .close-btn { position: absolute; top: 15px; right: 25px; font-size: 35px; color: #a0aec0; background: none; border: none; cursor: pointer; transition: 0.2s; }
         .close-btn:hover { color: #e53e3e; transform: scale(1.1); }
         
         .options-container { display: flex; gap: 25px; justify-content: center; }
-        .option-btn {
-            font-family: inherit; font-size: 60px; font-weight: bold; width: 120px; height: 120px;
-            border-radius: 25px; border: 5px solid #cbd5e0; background: white; color: #4a5568;
-            cursor: pointer; transition: 0.2s; box-shadow: 0 6px 10px rgba(0,0,0,0.1);
-        }
+        .option-btn { font-family: inherit; font-size: 60px; font-weight: bold; width: 120px; height: 120px; border-radius: 25px; border: 5px solid #cbd5e0; background: white; color: #4a5568; cursor: pointer; transition: 0.2s; box-shadow: 0 6px 10px rgba(0,0,0,0.1); user-select: none; }
         .option-btn:hover { border-color: #4cd137; background: #f0fdf4; transform: scale(1.1); color: #27ae60; }
         .option-btn.wrong-choice { border-color: #e53e3e; background: #fed7d7; color: #c0392b; animation: shake 0.4s; }
     </style>
@@ -143,49 +80,49 @@
     <div class="slide-container" id="slideContainer">
         
         <div class="question-slide active">
-            <div class="section-badge">✨ 挑出錯字 (點錯字修正)</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
             <div class="sentence-text auto-typo" data-sentence="<u>巴黎鐵搭</u>是<u>法國</u>知名的觀光景點。" data-wrong="搭" data-right="塔" data-choices="塔,答,嗒"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 挑出錯字 (點錯字修正)</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
             <div class="sentence-text auto-typo" data-sentence="我想去看看<u>臺南</u>有名的<u>鹽水蜂炮</u>。" data-wrong="蜂" data-right="烽" data-choices="烽,鋒,峰"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 挑出錯字 (點錯字修正)</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
             <div class="sentence-text auto-typo" data-sentence="美麗的山瑚是海洋的珍寶，需要我們好好去愛護。" data-wrong="山" data-right="珊" data-choices="珊,刪,衫"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 挑出錯字 (點錯字修正)</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
             <div class="sentence-text auto-typo" data-sentence="屋簷抵下經常會有燕子飛來築巢。" data-wrong="抵" data-right="底" data-choices="底,低,邸"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 挑出錯字 (點錯字修正)</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
             <div class="sentence-text auto-typo" data-sentence="各式各樣的風箏飄福在空中的場面，真是壯觀啊！" data-wrong="福" data-right="浮" data-choices="浮,符,芙"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 挑出錯字 (點錯字修正)</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
             <div class="sentence-text auto-typo" data-sentence="這間抗空公司正在招募有經驗的機師。" data-wrong="抗" data-right="航" data-choices="航,坑,杭"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 挑出錯字 (點錯字修正)</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
             <div class="sentence-text auto-typo" data-sentence="出海的傳隻總有返鄉靠岸的一天。" data-wrong="傳" data-right="船" data-choices="船,喘,串"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
-            <div class="section-badge">✨ 挑出錯字 (點錯字修正)</div>
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
             <div class="sentence-text auto-typo" data-sentence="時間對媽媽師展魔法，讓她多了許多白髮。" data-wrong="師" data-right="施" data-choices="施,獅,濕"></div>
             <div class="feedback-text"></div>
         </div>
@@ -194,163 +131,167 @@
 
     <div class="choice-modal" id="choiceModal">
         <div class="choice-content">
-            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <button class="close-btn" id="closeModalBtn">&times;</button>
             <div class="choice-title">🎯 請問正確的字是哪一個？</div>
-            <div class="options-container" id="optionsContainer">
-                </div>
+            <div class="options-container" id="optionsContainer"></div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>◀ 上一題</button>
-        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">下一題 ▶</button>
+        <button class="nav-btn" id="prevBtn" disabled>◀ 上一題</button>
+        <button class="nav-btn" id="nextBtn">下一題 ▶</button>
     </div>
 
     <script>
-        // ================= 自動生成可點擊句子的腳本 =================
-        document.querySelectorAll('.auto-typo').forEach(el => {
-            const rawText = el.getAttribute('data-sentence');
-            const wrongChar = el.getAttribute('data-wrong');
-            const rightChar = el.getAttribute('data-right');
-            const choicesStr = el.getAttribute('data-choices');
+        document.addEventListener('DOMContentLoaded', () => {
+            // 自動生成文字並安全綁定事件
+            document.querySelectorAll('.auto-typo').forEach(el => {
+                const rawText = el.getAttribute('data-sentence');
+                const wrongChar = el.getAttribute('data-wrong');
+                const rightChar = el.getAttribute('data-right');
+                const choicesStr = el.getAttribute('data-choices');
 
-            let resultHTML = '';
-            let inTag = false;
+                let resultHTML = '';
+                let inTag = false;
 
-            for(let i = 0; i < rawText.length; i++) {
-                let char = rawText[i];
-                if (char === '<') inTag = true;
-                if (inTag) {
-                    resultHTML += char;
-                    if (char === '>') inTag = false;
-                } else {
-                    if (/[，。！？、]/.test(char)) {
-                        resultHTML += `<span style="margin: 0 8px;">${char}</span>`;
-                    } else if (char === wrongChar) {
-                        // 點擊錯字時，呼叫開啟選項視窗的函數
-                        resultHTML += `<span class="char-btn" onclick="openChoiceModal(this, '${rightChar}', '${choicesStr}')">${char}</span>`;
+                for(let i = 0; i < rawText.length; i++) {
+                    let char = rawText[i];
+                    if (char === '<') inTag = true;
+                    if (inTag) {
+                        resultHTML += char;
+                        if (char === '>') inTag = false;
                     } else {
-                        // 點擊不是錯字的字
-                        resultHTML += `<span class="char-btn" onclick="checkTypo(this)">${char}</span>`;
+                        if (/[，。！？、「」]/.test(char)) {
+                            resultHTML += `<span style="margin: 0 8px;">${char}</span>`;
+                        } else if (char === wrongChar) {
+                            resultHTML += `<span class="char-btn wrong-target" data-right="${rightChar}" data-choices="${choicesStr}">${char}</span>`;
+                        } else {
+                            resultHTML += `<span class="char-btn normal-target">${char}</span>`;
+                        }
                     }
                 }
-            }
-            el.innerHTML = resultHTML;
-        });
+                el.innerHTML = resultHTML;
 
-        // ================= 點到非錯字的處理邏輯 =================
-        function checkTypo(element) {
-            const container = element.closest('.question-slide');
-            if (container.classList.contains('solved')) return;
-
-            const feedback = container.querySelector('.feedback-text');
-            element.classList.add('wrong');
-            setTimeout(() => element.classList.remove('wrong'), 400); 
-            
-            feedback.innerHTML = '💪 哎呀，這個字沒錯喔，再找找看！';
-            feedback.style.color = '#c0392b';
-            feedback.style.opacity = '1';
-        }
-
-        // ================= 彈出視窗與選擇邏輯 =================
-        let currentTargetElement = null; // 記錄目前點擊的是哪一個錯字元素
-        let currentCorrectAnswer = "";   // 記錄目前的正確答案
-
-        function openChoiceModal(element, rightChar, choicesStr) {
-            const container = element.closest('.question-slide');
-            if (container.classList.contains('solved')) return;
-
-            currentTargetElement = element;
-            currentCorrectAnswer = rightChar;
-            
-            // 將選項字串轉換為陣列，並隨機打亂順序 (避免正確答案永遠在第一個)
-            let choices = choicesStr.split(',');
-            choices.sort(() => Math.random() - 0.5);
-
-            const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.innerHTML = ''; // 清空先前的選項
-
-            choices.forEach(choice => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = choice;
-                btn.onclick = function() { checkFinalAnswer(this, choice); };
-                optionsContainer.appendChild(btn);
+                el.querySelectorAll('.wrong-target').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        openChoiceModal(this, this.getAttribute('data-right'), this.getAttribute('data-choices'));
+                    });
+                });
+                el.querySelectorAll('.normal-target').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        checkTypo(this);
+                    });
+                });
             });
 
-            document.getElementById('choiceModal').style.display = 'flex';
-        }
+            let currentTargetElement = null; 
+            let currentCorrectAnswer = "";   
 
-        function closeModal() {
-            document.getElementById('choiceModal').style.display = 'none';
-            currentTargetElement = null;
-        }
-
-        function checkFinalAnswer(btn, selectedChar) {
-            if (selectedChar === currentCorrectAnswer) {
-                // 選對了！
-                closeModal();
-                const container = currentTargetElement.closest('.question-slide');
+            function checkTypo(element) {
+                const container = element.closest('.question-slide');
+                if (container.classList.contains('solved')) return;
                 const feedback = container.querySelector('.feedback-text');
-
-                currentTargetElement.classList.add('correct');
-                currentTargetElement.innerText = currentCorrectAnswer; 
-                container.classList.add('solved');
                 
-                container.style.borderColor = '#4cd137';
-                container.querySelector('.sentence-text').style.backgroundColor = '#f0fdf4';
-                feedback.innerHTML = '✨ 答對了！成功揪出並修正錯字！';
-                feedback.style.color = '#27ae60';
+                element.classList.add('wrong');
+                setTimeout(() => element.classList.remove('wrong'), 400); 
+                
+                feedback.innerHTML = '💪 哎呀，這個字沒錯喔，再找找看！';
+                feedback.style.color = '#c0392b';
                 feedback.style.opacity = '1';
-            } else {
-                // 選錯了！按鈕發抖變紅
-                btn.classList.add('wrong-choice');
-                setTimeout(() => btn.classList.remove('wrong-choice'), 400); 
             }
-        }
 
-        // 點擊視窗外部也能關閉
-        window.onclick = function(event) {
-            const modal = document.getElementById('choiceModal');
-            if (event.target === modal) {
+            function openChoiceModal(element, rightChar, choicesStr) {
+                const container = element.closest('.question-slide');
+                if (container.classList.contains('solved')) return;
+
+                currentTargetElement = element;
+                currentCorrectAnswer = rightChar;
+                
+                let choices = choicesStr.split(',');
+                choices.sort(() => Math.random() - 0.5);
+
+                const optionsContainer = document.getElementById('optionsContainer');
+                optionsContainer.innerHTML = ''; 
+
+                choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = choice;
+                    btn.addEventListener('click', function() { checkFinalAnswer(this, choice); });
+                    optionsContainer.appendChild(btn);
+                });
+
+                document.getElementById('choiceModal').style.display = 'flex';
+            }
+
+            function checkFinalAnswer(btn, selectedChar) {
+                if (selectedChar === currentCorrectAnswer) {
+                    closeModal();
+                    const container = currentTargetElement.closest('.question-slide');
+                    const feedback = container.querySelector('.feedback-text');
+
+                    currentTargetElement.classList.add('correct');
+                    currentTargetElement.innerText = currentCorrectAnswer; 
+                    container.classList.add('solved');
+                    
+                    container.style.borderColor = '#4cd137';
+                    container.querySelector('.sentence-text').style.backgroundColor = '#f0fdf4';
+                    feedback.innerHTML = '✨ 答對了！成功揪出並修正錯字！';
+                    feedback.style.color = '#27ae60';
+                    feedback.style.opacity = '1';
+                } else {
+                    btn.classList.add('wrong-choice');
+                    setTimeout(() => btn.classList.remove('wrong-choice'), 400); 
+                }
+            }
+
+            function closeModal() {
+                document.getElementById('choiceModal').style.display = 'none';
+                currentTargetElement = null;
+            }
+
+            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+            window.addEventListener('click', (event) => {
+                if (event.target === document.getElementById('choiceModal')) closeModal();
+            });
+
+            // 投影片切換邏輯
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.question-slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progressIndicator = document.getElementById('progressIndicator');
+
+            function updateUI() {
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active');
+                    if (index === currentSlide) slide.classList.add('active');
+                });
+                progressIndicator.innerText = `第 ${currentSlide + 1} / ${slides.length} 題`;
+                prevBtn.disabled = currentSlide === 0;
+                
+                if (currentSlide === slides.length - 1) {
+                    nextBtn.innerText = "🎉 恭喜完成！回大廳";
+                    nextBtn.classList.add('finish-btn');
+                } else {
+                    nextBtn.innerText = "下一題 ▶";
+                    nextBtn.classList.remove('finish-btn');
+                }
                 closeModal();
             }
-        }
 
-        // ================= 投影片切換邏輯 =================
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.question-slide');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const progressIndicator = document.getElementById('progressIndicator');
-
-        function updateUI() {
-            slides.forEach((slide, index) => {
-                slide.classList.remove('active');
-                if (index === currentSlide) { slide.classList.add('active'); }
-            });
-            progressIndicator.innerText = `第 ${currentSlide + 1} / ${slides.length} 題`;
-            prevBtn.disabled = currentSlide === 0;
-            
-            if (currentSlide === slides.length - 1) {
-                nextBtn.innerText = "🎉 恭喜完成！回大廳";
-                nextBtn.classList.add('finish-btn');
-            } else {
-                nextBtn.innerText = "下一題 ▶";
-                nextBtn.classList.remove('finish-btn');
+            function changeSlide(direction) {
+                if (direction === 1 && currentSlide === slides.length - 1) {
+                    window.location.href = 'index.html'; 
+                    return;
+                }
+                currentSlide += direction;
+                updateUI();
             }
-            // 切換題目時自動關閉彈出視窗（防呆）
-            closeModal();
-        }
 
-        function changeSlide(direction) {
-            if (direction === 1 && currentSlide === slides.length - 1) {
-                window.location.href = 'index.html'; 
-                return;
-            }
-            currentSlide += direction;
-            updateUI();
-        }
+            prevBtn.addEventListener('click', () => changeSlide(-1));
+            nextBtn.addEventListener('click', () => changeSlide(1));
+        });
     </script>
 </body>
 </html>
