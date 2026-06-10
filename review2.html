@@ -74,56 +74,62 @@
 
     <div class="top-bar">
         <a href="index.html" class="back-btn">⬅️ 回大廳</a>
-        <div class="progress-text" id="progressIndicator">第 1 / 8 題</div>
+        <div class="progress-text" id="progressIndicator">第 1 / 9 題</div>
     </div>
 
     <div class="slide-container" id="slideContainer">
         
         <div class="question-slide active">
             <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
-            <div class="sentence-text auto-typo" data-sentence="<u>巴黎鐵搭</u>是<u>法國</u>知名的觀光景點。" data-wrong="搭" data-right="塔" data-choices="塔,答,嗒"></div>
+            <div class="sentence-text auto-typo" data-sentence="這個調色般裡裝著七彩的顏料。" data-wrong="般" data-right="盤" data-choices="盤,般,船"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
             <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
-            <div class="sentence-text auto-typo" data-sentence="我想去看看<u>臺南</u>有名的<u>鹽水蜂炮</u>。" data-wrong="蜂" data-right="烽" data-choices="烽,鋒,峰"></div>
+            <div class="sentence-text auto-typo" data-sentence="合唱團的歌聲嘹亮無比，簡直響徹雲消。" data-wrong="消" data-right="霄" data-choices="霄,消,削"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
             <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
-            <div class="sentence-text auto-typo" data-sentence="美麗的山瑚是海洋的珍寶，需要我們好好去愛護。" data-wrong="山" data-right="珊" data-choices="珊,刪,衫"></div>
+            <div class="sentence-text auto-typo" data-sentence="我喜歡穿著莧鬆的衣服去跑步。" data-wrong="莧" data-right="寬" data-choices="寬,莧,見"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
             <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
-            <div class="sentence-text auto-typo" data-sentence="屋簷抵下經常會有燕子飛來築巢。" data-wrong="抵" data-right="底" data-choices="底,低,邸"></div>
+            <div class="sentence-text auto-typo" data-sentence="那隻兇惡的野狗被關進了聾子。" data-wrong="聾" data-right="籠" data-choices="籠,聾,龍"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
             <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
-            <div class="sentence-text auto-typo" data-sentence="各式各樣的風箏飄福在空中的場面，真是壯觀啊！" data-wrong="福" data-right="浮" data-choices="浮,符,芙"></div>
+            <div class="sentence-text auto-typo" data-sentence="綠豆加薏仁是一種清涼的骨早味甜品。" data-wrong="骨" data-right="古" data-choices="古,骨,苦"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
             <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
-            <div class="sentence-text auto-typo" data-sentence="這間抗空公司正在招募有經驗的機師。" data-wrong="抗" data-right="航" data-choices="航,坑,杭"></div>
+            <div class="sentence-text auto-typo" data-sentence="想不到我竟然中講了，真是幸運！" data-wrong="講" data-right="獎" data-choices="獎,講,槳"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
             <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
-            <div class="sentence-text auto-typo" data-sentence="出海的傳隻總有返鄉靠岸的一天。" data-wrong="傳" data-right="船" data-choices="船,喘,串"></div>
+            <div class="sentence-text auto-typo" data-sentence="奶奶因為不小心把假牙否下肚而急忙去醫院看診。" data-wrong="否" data-right="吞" data-choices="吞,否,杏"></div>
             <div class="feedback-text"></div>
         </div>
 
         <div class="question-slide">
             <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
-            <div class="sentence-text auto-typo" data-sentence="時間對媽媽師展魔法，讓她多了許多白髮。" data-wrong="師" data-right="施" data-choices="施,獅,濕"></div>
+            <div class="sentence-text auto-typo" data-sentence="這些話要怎麼說才會比較試當呢？" data-wrong="試" data-right="適" data-choices="適,試,式"></div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="這位轉學生一時還無法啇應這裡的生活。" data-wrong="啇" data-right="適" data-choices="適,啇,滴"></div>
             <div class="feedback-text"></div>
         </div>
 
@@ -208,7 +214,7 @@
                 currentCorrectAnswer = rightChar;
                 
                 let choices = choicesStr.split(',');
-                choices.sort(() => Math.random() - 0.5);
+                choices.sort(() => Math.random() - 0.5); // 選項隨機洗牌
 
                 const optionsContainer = document.getElementById('optionsContainer');
                 optionsContainer.innerHTML = ''; 
@@ -277,7 +283,7 @@
                     nextBtn.innerText = "下一題 ▶";
                     nextBtn.classList.remove('finish-btn');
                 }
-                closeModal();
+                closeModal(); // 切換題目時自動關閉彈出視窗
             }
 
             function changeSlide(direction) {
