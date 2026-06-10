@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>複習三：綜合練習 - 國語樂園</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #fdf5e6; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; box-sizing: border-box; overflow: hidden; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 4%; background-color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; }
+        .back-btn { text-decoration: none; background-color: #00897b; color: white; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 24px; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .back-btn:hover { background-color: #00695c; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+        .progress-text { font-size: 28px; font-weight: bold; color: #4a5568; background: #e2e8f0; padding: 10px 30px; border-radius: 50px; }
+
+        .slide-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 40px; position: relative; }
+        .question-slide { display: none; width: 100%; max-width: 1400px; height: 100%; background: white; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-left: 15px solid #fbc531; flex-direction: column; justify-content: center; align-items: center; padding: 40px 60px; box-sizing: border-box; animation: fadeIn 0.4s ease-in-out; text-align: center; transition: 0.3s; }
+        .question-slide.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+        .section-badge { background-color: #4a5568; color: white; padding: 15px 40px; border-radius: 50px; font-size: 32px; font-weight: bold; margin-bottom: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* 改錯字互動樣式 */
+        .sentence-text { font-size: clamp(40px, 5vw, 65px); color: #1a202c; line-height: 1.8; font-weight: bold; display: flex; flex-wrap: wrap; justify-content: center; border-radius: 20px; padding: 20px; transition: 0.3s; }
+        u { text-decoration-color: #e53e3e; text-decoration-thickness: 6px; text-underline-offset: 12px; }
+        .char-btn { cursor: pointer; padding: 0 8px; border-radius: 12px; transition: 0.2s; display: inline-block; user-select: none; -webkit-user-select: none; }
+        .char-btn:hover { background-color: #e2e8f0; transform: scale(1.1); }
+        .char-btn.wrong { background-color: #fed7d7; color: #e53e3e; animation: shake 0.4s; }
+        .char-btn.correct { background-color: #c6f6d5; color: #2f855a; font-weight: bold; transform: scale(1.15); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } }
+
+        /* 選擇題互動樣式 */
+        .mcq-text { font-size: clamp(40px, 5vw, 60px); font-weight: bold; color: #2d3748; margin-bottom: 40px; line-height: 1.6; }
+        .blank-box { display: inline-block; width: 80px; height: 70px; border-bottom: 6px solid #4a5568; margin: 0 15px; text-align: center; color: #e53e3e; }
+        .btn-group { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+        .mcq-btn { font-family: inherit; font-size: 45px; font-weight: bold; padding: 25px 60px; border-radius: 30px; cursor: pointer; border: 6px solid #cbd5e0; background: white; color: #2b6cb0; transition: 0.2s; box-shadow: 0 8px 15px rgba(0,0,0,0.1); user-select: none; -webkit-user-select: none; }
+        .mcq-btn:hover:not(:disabled) { transform: scale(1.05); border-color: #4299e1; background: #ebf8ff; }
+        .mcq-btn:active:not(:disabled) { transform: scale(0.95); }
+        .mcq-btn.correct-choice { border-color: #4cd137; background: #f0fdf4; color: #27ae60; }
+        .mcq-btn.wrong-choice { border-color: #e84118; background: #fff0f0; color: #c0392b; animation: shake 0.4s; }
+
+        .feedback-text { font-size: 40px; font-weight: bold; margin-top: 40px; height: 50px; opacity: 0; transition: 0.3s; }
+
+        /* 底部導航 */
+        .bottom-nav { display: flex; justify-content: space-between; padding: 30px 5%; background: #fff; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 10; }
+        .nav-btn { font-family: inherit; font-size: 32px; font-weight: bold; padding: 20px 50px; border-radius: 20px; border: none; background-color: #4299e1; color: white; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 12px rgba(66, 153, 225, 0.3); user-select: none; -webkit-user-select: none; }
+        .nav-btn:hover:not(:disabled) { background-color: #3182ce; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(66, 153, 225, 0.4); }
+        .nav-btn:disabled { background-color: #cbd5e0; cursor: not-allowed; box-shadow: none; transform: none; }
+        .nav-btn.finish-btn { background-color: #4cd137; box-shadow: 0 6px 12px rgba(76, 209, 55, 0.3); }
+        .nav-btn.finish-btn:hover { background-color: #44bd32; box-shadow: 0 10px 20px rgba(76, 209, 55, 0.4); }
+
+        /* 彈出視窗 */
+        .choice-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .choice-content { background: white; padding: 50px; border-radius: 30px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: popIn 0.3s ease-out; position: relative; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .choice-title { font-size: 36px; color: #2d3748; margin-bottom: 30px; font-weight: bold; }
+        .close-btn { position: absolute; top: 15px; right: 25px; font-size: 35px; color: #a0aec0; background: none; border: none; cursor: pointer; transition: 0.2s; }
+        .close-btn:hover { color: #e53e3e; transform: scale(1.1); }
+        .options-container { display: flex; gap: 25px; justify-content: center; }
+        .option-btn { font-family: inherit; font-size: 60px; font-weight: bold; width: 120px; height: 120px; border-radius: 25px; border: 5px solid #cbd5e0; background: white; color: #4a5568; cursor: pointer; transition: 0.2s; box-shadow: 0 6px 10px rgba(0,0,0,0.1); user-select: none; }
+        .option-btn:hover { border-color: #4cd137; background: #f0fdf4; transform: scale(1.1); color: #27ae60; }
+        .option-btn.wrong-choice { border-color: #e53e3e; background: #fed7d7; color: #c0392b; animation: shake 0.4s; }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">⬅️ 回大廳</a>
+        <div class="progress-text" id="progressIndicator">第 1 / 9 題</div>
+    </div>
+
+    <div class="slide-container" id="slideContainer">
+        
+        <div class="question-slide active">
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="河流因為長時間不下雨而乾苦了。" data-wrong="苦" data-right="枯" data-choices="枯,苦,估"></div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="我將這些靈件組裝成一個機器人。" data-wrong="靈" data-right="零" data-choices="零,靈,領"></div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="小狗汪汪不懂是我的玩伴，更是我的好朋友。" data-wrong="懂" data-right="僅" data-choices="僅,懂,謹"></div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="今年暑假，妹妹要去參加羽球夏另營。" data-wrong="另" data-right="令" data-choices="令,另,今"></div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="燕子的翅膀受傷了，得趕緊幫牠冶療才行。" data-wrong="冶" data-right="治" data-choices="治,冶,抬"></div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 挑出錯字 (點擊錯字修正)</div>
+            <div class="sentence-text auto-typo" data-sentence="這條河流到這裡後就變昨了。" data-wrong="昨" data-right="窄" data-choices="窄,昨,榨"></div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide mcq-slide">
+            <div class="section-badge">✨ 讀一讀，選出正確的字</div>
+            <div class="mcq-text">努力是成功不可 <span class="blank-box" id="blank-7"></span> 缺的要素。</div>
+            <div class="btn-group">
+                <button class="mcq-btn" data-answer="true" data-fill="或">或</button>
+                <button class="mcq-btn" data-answer="false">缺</button>
+                <button class="mcq-btn" data-answer="false">咸</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide mcq-slide">
+            <div class="section-badge">✨ 讀一讀，選出正確的注音</div>
+            <div class="mcq-text">爸爸說的笑話，令大家全都哈 <span class="blank-box" id="blank-8"></span> 哈大笑。</div>
+            <div class="btn-group">
+                <button class="mcq-btn" data-answer="true" data-fill="ㄏㄚ">ㄏㄚ</button>
+                <button class="mcq-btn" data-answer="false">ㄏㄚˇ</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide mcq-slide">
+            <div class="section-badge">✨ 多音字大挑戰：選出正確的組合</div>
+            <div class="mcq-text" style="font-size: clamp(32px, 4vw, 50px);">
+                看到這些舊「相」<span class="blank-box" id="blank-9-1" style="width: 100px;"></span>片，<br>就讓我想到當時的情景，令人「相」<span class="blank-box" id="blank-9-2" style="width: 100px;"></span>當懷念。
+            </div>
+            <div class="btn-group">
+                <button class="mcq-btn" data-answer="false" data-fill="ㄒㄧㄤ,ㄒㄧㄤˋ">ㄒㄧㄤ / ㄒㄧㄤˋ</button>
+                <button class="mcq-btn" data-answer="true" data-fill="ㄒㄧㄤˋ,ㄒㄧㄤ">ㄒㄧㄤˋ / ㄒㄧㄤ</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+    </div>
+
+    <div class="choice-modal" id="choiceModal">
+        <div class="choice-content">
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+            <div class="choice-title">🎯 請問正確的字是哪一個？</div>
+            <div class="options-container" id="optionsContainer"></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-btn" id="prevBtn" disabled>◀ 上一題</button>
+        <button class="nav-btn" id="nextBtn">下一題 ▶</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ================= 1. 改錯字：自動生成文字並綁定事件 =================
+            document.querySelectorAll('.auto-typo').forEach(el => {
+                const rawText = el.getAttribute('data-sentence');
+                const wrongChar = el.getAttribute('data-wrong');
+                const rightChar = el.getAttribute('data-right');
+                const choicesStr = el.getAttribute('data-choices');
+
+                let resultHTML = '';
+                let inTag = false;
+
+                for(let i = 0; i < rawText.length; i++) {
+                    let char = rawText[i];
+                    if (char === '<') inTag = true;
+                    if (inTag) {
+                        resultHTML += char;
+                        if (char === '>') inTag = false;
+                    } else {
+                        if (/[，。！？、「」]/.test(char)) {
+                            resultHTML += `<span style="margin: 0 8px;">${char}</span>`;
+                        } else if (char === wrongChar) {
+                            resultHTML += `<span class="char-btn wrong-target" data-right="${rightChar}" data-choices="${choicesStr}">${char}</span>`;
+                        } else {
+                            resultHTML += `<span class="char-btn normal-target">${char}</span>`;
+                        }
+                    }
+                }
+                el.innerHTML = resultHTML;
+
+                el.querySelectorAll('.wrong-target').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        openChoiceModal(this, this.getAttribute('data-right'), this.getAttribute('data-choices'));
+                    });
+                });
+                el.querySelectorAll('.normal-target').forEach(btn => {
+                    btn.addEventListener('click', function() { checkTypo(this); });
+                });
+            });
+
+            let currentTargetElement = null; 
+            let currentCorrectAnswer = "";   
+
+            function checkTypo(element) {
+                const container = element.closest('.question-slide');
+                if (container.classList.contains('solved')) return;
+                const feedback = container.querySelector('.feedback-text');
+                
+                element.classList.add('wrong');
+                setTimeout(() => element.classList.remove('wrong'), 400); 
+                
+                feedback.innerHTML = '💪 哎呀，這個字沒錯喔，再找找看！';
+                feedback.style.color = '#c0392b';
+                feedback.style.opacity = '1';
+            }
+
+            function openChoiceModal(element, rightChar, choicesStr) {
+                const container = element.closest('.question-slide');
+                if (container.classList.contains('solved')) return;
+
+                currentTargetElement = element;
+                currentCorrectAnswer = rightChar;
+                
+                let choices = choicesStr.split(',');
+                choices.sort(() => Math.random() - 0.5);
+
+                const optionsContainer = document.getElementById('optionsContainer');
+                optionsContainer.innerHTML = ''; 
+
+                choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = choice;
+                    btn.addEventListener('click', function() { checkFinalAnswer(this, choice); });
+                    optionsContainer.appendChild(btn);
+                });
+
+                document.getElementById('choiceModal').style.display = 'flex';
+            }
+
+            function checkFinalAnswer(btn, selectedChar) {
+                if (selectedChar === currentCorrectAnswer) {
+                    const target = currentTargetElement;
+                    closeModal();
+
+                    const container = target.closest('.question-slide');
+                    const feedback = container.querySelector('.feedback-text');
+
+                    target.classList.add('correct');
+                    target.textContent = currentCorrectAnswer; 
+                    container.classList.add('solved');
+                    
+                    container.style.borderColor = '#4cd137';
+                    container.querySelector('.sentence-text').style.backgroundColor = '#f0fdf4';
+                    feedback.innerHTML = '✨ 答對了！成功揪出並修正錯字！';
+                    feedback.style.color = '#27ae60';
+                    feedback.style.opacity = '1';
+                } else {
+                    btn.classList.add('wrong-choice');
+                    setTimeout(() => btn.classList.remove('wrong-choice'), 400); 
+                }
+            }
+
+            function closeModal() {
+                document.getElementById('choiceModal').style.display = 'none';
+                currentTargetElement = null;
+            }
+
+            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+            window.addEventListener('click', (event) => {
+                if (event.target === document.getElementById('choiceModal')) closeModal();
+            });
+
+
+            // ================= 2. 選擇題與注音題邏輯 =================
+            document.querySelectorAll('.mcq-slide').forEach(slide => {
+                const btns = slide.querySelectorAll('.mcq-btn');
+                const feedback = slide.querySelector('.feedback-text');
+                const blankBoxes = slide.querySelectorAll('.blank-box');
+
+                btns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const isCorrect = this.getAttribute('data-answer') === 'true';
+                        
+                        // 鎖定所有按鈕
+                        btns.forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+                        this.style.opacity = '1';
+
+                        if (isCorrect) {
+                            this.classList.add('correct-choice');
+                            slide.style.borderColor = '#4cd137'; 
+                            slide.style.backgroundColor = '#f0fdf4';
+                            feedback.innerHTML = '✨ 答對了！太棒了！'; 
+                            feedback.style.color = '#27ae60';
+
+                            // 填入括號
+                            const fillText = this.getAttribute('data-fill');
+                            if(fillText) {
+                                const fillParts = fillText.split(',');
+                                blankBoxes.forEach((box, idx) => {
+                                    if(fillParts[idx]) {
+                                        box.innerText = fillParts[idx];
+                                        box.style.borderBottom = 'none'; // 移除底線
+                                    }
+                                });
+                            }
+                        } else {
+                            this.classList.add('wrong-choice');
+                            slide.style.borderColor = '#e84118'; 
+                            slide.style.backgroundColor = '#fff0f0';
+                            feedback.innerHTML = '💪 哎呀，再仔細想想看喔！'; 
+                            feedback.style.color = '#c0392b';
+                        }
+                        feedback.style.opacity = '1';
+                    });
+                });
+            });
+
+            // ================= 3. 投影片切換邏輯 =================
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.question-slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progressIndicator = document.getElementById('progressIndicator');
+
+            function updateUI() {
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active');
+                    if (index === currentSlide) slide.classList.add('active');
+                });
+                progressIndicator.innerText = `第 ${currentSlide + 1} / ${slides.length} 題`;
+                prevBtn.disabled = currentSlide === 0;
+                
+                if (currentSlide === slides.length - 1) {
+                    nextBtn.innerText = "🎉 恭喜完成！回大廳";
+                    nextBtn.classList.add('finish-btn');
+                } else {
+                    nextBtn.innerText = "下一題 ▶";
+                    nextBtn.classList.remove('finish-btn');
+                }
+                closeModal();
+            }
+
+            function changeSlide(direction) {
+                if (direction === 1 && currentSlide === slides.length - 1) {
+                    window.location.href = 'index.html'; 
+                    return;
+                }
+                currentSlide += direction;
+                updateUI();
+            }
+
+            prevBtn.addEventListener('click', () => changeSlide(-1));
+            nextBtn.addEventListener('click', () => changeSlide(1));
+        });
+    </script>
+</body>
+</html>
