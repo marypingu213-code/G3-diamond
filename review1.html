@@ -5,123 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>複習一：綜合練習 - 國語樂園</title>
     <style>
-        body {
-            font-family: "Microsoft JhengHei", sans-serif;
-            background-color: #fdf5e6;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            box-sizing: border-box;
-            overflow: hidden;
-        }
-        
-        .top-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 4%; background-color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10;
-        }
-        .back-btn {
-            text-decoration: none; background-color: #00897b; color: white;
-            padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 24px;
-            transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #fdf5e6; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; box-sizing: border-box; overflow: hidden; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 4%; background-color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; }
+        .back-btn { text-decoration: none; background-color: #00897b; color: white; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 24px; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .back-btn:hover { background-color: #00695c; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
         .progress-text { font-size: 28px; font-weight: bold; color: #4a5568; background: #e2e8f0; padding: 10px 30px; border-radius: 50px; }
 
-        .slide-container {
-            flex-grow: 1; display: flex; justify-content: center; align-items: center;
-            padding: 40px; position: relative;
-        }
-        
-        .question-slide {
-            display: none; width: 100%; max-width: 1400px; height: 100%;
-            background: white; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border-left: 15px solid #fbc531; flex-direction: column; justify-content: center;
-            align-items: center; padding: 40px 60px; box-sizing: border-box;
-            animation: fadeIn 0.4s ease-in-out; text-align: center; transition: 0.3s;
-        }
+        .slide-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 40px; position: relative; }
+        .question-slide { display: none; width: 100%; max-width: 1400px; height: 100%; background: white; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-left: 15px solid #fbc531; flex-direction: column; justify-content: center; align-items: center; padding: 40px 60px; box-sizing: border-box; animation: fadeIn 0.4s ease-in-out; text-align: center; transition: 0.3s; }
         .question-slide.active { display: flex; }
-
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        .section-badge {
-            background-color: #4a5568; color: white; padding: 15px 40px;
-            border-radius: 50px; font-size: 32px; font-weight: bold; margin-bottom: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        .section-badge { background-color: #4a5568; color: white; padding: 15px 40px; border-radius: 50px; font-size: 32px; font-weight: bold; margin-bottom: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
         /* 改錯字互動樣式 */
-        .sentence-text {
-            font-size: clamp(40px, 5vw, 65px); color: #1a202c; line-height: 1.8;
-            font-weight: bold; display: flex; flex-wrap: wrap; justify-content: center;
-            border-radius: 20px; padding: 20px; transition: 0.3s;
-        }
+        .sentence-text { font-size: clamp(40px, 5vw, 65px); color: #1a202c; line-height: 1.8; font-weight: bold; display: flex; flex-wrap: wrap; justify-content: center; border-radius: 20px; padding: 20px; transition: 0.3s; }
         u { text-decoration-color: #e53e3e; text-decoration-thickness: 6px; text-underline-offset: 12px; }
-
-        .char-btn {
-            cursor: pointer; padding: 0 8px; border-radius: 12px; transition: 0.2s; display: inline-block;
-            user-select: none; -webkit-user-select: none; /* 防止平板連點時反白文字 */
-        }
+        .char-btn { cursor: pointer; padding: 0 8px; border-radius: 12px; transition: 0.2s; display: inline-block; user-select: none; -webkit-user-select: none; }
         .char-btn:hover { background-color: #e2e8f0; transform: scale(1.1); }
         .char-btn.wrong { background-color: #fed7d7; color: #e53e3e; animation: shake 0.4s; }
         .char-btn.correct { background-color: #c6f6d5; color: #2f855a; font-weight: bold; transform: scale(1.15); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } }
 
         /* 選擇題互動樣式 */
         .compare-container { display: flex; flex-direction: column; gap: 30px; margin-bottom: 50px; width: 100%; }
-        .compare-item {
-            font-size: clamp(35px, 4vw, 55px); font-weight: bold; color: #2b6cb0;
-            background-color: #ebf8ff; padding: 30px; border-radius: 25px; letter-spacing: 3px;
-        }
+        .compare-item { font-size: clamp(35px, 4vw, 55px); font-weight: bold; color: #2b6cb0; background-color: #ebf8ff; padding: 30px; border-radius: 25px; letter-spacing: 3px; }
         .btn-group { display: flex; justify-content: center; gap: 40px; }
-        .ox-btn {
-            font-family: inherit; font-size: 45px; font-weight: bold; padding: 30px 80px;
-            border-radius: 30px; cursor: pointer; border: 6px solid #cbd5e0; background: white;
-            color: #4a5568; transition: 0.2s; box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            user-select: none; -webkit-user-select: none;
-        }
+        .ox-btn { font-family: inherit; font-size: 45px; font-weight: bold; padding: 30px 80px; border-radius: 30px; cursor: pointer; border: 6px solid #cbd5e0; background: white; color: #4a5568; transition: 0.2s; box-shadow: 0 8px 15px rgba(0,0,0,0.1); user-select: none; -webkit-user-select: none; }
         .ox-btn:hover:not(:disabled) { transform: scale(1.05); border-color: #a0aec0; background: #f7fafc; }
         .ox-btn:active:not(:disabled) { transform: scale(0.95); }
 
         .feedback-text { font-size: 40px; font-weight: bold; margin-top: 40px; height: 50px; opacity: 0; transition: 0.3s; }
 
         /* 底部導航 */
-        .bottom-nav {
-            display: flex; justify-content: space-between; padding: 30px 5%;
-            background: #fff; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 10;
-        }
-        .nav-btn {
-            font-family: inherit; font-size: 32px; font-weight: bold; padding: 20px 50px;
-            border-radius: 20px; border: none; background-color: #4299e1; color: white;
-            cursor: pointer; transition: 0.3s; box-shadow: 0 6px 12px rgba(66, 153, 225, 0.3);
-            user-select: none; -webkit-user-select: none;
-        }
+        .bottom-nav { display: flex; justify-content: space-between; padding: 30px 5%; background: #fff; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 10; }
+        .nav-btn { font-family: inherit; font-size: 32px; font-weight: bold; padding: 20px 50px; border-radius: 20px; border: none; background-color: #4299e1; color: white; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 12px rgba(66, 153, 225, 0.3); user-select: none; -webkit-user-select: none; }
         .nav-btn:hover:not(:disabled) { background-color: #3182ce; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(66, 153, 225, 0.4); }
         .nav-btn:disabled { background-color: #cbd5e0; cursor: not-allowed; box-shadow: none; transform: none; }
         .nav-btn.finish-btn { background-color: #4cd137; box-shadow: 0 6px 12px rgba(76, 209, 55, 0.3); }
         .nav-btn.finish-btn:hover { background-color: #44bd32; box-shadow: 0 10px 20px rgba(76, 209, 55, 0.4); }
 
         /* 彈出視窗 */
-        .choice-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);
-        }
-        .choice-content {
-            background: white; padding: 50px; border-radius: 30px; text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: popIn 0.3s ease-out; position: relative;
-        }
+        .choice-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .choice-content { background: white; padding: 50px; border-radius: 30px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: popIn 0.3s ease-out; position: relative; }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .choice-title { font-size: 36px; color: #2d3748; margin-bottom: 30px; font-weight: bold; }
         .close-btn { position: absolute; top: 15px; right: 25px; font-size: 35px; color: #a0aec0; background: none; border: none; cursor: pointer; transition: 0.2s; }
         .close-btn:hover { color: #e53e3e; transform: scale(1.1); }
-        
         .options-container { display: flex; gap: 25px; justify-content: center; }
-        .option-btn {
-            font-family: inherit; font-size: 60px; font-weight: bold; width: 120px; height: 120px;
-            border-radius: 25px; border: 5px solid #cbd5e0; background: white; color: #4a5568;
-            cursor: pointer; transition: 0.2s; box-shadow: 0 6px 10px rgba(0,0,0,0.1); user-select: none;
-        }
+        .option-btn { font-family: inherit; font-size: 60px; font-weight: bold; width: 120px; height: 120px; border-radius: 25px; border: 5px solid #cbd5e0; background: white; color: #4a5568; cursor: pointer; transition: 0.2s; box-shadow: 0 6px 10px rgba(0,0,0,0.1); user-select: none; }
         .option-btn:hover { border-color: #4cd137; background: #f0fdf4; transform: scale(1.1); color: #27ae60; }
         .option-btn.wrong-choice { border-color: #e53e3e; background: #fed7d7; color: #c0392b; animation: shake 0.4s; }
     </style>
@@ -269,7 +201,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // ================= 1. 自動生成文字並安全綁定事件 =================
             document.querySelectorAll('.auto-typo').forEach(el => {
                 const rawText = el.getAttribute('data-sentence');
                 const wrongChar = el.getAttribute('data-wrong');
@@ -297,20 +228,16 @@
                 }
                 el.innerHTML = resultHTML;
 
-                // 安全地將點擊事件綁定到生成的按鈕上
                 el.querySelectorAll('.wrong-target').forEach(btn => {
                     btn.addEventListener('click', function() {
                         openChoiceModal(this, this.getAttribute('data-right'), this.getAttribute('data-choices'));
                     });
                 });
                 el.querySelectorAll('.normal-target').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        checkTypo(this);
-                    });
+                    btn.addEventListener('click', function() { checkTypo(this); });
                 });
             });
 
-            // ================= 2. 改錯字邏輯 =================
             let currentTargetElement = null; 
             let currentCorrectAnswer = "";   
 
@@ -335,7 +262,7 @@
                 currentCorrectAnswer = rightChar;
                 
                 let choices = choicesStr.split(',');
-                choices.sort(() => Math.random() - 0.5); // 隨機打亂按鈕
+                choices.sort(() => Math.random() - 0.5);
 
                 const optionsContainer = document.getElementById('optionsContainer');
                 optionsContainer.innerHTML = ''; 
@@ -353,12 +280,16 @@
 
             function checkFinalAnswer(btn, selectedChar) {
                 if (selectedChar === currentCorrectAnswer) {
+                    // 【修復核心】先記住目標元素，再關閉視窗
+                    const target = currentTargetElement;
                     closeModal();
-                    const container = currentTargetElement.closest('.question-slide');
+
+                    const container = target.closest('.question-slide');
                     const feedback = container.querySelector('.feedback-text');
 
-                    currentTargetElement.classList.add('correct');
-                    currentTargetElement.innerText = currentCorrectAnswer; 
+                    // 替換畫面上的字並變色！
+                    target.classList.add('correct');
+                    target.textContent = currentCorrectAnswer; 
                     container.classList.add('solved');
                     
                     container.style.borderColor = '#4cd137';
@@ -382,7 +313,6 @@
                 if (event.target === document.getElementById('choiceModal')) closeModal();
             });
 
-            // ================= 3. O/X 選擇題邏輯 =================
             document.querySelectorAll('.ox-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const card = this.closest('.question-slide');
@@ -404,7 +334,6 @@
                 });
             });
 
-            // ================= 4. 投影片導航邏輯 =================
             let currentSlide = 0;
             const slides = document.querySelectorAll('.question-slide');
             const prevBtn = document.getElementById('prevBtn');
