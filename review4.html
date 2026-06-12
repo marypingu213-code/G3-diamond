@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>複習四：綜合練習 - 國語樂園</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #fdf5e6; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; box-sizing: border-box; overflow: hidden; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 4%; background-color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; }
+        .back-btn { text-decoration: none; background-color: #00897b; color: white; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 24px; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .back-btn:hover { background-color: #00695c; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+        .progress-text { font-size: 28px; font-weight: bold; color: #4a5568; background: #e2e8f0; padding: 10px 30px; border-radius: 50px; }
+
+        .slide-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 40px; position: relative; }
+        .question-slide { display: none; width: 100%; max-width: 1400px; height: 100%; background: white; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-left: 15px solid #fbc531; flex-direction: column; justify-content: center; align-items: center; padding: 40px 60px; box-sizing: border-box; animation: fadeIn 0.4s ease-in-out; text-align: center; transition: 0.3s; overflow-y: auto; }
+        .question-slide.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+        .section-badge { background-color: #4a5568; color: white; padding: 15px 40px; border-radius: 50px; font-size: 32px; font-weight: bold; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* 選擇題樣式 */
+        .mcq-text { font-size: clamp(35px, 4vw, 55px); font-weight: bold; color: #2d3748; margin-bottom: 40px; line-height: 1.6; text-align: center; }
+        u { text-decoration-color: #e53e3e; text-decoration-thickness: 6px; text-underline-offset: 12px; }
+        
+        /* 2x2 網格選項排版 */
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; margin: 0 auto; }
+        .mcq-btn { font-family: inherit; font-size: 36px; font-weight: bold; padding: 25px 30px; border-radius: 20px; cursor: pointer; border: 6px solid #cbd5e0; background: white; color: #2b6cb0; transition: 0.2s; box-shadow: 0 8px 15px rgba(0,0,0,0.1); user-select: none; text-align: left; display: flex; align-items: center; }
+        .mcq-btn:hover:not(:disabled) { transform: scale(1.03); border-color: #4299e1; background: #ebf8ff; }
+        .mcq-btn:active:not(:disabled) { transform: scale(0.98); }
+        .mcq-btn.correct-choice { border-color: #4cd137; background: #f0fdf4; color: #27ae60; }
+        .mcq-btn.wrong-choice { border-color: #e84118; background: #fff0f0; color: #c0392b; animation: shake 0.4s; }
+
+        .option-num { display: inline-block; background: #e2e8f0; color: #4a5568; border-radius: 50%; width: 45px; height: 45px; line-height: 45px; text-align: center; margin-right: 15px; flex-shrink: 0; }
+        .mcq-btn.correct-choice .option-num { background: #4cd137; color: white; }
+        .mcq-btn.wrong-choice .option-num { background: #e84118; color: white; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } }
+
+        .feedback-text { font-size: 36px; font-weight: bold; margin-top: 30px; height: 40px; opacity: 0; transition: 0.3s; }
+
+        /* 底部導航 */
+        .bottom-nav { display: flex; justify-content: space-between; padding: 25px 5%; background: #fff; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 10; }
+        .nav-btn { font-family: inherit; font-size: 32px; font-weight: bold; padding: 18px 45px; border-radius: 20px; border: none; background-color: #4299e1; color: white; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 12px rgba(66, 153, 225, 0.3); user-select: none; }
+        .nav-btn:hover:not(:disabled) { background-color: #3182ce; transform: translateY(-5px); }
+        .nav-btn:disabled { background-color: #cbd5e0; cursor: not-allowed; }
+        .nav-btn.finish-btn { background-color: #4cd137; }
+
+        @media (max-width: 768px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .mcq-btn { font-size: 28px; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">⬅️ 回大廳</a>
+        <div class="progress-text" id="progressIndicator">第 1 / 9 題</div>
+    </div>
+
+    <div class="slide-container" id="slideContainer">
+        
+        <!-- ================= 選擇題區 (1~9題) ================= -->
+        <div class="question-slide active">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">下列哪一個選項的組成方式和「一座座」<u>不同</u>？</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="true"><span class="option-num">1</span>一直飛</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">2</span>一次次</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>一幢幢</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">4</span>一波波</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">關於句中的量詞，下列哪一個使用<u>錯誤</u>？</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="false"><span class="option-num">1</span>一朵雪白的浪花</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">2</span>一抹迷人的藍色</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>一座巨大的鹽山</button>
+                <button class="mcq-btn" data-answer="true"><span class="option-num">4</span>一幢明亮的金光</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「這座池塘裡有許多的『浮』萍。」<br>『浮』的讀音是什麼？</div>
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">1</span>ㄈㄨˊ</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">2</span>ㄈㄨˇ</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">3</span>ㄈㄨˋ</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">4</span>ㄈㄨ</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「為了改善交通堵塞的問題，這條道路將會進行拓『寬』。」<br>『寬』的讀音是什麼？</div>
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">1</span>ㄎㄨㄢ</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">2</span>ㄎㄨㄢˇ</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">3</span>ㄎㄨㄢˋ</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">4</span>ㄎㄨㄢ˙</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「我 □ 腳踏車去公園運動。」<br>□ 中應填入哪一個字？</div>
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">1</span>騎</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">2</span>開</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">3</span>施</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">4</span>賣</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「她『ㄏㄨㄛˋ』許是不得已才這麼做的，你就別太生氣了。」<br>『ㄏㄨㄛˋ』寫成國字後，是下列哪一個字？</div>
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">1</span>域</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">2</span>國</button>
+                <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">3</span>或</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">4</span>惑</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">下列哪一個字讀三聲（ˇ）？</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="false"><span class="option-num">1</span>「巢」穴</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">2</span>「柴」火</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>下「沉」</button>
+                <button class="mcq-btn" data-answer="true"><span class="option-num">4</span>「腐」木</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「枯木」的意思是：</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="false"><span class="option-num">1</span>無聊，沒有趣味</button>
+                <button class="mcq-btn" data-answer="true"><span class="option-num">2</span>草木乾萎失去生機</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>憔悴、消瘦</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">4</span>經脫水加工製成的食品</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「輕而易舉」的意思是什麼？</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="true"><span class="option-num">1</span>形容簡單容易，不費力</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">2</span>形容交易失敗，有所損失</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>形容困難不易，難解決</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">4</span>形容難易不定，不好判斷</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-btn" id="prevBtn" disabled>◀ 上一題</button>
+        <button class="nav-btn" id="nextBtn">下一題 ▶</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // ================= 選擇題邏輯 =================
+            document.querySelectorAll('.question-slide').forEach(slide => {
+                const btns = slide.querySelectorAll('.mcq-btn');
+                const feedback = slide.querySelector('.feedback-text');
+
+                btns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // 鎖定所有按鈕防止重複作答
+                        btns.forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+                        this.style.opacity = '1';
+
+                        const isCorrect = this.getAttribute('data-answer') === 'true';
+
+                        if (isCorrect) {
+                            this.classList.add('correct-choice');
+                            slide.style.borderColor = '#4cd137'; 
+                            slide.style.backgroundColor = '#f0fdf4';
+                            feedback.innerHTML = '✨ 答對了！太棒了！'; 
+                            feedback.style.color = '#27ae60';
+                        } else {
+                            this.classList.add('wrong-choice');
+                            slide.style.borderColor = '#e84118'; 
+                            slide.style.backgroundColor = '#fff0f0';
+                            
+                            // 找出正確答案並高亮顯示
+                            btns.forEach(b => {
+                                if(b.getAttribute('data-answer') === 'true') {
+                                    b.style.opacity = '1';
+                                    b.classList.add('correct-choice');
+                                }
+                            });
+
+                            feedback.innerHTML = '💪 哎呀，再仔細想想看喔！'; 
+                            feedback.style.color = '#c0392b';
+                        }
+                        feedback.style.opacity = '1';
+                    });
+                });
+            });
+
+            // ================= 投影片切換邏輯 =================
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.question-slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progressIndicator = document.getElementById('progressIndicator');
+
+            function updateUI() {
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active');
+                    if (index === currentSlide) slide.classList.add('active');
+                });
+                progressIndicator.innerText = `第 ${currentSlide + 1} / ${slides.length} 題`;
+                prevBtn.disabled = currentSlide === 0;
+                
+                if (currentSlide === slides.length - 1) {
+                    nextBtn.innerText = "🎉 恭喜完成！回大廳";
+                    nextBtn.classList.add('finish-btn');
+                } else {
+                    nextBtn.innerText = "下一題 ▶";
+                    nextBtn.classList.remove('finish-btn');
+                }
+            }
+
+            function changeSlide(direction) {
+                if (direction === 1 && currentSlide === slides.length - 1) {
+                    window.location.href = 'index.html'; 
+                    return;
+                }
+                currentSlide += direction;
+                updateUI();
+            }
+
+            prevBtn.addEventListener('click', () => changeSlide(-1));
+            nextBtn.addEventListener('click', () => changeSlide(1));
+        });
+    </script>
+</body>
+</html>
