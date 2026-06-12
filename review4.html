@@ -24,7 +24,7 @@
         
         /* 2x2 網格選項排版 */
         .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; margin: 0 auto; }
-        .mcq-btn { font-family: inherit; font-size: 36px; font-weight: bold; padding: 25px 30px; border-radius: 20px; cursor: pointer; border: 6px solid #cbd5e0; background: white; color: #2b6cb0; transition: 0.2s; box-shadow: 0 8px 15px rgba(0,0,0,0.1); user-select: none; text-align: left; display: flex; align-items: center; }
+        .mcq-btn { font-family: inherit; font-size: 32px; font-weight: bold; padding: 25px 30px; border-radius: 20px; cursor: pointer; border: 6px solid #cbd5e0; background: white; color: #2b6cb0; transition: 0.2s; box-shadow: 0 8px 15px rgba(0,0,0,0.1); user-select: none; text-align: left; display: flex; align-items: center; }
         .mcq-btn:hover:not(:disabled) { transform: scale(1.03); border-color: #4299e1; background: #ebf8ff; }
         .mcq-btn:active:not(:disabled) { transform: scale(0.98); }
         .mcq-btn.correct-choice { border-color: #4cd137; background: #f0fdf4; color: #27ae60; }
@@ -33,6 +33,7 @@
         .option-num { display: inline-block; background: #e2e8f0; color: #4a5568; border-radius: 50%; width: 45px; height: 45px; line-height: 45px; text-align: center; margin-right: 15px; flex-shrink: 0; }
         .mcq-btn.correct-choice .option-num { background: #4cd137; color: white; }
         .mcq-btn.wrong-choice .option-num { background: #e84118; color: white; }
+        .blank-box { display: inline-block; min-width: 60px; height: 70px; border-bottom: 6px solid #4a5568; margin: 0 10px; text-align: center; color: #e53e3e; vertical-align: bottom; }
 
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } }
 
@@ -47,7 +48,7 @@
 
         @media (max-width: 768px) {
             .options-grid { grid-template-columns: 1fr; }
-            .mcq-btn { font-size: 28px; padding: 20px; }
+            .mcq-btn { font-size: 24px; padding: 20px; }
         }
     </style>
 </head>
@@ -55,12 +56,14 @@
 
     <div class="top-bar">
         <a href="index.html" class="back-btn">⬅️ 回大廳</a>
-        <div class="progress-text" id="progressIndicator">第 1 / 9 題</div>
+        <div class="progress-text" id="progressIndicator">第 1 / 19 題</div>
     </div>
 
     <div class="slide-container" id="slideContainer">
         
-        <!-- ================= 選擇題區 (1~9題) ================= -->
+        <!-- ================= 選擇題區 ================= -->
+        
+        <!-- 舊的 9 題 -->
         <div class="question-slide active">
             <div class="section-badge">✨ 綜合測驗</div>
             <div class="mcq-text">下列哪一個選項的組成方式和「一座座」<u>不同</u>？</div>
@@ -111,7 +114,7 @@
 
         <div class="question-slide">
             <div class="section-badge">✨ 綜合測驗</div>
-            <div class="mcq-text">「我 □ 腳踏車去公園運動。」<br>□ 中應填入哪一個字？</div>
+            <div class="mcq-text">「我 <span class="blank-box"></span> 腳踏車去公園運動。」<br><span class="blank-box"></span> 中應填入哪一個字？</div>
             <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
                 <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">1</span>騎</button>
                 <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">2</span>開</button>
@@ -165,6 +168,127 @@
                 <button class="mcq-btn" data-answer="false"><span class="option-num">2</span>形容交易失敗，有所損失</button>
                 <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>形容困難不易，難解決</button>
                 <button class="mcq-btn" data-answer="false"><span class="option-num">4</span>形容難易不定，不好判斷</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <!-- 新的 10 題 -->
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「突如其來的作，『ㄐㄧㄠˇ』亂了我所有的旅遊計畫。」<br>『ㄐㄧㄠˇ』寫成國字後，是下列哪一個字？</div>
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">1</span>絞</button>
+                <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">2</span>攪</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">3</span>角</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">4</span>腳</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">調色「盤」：</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="false"><span class="option-num">1</span>一種裝飾的藝術技巧</button>
+                <button class="mcq-btn" data-answer="true"><span class="option-num">2</span>一種盛放物品的淺底器皿</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>一種容納物品的袋狀物</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">4</span>一種支撐物品的圓柱體</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「沒有工作的假日，最適合把壓力和煩憂拋到九 <span class="blank-box"></span><span class="blank-box"></span> 外了！」<br>空格中應填入哪些字？</div>
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">1</span>霄雪</button>
+                <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">2</span>霄雲</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">3</span>宵雲</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">4</span>宵雪</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「哥哥在圖畫紙上塗 <span class="blank-box"></span> 各式各樣的顏色。」<br>空格中應填入哪一個字？</div>
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">1</span>看</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">2</span>下</button>
+                <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">3</span>抹</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">4</span>踩</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">下列哪一個使用的修辭和「游哇游」相同？</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="true"><span class="option-num">1</span>搖哇搖</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">2</span>樹狀的珊瑚</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>神奇又漂亮</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">4</span>比手畫腳</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">依據<u>和魚一起游泳</u>一文，「我的願望終於實現了！」表現出作者什麼樣的心情？</div>
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">1</span>很懊惱</button>
+                <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">2</span>很興奮</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">3</span>很悲傷</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">4</span>很生氣</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">根據<u>三峽老街樂藍染</u>一文，下列哪個選項屬於「自然」景觀？</div>
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mcq-btn" data-answer="true" style="justify-content: center;"><span class="option-num">1</span>老樹</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">2</span>山牆</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">3</span>騎樓</button>
+                <button class="mcq-btn" data-answer="false" style="justify-content: center;"><span class="option-num">4</span>拱廊</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">依據<u>三峽老街樂藍染</u>一文，關於「藍染」這種手工藝，下列哪個敘述正確？</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="true"><span class="option-num">1</span>染布前會先綁緊布料</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">2</span>是創新的染布技藝</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>不用花時間等待成果</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">4</span>需要泡鹽水定色</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">依據<u>騎樓</u>一文，「連二樓都有騎樓」是哪裡的騎樓特色呢？</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="false"><span class="option-num">1</span>臺北 土銀展示館</button>
+                <button class="mcq-btn" data-answer="true"><span class="option-num">2</span>萬華 華江整建住宅</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>旗山老街</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">4</span>三峽老街</button>
+            </div>
+            <div class="feedback-text"></div>
+        </div>
+
+        <div class="question-slide">
+            <div class="section-badge">✨ 綜合測驗</div>
+            <div class="mcq-text">「鹹」的：</div>
+            <div class="options-grid">
+                <button class="mcq-btn" data-answer="false"><span class="option-num">1</span>艱辛、難受</button>
+                <button class="mcq-btn" data-answer="true"><span class="option-num">2</span>含鹽分或鹽味的</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">3</span>高溫、熱烈</button>
+                <button class="mcq-btn" data-answer="false"><span class="option-num">4</span>比喻吝嗇、小氣</button>
             </div>
             <div class="feedback-text"></div>
         </div>
